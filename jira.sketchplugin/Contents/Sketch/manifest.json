@@ -1,0 +1,24 @@
+{
+  "compatibleVersion": 3,
+  "bundleVersion": 1,
+  "commands": [
+    {
+      "name": "Recent issues",
+      "identifier": "issues",
+      "script": "issues.js",
+      "shortcut": "cmd alt j"
+    }
+  ],
+  "menu": {
+    "title": "JIRA",
+    "items": [
+      "issues"
+    ]
+  },
+  "version": "0.0.1",
+  "description": "A Sketch plugin for interacting with Atlassian JIRA",
+  "homepage": "https://bitbucket.org/tpettersen/jira-sketch-plugin#readme",
+  "name": "jira-for-sketch",
+  "disableCocoaScriptPreprocessor": true,
+  "appcast": "https://raw.githubusercontent.com//master/.appcast.xml"
+}

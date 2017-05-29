@@ -3,16 +3,16 @@
 	"bundleVersion": 1,
 	"commands": [
 		{
-			"name": "My Issues",
-			"identifier": "my-issues",
-			"script": "./my-issues.js",
+			"name": "Recent issues",
+			"identifier": "issues",
+			"script": "./issues.js",
 			"shortcut": "cmd alt j"
 		}
 	],
 	"menu": {
 		"title": "JIRA",
 		"items": [
-			"my-issues"
+			"issues"
 		]
 	}
 }
