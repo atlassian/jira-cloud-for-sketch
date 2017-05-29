@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import pluginCall from 'sketch-module-web-view/client'
-
+import AkDynamicTable from '@atlaskit/dynamic-table'
+import styled from 'styled-components'
+import '@atlaskit/css-reset'
 
 class Issue extends Component {
   render () {
@@ -17,6 +19,75 @@ class Issue extends Component {
     )
   }
 }
+
+const Wrapper = styled.div`
+  min-width: 550px;
+  padding: 10px;
+`;
+
+const KeyWrapper = styled.span`
+  display: flex;
+  align-items: center;
+`;
+
+const Icon = styled.img`
+  border-radius: 3px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+`;
+
+const caption = 'Recent issues';
+
+const head = {
+  cells: [
+    {
+      key: 'issueKey',
+      content: 'Key',
+      isSortable: true,
+      width: 15,
+    },
+    {
+      key: 'summary',
+      content: 'Summary',
+      shouldTruncate: true,
+      isSortable: true,
+      width: 50,
+    },
+    {
+      key: 'status',
+      content: 'Status',
+      shouldTruncate: true,
+      isSortable: true,
+      width: 20,
+    }
+  ]
+};
+
+const rows = function(issues) {
+  issues = issues || [];
+  return issues.map(issue => ({
+    cells: [
+      {
+        key: issue.key,
+        content: (
+          <KeyWrapper>
+            <Icon src='story.svg' />
+            <span>{issue.key}</span>
+          </KeyWrapper>
+        ),
+      },
+      {
+        key: issue.synnary,
+        content: issue.summary,
+      },
+      {
+        key: issue.status,
+        content: issue.status,
+      },
+    ],
+  }))
+};
 
 class Issues extends Component {
   constructor (props) {
@@ -40,13 +111,19 @@ class Issues extends Component {
 
   render (props) {    
     return (
-      <div>        
+      <Wrapper>
         {!this.state.ready && 'loading...'}
-        {(this.state.issues || []).map((issueKey) =>
-          <Issue key={issueKey} 
-            issueKey={issueKey} />
-        )}
-      </div>
+        <AkDynamicTable
+          /*caption={caption}*/
+          head={head}
+          rows={rows(this.state.issues)}
+          rowsPerPage={10}
+          defaultPage={1}
+          isFixedSize
+          defaultSortKey="issueKey" // TODO order by how recently issue was viewed
+          defaultSortOrder="ASC"
+        />
+      </Wrapper>
     )
   }
 }

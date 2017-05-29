@@ -255,6 +255,7 @@ exports.default = function (context) {
     var webUI = new _sketchModuleWebView2.default(context, 'issues.html', {
       identifier: 'jira-sketch-plugin.issues',
       height: 280,
+      width: 600,
       onlyShowCloseButton: true,
       hideTitleBar: false,
       handlers: {
@@ -277,9 +278,8 @@ exports.default = function (context) {
       }
     });
     context.document.showMessage('Launched issues webview');
-    webUI.eval('window.issues=["SKIRA-1","JRA-1330"]');
+    webUI.eval('window.issues=[{key:"SKIRA-1",summary:"Just do it",status:"Open"}, {key:"JRA-1330",summary:"Field level security",status:"Resolved"}]');
     webUI.eval('window.ready=true');
-    log("done eval");
   });
 };
 
