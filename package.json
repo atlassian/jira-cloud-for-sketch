@@ -27,6 +27,7 @@
     "skpm": "^0.9.13"
   },
   "dependencies": {
+    "sketch-module-user-preferences": "^1.0.1",
     "sketch-module-web-view": "^0.1.4"
   }
 }
