@@ -3,15 +3,16 @@
 	"bundleVersion": 1,
 	"commands": [
 		{
-			"name": "my-command",
-			"identifier": "my-command-identifier",
-			"script": "./my-command.js"
+			"name": "My Issues",
+			"identifier": "my-issues",
+			"script": "./my-issues.js",
+			"shortcut": "cmd alt j"
 		}
 	],
 	"menu": {
-		"title": "jira-sketch-plugin",
+		"title": "JIRA",
 		"items": [
-			"my-command-identifier"
+			"my-issues"
 		]
 	}
 }

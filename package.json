@@ -1,5 +1,5 @@
 {
-  "name": "jira-sketch-plugin",
+  "name": "JIRA for Sketch",
   "version": "0.0.1",
   "description": "A Sketch plugin for interacting with Atlassian JIRA.",
   "main": "plugin.sketchplugin",
