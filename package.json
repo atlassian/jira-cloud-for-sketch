@@ -27,7 +27,6 @@
   "engines": {
     "sketch": ">=3.0"
   },
-  "manifest": "src/manifest.json",
   "devDependencies": {
     "babel-plugin-add-module-exports": "0.2.1",
     "babel-plugin-transform-react-jsx": "^6.8.0",
