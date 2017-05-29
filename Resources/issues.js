@@ -1,16 +1,17 @@
-import { h, render, Component } from 'preact'
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import pluginCall from 'sketch-module-web-view/client'
 
 
 class Issue extends Component {
-  render ({issueKey}) {
+  render () {
     return (
       <div className='issue'>
-        <span className='key' onClick={() => pluginCall('viewIssue', issueKey)} title='View issue'>
-          {issueKey}
+        <span className='key' onClick={() => pluginCall('viewIssue', this.props.issueKey)} title='View issue'>
+          {this.props.issueKey}
         </span>
-        <span className='export' onClick={() => pluginCall('exportAssets', issueKey)}>
-          <img src='export.png' title='Attach assets' />          
+        <span className='export' onClick={() => pluginCall('exportAssets', this.props.issueKey)}>
+          <img src='export.png' title='Attach assets' />
         </span>
       </div>
     )
@@ -37,11 +38,11 @@ class Issues extends Component {
     }
   }
 
-  render (props, {ready, issues}) {    
+  render (props) {    
     return (
       <div>        
-        {!ready && 'loading...'}
-        {(issues || []).map((issueKey) =>
+        {!this.state.ready && 'loading...'}
+        {(this.state.issues || []).map((issueKey) =>
           <Issue key={issueKey} 
             issueKey={issueKey} />
         )}
@@ -50,4 +51,4 @@ class Issues extends Component {
   }
 }
 
-render(<Issues />, document.getElementById('container'))
+ReactDOM.render(<Issues />, document.getElementById('container'))

@@ -1,7 +1,7 @@
 ---
 extends:
   - standard
-  - standard-preact
+  - standard-react
   - plugin:import/warnings
   - plugin:import/errors
   - sketch
