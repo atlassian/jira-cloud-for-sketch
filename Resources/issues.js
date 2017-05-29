@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import pluginCall from 'sketch-module-web-view/client'
 import AkDynamicTable from '@atlaskit/dynamic-table'
+import Lozenge from '@atlaskit/lozenge';
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 
@@ -28,6 +29,7 @@ const Wrapper = styled.div`
 const KeyWrapper = styled.span`
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const Icon = styled.img`
@@ -64,8 +66,22 @@ const head = {
   ]
 };
 
+const statusCategoryToAppearance = function(statusCategory) {
+  switch (statusCategory) {
+    case "new":
+      return "new"
+    case "indeterminate":
+      return "inprogress"
+    case "done":
+      return "success"
+    case "undefined":
+    default:
+      return "default"
+  }
+}
+
 const rows = function(issues) {
-  issues = issues || [];
+  issues = issues || [];  
   return issues.map(issue => ({
     cells: [
       {
@@ -82,8 +98,10 @@ const rows = function(issues) {
         content: issue.summary,
       },
       {
-        key: issue.status,
-        content: issue.status,
+        key: issue.status,        
+        content: (
+          <Lozenge appearance={statusCategoryToAppearance(issue.statusCategory)}>{issue.status}</Lozenge>
+        )
       },
     ],
   }))

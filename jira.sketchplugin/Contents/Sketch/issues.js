@@ -258,6 +258,7 @@ exports.default = function (context) {
       width: 600,
       onlyShowCloseButton: true,
       hideTitleBar: false,
+      title: "Recent Issues",
       handlers: {
         viewIssue: function viewIssue(key) {
           (0, _util.executeSafely)(context, function () {
@@ -278,7 +279,7 @@ exports.default = function (context) {
       }
     });
     context.document.showMessage('Launched issues webview');
-    webUI.eval('window.issues=[{key:"SKIRA-1",summary:"Just do it",status:"Open"}, {key:"JRA-1330",summary:"Field level security",status:"Resolved"}]');
+    webUI.eval('window.issues=[' + '{key:"SKIRA-1",summary:"Just do it",status:"Open",statusCategory:"new"},' + '{key:"JRA-1330",summary:"Field level security",status:"Resolved",statusCategory:"done"},' + '{key:"AC-12345",summary:"Atlassian Connect enhancements",status:"In Progress",statusCategory:"indeterminate"}' + ']');
     webUI.eval('window.ready=true');
   });
 };

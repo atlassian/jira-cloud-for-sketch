@@ -9,6 +9,7 @@ export default function (context) {
       width: 600,
       onlyShowCloseButton: true,
       hideTitleBar: false,
+      title: "Recent Issues",
       handlers: {
         viewIssue (key) {
           executeSafely(context, function () {            
@@ -28,8 +29,12 @@ export default function (context) {
         }
       }
     })
-    context.document.showMessage('Launched issues webview')
-    webUI.eval('window.issues=[{key:"SKIRA-1",summary:"Just do it",status:"Open"}, {key:"JRA-1330",summary:"Field level security",status:"Resolved"}]')
+    context.document.showMessage('Launched issues webview')    
+    webUI.eval('window.issues=[' + 
+        '{key:"SKIRA-1",summary:"Just do it",status:"Open",statusCategory:"new"},' + 
+        '{key:"JRA-1330",summary:"Field level security",status:"Resolved",statusCategory:"done"},' + 
+        '{key:"AC-12345",summary:"Atlassian Connect enhancements",status:"In Progress",statusCategory:"indeterminate"}' + 
+      ']')
     webUI.eval('window.ready=true')
   })
 }

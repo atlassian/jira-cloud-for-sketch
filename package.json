@@ -44,6 +44,7 @@
   "dependencies": {
     "@atlaskit/css-reset": "^1.1.4",
     "@atlaskit/dynamic-table": "^3.0.0",
+    "@atlaskit/lozenge": "^3.0.2",
     "css-loader": "^0.28.3",
     "eslint-config-sketch": "^0.2.2",
     "eslint-config-standard-react": "^5.0.0",
