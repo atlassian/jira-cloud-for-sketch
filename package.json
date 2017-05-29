@@ -1,29 +1,32 @@
 {
-	"name": "jira-sketch-plugin",
-	"version": "0.0.1",
-	"description": "A Sketch plugin for interacting with Atlassian JIRA.",
-	"main": "plugin.sketchplugin",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "skpm build",
-		"publish": "skpm publish"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://bitbucket.org/tpettersen/jira-sketch-plugin.git"
-	},
-	"keywords": [
-		"sketch",
-		"jira"
-	],
-	"author": "Tim Pettersen <tim@atlassian.com>",
-	"license": "BSD-2-Clause",
-	"homepage": "https://bitbucket.org/tpettersen/jira-sketch-plugin#readme",
-	"engines": {
-		"sketch": ">=3.0"
-	},
-	"manifest": "src/manifest.json",
-	"devDependencies": {
-		"skpm": "^0.9.13"
-	}
+  "name": "jira-sketch-plugin",
+  "version": "0.0.1",
+  "description": "A Sketch plugin for interacting with Atlassian JIRA.",
+  "main": "plugin.sketchplugin",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "skpm build",
+    "publish": "skpm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/tpettersen/jira-sketch-plugin.git"
+  },
+  "keywords": [
+    "sketch",
+    "jira"
+  ],
+  "author": "Tim Pettersen <tim@atlassian.com>",
+  "license": "BSD-2-Clause",
+  "homepage": "https://bitbucket.org/tpettersen/jira-sketch-plugin#readme",
+  "engines": {
+    "sketch": ">=3.0"
+  },
+  "manifest": "src/manifest.json",
+  "devDependencies": {
+    "skpm": "^0.9.13"
+  },
+  "dependencies": {
+    "sketch-module-web-view": "^0.1.4"
+  }
 }
