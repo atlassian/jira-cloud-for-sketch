@@ -25,3 +25,8 @@ export function createFailAlert (context, title, error) {
     responseCode
   }
 }
+
+export function openInBrowser (urlString) {
+  var url = NSURL.URLWithString(urlString)
+  NSWorkspace.sharedWorkspace().openURL(url)
+}

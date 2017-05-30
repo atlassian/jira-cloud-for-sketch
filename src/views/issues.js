@@ -1,5 +1,5 @@
 import WebUI from 'sketch-module-web-view'
-import { executeSafely } from './util'
+import { executeSafely } from '../util'
 
 export default function (context) {
   executeSafely(context, function() {      
