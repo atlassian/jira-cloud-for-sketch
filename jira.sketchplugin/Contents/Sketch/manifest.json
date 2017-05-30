@@ -3,6 +3,12 @@
   "bundleVersion": 1,
   "commands": [
     {
+      "name": "Connect to JIRA Cloud",
+      "identifier": "connect",
+      "script": "connect.js",
+      "shortcut": "cmd alt k"
+    },
+    {
       "name": "Recent issues",
       "identifier": "issues",
       "script": "issues.js",
@@ -12,6 +18,7 @@
   "menu": {
     "title": "JIRA",
     "items": [
+      "connect",
       "issues"
     ]
   },
