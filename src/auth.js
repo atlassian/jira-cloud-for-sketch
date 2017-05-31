@@ -1,6 +1,6 @@
 import fetch from 'sketch-module-fetch-polyfill'
 import { openInBrowser, createFailAlert } from './util';
-import { pluginName, jiraSketchIntegrationApi } from './config';
+import { pluginName, jiraSketchIntegrationApi, jiraSketchIntegrationAuthRedirectUrl } from './config';
 import queryString from 'query-string';
 import prefsManager from 'sketch-module-user-preferences'
 
@@ -13,8 +13,8 @@ export async function getSketchClientDetails () {
     })
     if (prefs.clientId === _NOT_SET || prefs.sharedSecret === _NOT_SET) {
         // let any http errors bubble up for now
-        var response = await fetch (jiraSketchIntegrationApi.client, {method: "POST"})
-        var json = await response.json()
+        const response = await fetch (jiraSketchIntegrationApi.client, {method: "POST"})
+        const json = await response.json()
         prefs.clientId = json.data.id
         prefs.sharedSecret = json.data.sharedSecret
         prefsManager.setUserPreferences(pluginName, prefs)
@@ -26,10 +26,11 @@ export async function getSketchClientDetails () {
 }
 
 export async function authorizeSketchForJira (context, jiraUrl) {
-    var clientDetails = await getSketchClientDetails()
-    var params = {
+    const jiraHost = jiraUrl; // TODO extract hostname from URL
+    const clientDetails = await getSketchClientDetails()
+    const params = {
         clientId: clientDetails.clientId,
-        jiraUrl: jiraUrl
+        jiraHost: jiraHost
     }
-    openInBrowser(jiraSketchIntegrationApi.authorizeJira + "?" + queryString.stringify(params))
+    openInBrowser(jiraSketchIntegrationAuthRedirectUrl + "?" + queryString.stringify(params))
 }
