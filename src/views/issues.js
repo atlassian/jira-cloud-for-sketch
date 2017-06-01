@@ -29,7 +29,6 @@ export default function (context) {
         }
       }
     })
-    context.document.showMessage('Launched issues webview')    
     webUI.eval('window.issues=[' + 
         '{key:"SKIRA-1",summary:"Just do it",status:"Open",statusCategory:"new"},' + 
         '{key:"JRA-1330",summary:"Field level security",status:"Resolved",statusCategory:"done"},' + 
