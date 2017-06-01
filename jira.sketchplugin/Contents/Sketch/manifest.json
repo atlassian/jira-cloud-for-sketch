@@ -13,13 +13,20 @@
       "identifier": "issues",
       "script": "issues.js",
       "shortcut": "cmd alt j"
+    },
+    {
+      "name": "Bearer token test",
+      "identifier": "bearer",
+      "script": "bearer.js",
+      "shortcut": "cmd alt b"
     }
   ],
   "menu": {
     "title": "JIRA",
     "items": [
       "connect",
-      "issues"
+      "issues",
+      "bearer"
     ]
   },
   "version": "0.0.1",

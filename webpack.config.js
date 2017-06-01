@@ -20,5 +20,8 @@ module.exports = {
           } 
       } 
     ] 
-  }      
+  },
+  node: {
+    setImmediate: false
+  }
 }

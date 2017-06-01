@@ -7,4 +7,5 @@ export const jiraSketchIntegrationAuthRedirectUrl = jiraSketchIntegrationBaseUrl
 export const jiraSketchIntegrationApiBaseUrl = jiraSketchIntegrationBaseUrl + "/api"
 export const jiraSketchIntegrationApi = {
     client: jiraSketchIntegrationApiBaseUrl + "/clients",
+    bearer: jiraSketchIntegrationApiBaseUrl + "/clients/bearer"
 }
