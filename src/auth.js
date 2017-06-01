@@ -11,7 +11,7 @@ export async function getSketchClientDetails () {
         clientId: _NOT_SET,
         sharedSecret: _NOT_SET
     })
-    if (prefs.clientId === _NOT_SET || prefs.sharedSecret === _NOT_SET) {
+    if (!prefs.clientId || prefs.clientId === _NOT_SET || !prefs.sharedSecret || prefs.sharedSecret === _NOT_SET) {
         // let any http errors bubble up for now
         const response = await fetch (jiraSketchIntegrationApi.client, {method: "POST"})
         const json = await response.json()
