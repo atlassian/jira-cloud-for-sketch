@@ -16,6 +16,7 @@ class Connect extends Component {
             You&apos;ll then be asked to authorize Sketch to act on your behalf.
         </p>
         <AkFieldText
+            ref="jiraUrl"
             placeholder="sketchfan.atlassian.net"
             label="JIRA Cloud URL"
             onChange={(event) => this.setState({jiraUrl: event.target.value})}
@@ -23,13 +24,17 @@ class Connect extends Component {
         />
         <br />
         <ButtonGroup>
-            <Button appearance="primary"                 
+            <Button appearance="primary" type="submit"
                 onClick={() => pluginCall('connectToJira', this.state.jiraUrl)}>Connect</Button>
             <Button appearance="subtle-link" 
                 onClick={() => pluginCall('cancel')}>Cancel</Button>
         </ButtonGroup>        
       </FormWrapper>
     )
+  }
+
+  componentDidMount() {
+    this.refs.jiraUrl.focus()
   }
 }
 

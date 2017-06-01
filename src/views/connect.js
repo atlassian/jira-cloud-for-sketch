@@ -15,14 +15,12 @@ export default function (context) {
         connectToJira (jiraUrl) {
           executeSafely(context, function () {            
             webUI.panel.close()
-            context.document.showMessage(`Connecting to '${jiraUrl}'`)
             authorizeSketchForJira(context, jiraUrl)
           })
         },
         cancel () {
           executeSafely(context, function () {            
             webUI.panel.close()
-            context.document.showMessage(`Cancelled connecting to JIRA`)
           })
         }
       }
