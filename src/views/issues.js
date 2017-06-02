@@ -1,5 +1,5 @@
 import WebUI from 'sketch-module-web-view'
-import { executeSafely, executeSafelyAsync } from '../util'
+import { executeSafely, executeSafelyAsync, openInBrowser } from '../util'
 import { getBearerToken, getJiraHost } from '../auth'
 import JIRA from '../jira'
 
@@ -20,6 +20,11 @@ export default function (context) {
       hideTitleBar: false,
       title: "Recent Issues",
       handlers: {
+        openInBrowser (url) {
+          executeSafely(context, function() {
+            openInBrowser(url)
+          })
+        },
         viewIssue (key) {
           executeSafely(context, function () {
             var app = NSApp.delegate()

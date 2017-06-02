@@ -80,6 +80,10 @@ const statusCategoryToAppearance = function(statusCategory) {
   }
 }
 
+const browseUrl = function(issue) {
+  return issue.self.substring(0, issue.self.indexOf('/rest/')) + '/browse/' + issue.key
+}
+
 const rows = function(issues) {
   issues = issues || [];  
   return issues.map(issue => ({
@@ -89,7 +93,7 @@ const rows = function(issues) {
         content: (
           <KeyWrapper>
             <Icon src={issue.fields.issuetype.iconUrl} />
-            <span>{issue.key}</span>
+            <span onClick={() => pluginCall('openInBrowser', browseUrl(issue))}>{issue.key}</span>
           </KeyWrapper>
         ),
       },
