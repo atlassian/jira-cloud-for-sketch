@@ -11,6 +11,14 @@ export function executeSafely (context, func) {
   }
 }
 
+export async function executeSafelyAsync (context, func) {
+  try {
+    await func(context)
+  } catch (e) {
+    createFailAlert(context, 'Error', e)
+  }
+}
+
 export function createFailAlert (context, title, error) {
   console.log(error)
   var alert = NSAlert.alloc().init()

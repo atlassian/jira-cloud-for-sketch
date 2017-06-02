@@ -1,5 +1,5 @@
 import WebUI from 'sketch-module-web-view'
-import { executeSafely } from '../util'
+import { executeSafely, executeSafelyAsync } from '../util'
 import { authorizeSketchForJira } from '../auth'
 
 export default function (context) {
@@ -13,9 +13,9 @@ export default function (context) {
       title: "Connect to JIRA Cloud",
       handlers: {
         connectToJira (jiraUrl) {
-          executeSafely(context, function () {            
+          executeSafelyAsync(context, async function() {
             webUI.panel.close()
-            authorizeSketchForJira(context, jiraUrl)
+            await authorizeSketchForJira(context, jiraUrl)
           })
         },
         cancel () {
