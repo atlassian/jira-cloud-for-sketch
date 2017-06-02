@@ -1,8 +1,17 @@
 import WebUI from 'sketch-module-web-view'
 import { executeSafely, executeSafelyAsync } from '../util'
+import { getBearerToken, getJiraHost } from '../auth'
+import JIRA from '../jira'
 
 export default function (context) {
-  executeSafelyAsync(context, function() {
+  executeSafelyAsync(context, async function() {
+
+    const token = await getBearerToken()
+    const jiraHost = getJiraHost()
+    const jira = new JIRA(jiraHost, token)
+
+    const recentIssues = await jira.getRecentIssues()
+
     const webUI = new WebUI(context, 'issues.html', {
       identifier: 'jira-sketch-plugin.issues',
       height: 280,
@@ -29,11 +38,7 @@ export default function (context) {
         }
       }
     })
-    webUI.eval('window.issues=[' + 
-        '{key:"SKIRA-1",summary:"Just do it",status:"Open",statusCategory:"new"},' + 
-        '{key:"JRA-1330",summary:"Field level security",status:"Resolved",statusCategory:"done"},' + 
-        '{key:"AC-12345",summary:"Atlassian Connect enhancements",status:"In Progress",statusCategory:"indeterminate"}' + 
-      ']')
+    webUI.eval('window.issues=' + JSON.stringify(recentIssues.issues));
     webUI.eval('window.ready=true')
   })
 }

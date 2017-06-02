@@ -88,19 +88,19 @@ const rows = function(issues) {
         key: issue.key,
         content: (
           <KeyWrapper>
-            <Icon src='story.svg' />
+            <Icon src={issue.fields.issuetype.iconUrl} />
             <span>{issue.key}</span>
           </KeyWrapper>
         ),
       },
       {
-        key: issue.synnary,
-        content: issue.summary,
+        key: issue.fields.summary,
+        content: issue.fields.summary,
       },
       {
-        key: issue.status,        
+        key: issue.fields.status.name,
         content: (
-          <Lozenge appearance={statusCategoryToAppearance(issue.statusCategory)}>{issue.status}</Lozenge>
+          <Lozenge appearance={statusCategoryToAppearance(issue.fields.status.statusCategory.key)}>{issue.fields.status.name}</Lozenge>
         )
       },
     ],
@@ -135,7 +135,7 @@ class Issues extends Component {
           /*caption={caption}*/
           head={head}
           rows={rows(this.state.issues)}
-          rowsPerPage={10}
+          rowsPerPage={6}
           defaultPage={1}
           isFixedSize
           defaultSortKey="issueKey" // TODO order by how recently issue was viewed

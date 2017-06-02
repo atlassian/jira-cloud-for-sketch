@@ -12,8 +12,6 @@ export default class JIRA {
 
     async getRecentIssues () {
         var searchUrl = this.apiRoot + "/search?jql=issue+in+issueHistory()"
-        console.log(searchUrl)
-        console.log('bearer: "' + this.bearerToken + '"')
         const res = await fetch(searchUrl, {
             headers: {
                 "Accept": "application/json",
