@@ -64,3 +64,7 @@ export async function getBearerToken () {
     }
     return json.data.access_token
 }
+
+export function getJiraHost() {
+    return prefs.getString(keys.jiraHost)
+}

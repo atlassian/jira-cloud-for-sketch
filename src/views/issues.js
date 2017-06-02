@@ -1,8 +1,8 @@
 import WebUI from 'sketch-module-web-view'
-import { executeSafely } from '../util'
+import { executeSafely, executeSafelyAsync } from '../util'
 
 export default function (context) {
-  executeSafely(context, function() {      
+  executeSafelyAsync(context, function() {
     const webUI = new WebUI(context, 'issues.html', {
       identifier: 'jira-sketch-plugin.issues',
       height: 280,
@@ -12,7 +12,7 @@ export default function (context) {
       title: "Recent Issues",
       handlers: {
         viewIssue (key) {
-          executeSafely(context, function () {            
+          executeSafely(context, function () {
             var app = NSApp.delegate()
             app.refreshCurrentDocument()
             webUI.panel.close()
@@ -20,7 +20,7 @@ export default function (context) {
           })
         },
         exportAssets (key) {
-          executeSafely(context, function () {                        
+          executeSafely(context, function () {
             var app = NSApp.delegate()
             app.refreshCurrentDocument()
             webUI.panel.close()
