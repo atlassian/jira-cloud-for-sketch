@@ -11,7 +11,7 @@ export default class JIRA {
     }
 
     async getRecentIssues () {
-        var searchUrl = this.apiRoot + "/search?jql=issue+in+issueHistory()"
+        var searchUrl = this.apiRoot + "/search?jql=issue+in+issueHistory()+order+by+lastViewed"
         const res = await fetch(searchUrl, {
             headers: {
                 "Accept": "application/json",
