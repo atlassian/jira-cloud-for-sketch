@@ -6,22 +6,7 @@ import Lozenge from '@atlaskit/lozenge';
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 
-class Issue extends Component {
-  render () {
-    return (
-      <div className='issue'>
-        <span className='key' onClick={() => pluginCall('viewIssue', this.props.issueKey)} title='View issue'>
-          {this.props.issueKey}
-        </span>
-        <span className='export' onClick={() => pluginCall('exportAssets', this.props.issueKey)}>
-          <img src='export.png' title='Attach assets' />
-        </span>
-      </div>
-    )
-  }
-}
-
-const Wrapper = styled.div`
+const TableWrapper = styled.div`
   min-width: 550px;
   padding: 10px;
 `;
@@ -99,7 +84,9 @@ const rows = function(issues) {
       },
       {
         key: issue.fields.summary,
-        content: issue.fields.summary,
+        content: (
+          <div>{issue.fields.summary}</div>
+        )
       },
       {
         key: issue.fields.status.name,
@@ -111,7 +98,7 @@ const rows = function(issues) {
   }))
 };
 
-class Issues extends Component {
+class IssueTable extends Component {
   constructor (props) {
     super(props)    
     this.state = {
@@ -133,21 +120,18 @@ class Issues extends Component {
 
   render (props) {    
     return (
-      <Wrapper>
+      <TableWrapper>
         {!this.state.ready && 'loading...'}
         <AkDynamicTable
-          /*caption={caption}*/
           head={head}
           rows={rows(this.state.issues)}
           rowsPerPage={6}
           defaultPage={1}
           isFixedSize
-          defaultSortKey="issueKey" // TODO order by how recently issue was viewed
-          defaultSortOrder="ASC"
         />
-      </Wrapper>
+      </TableWrapper>
     )
   }
 }
 
-ReactDOM.render(<Issues />, document.getElementById('container'))
+ReactDOM.render(<IssueTable />, document.getElementById('container'))
