@@ -1,3 +1,4 @@
+import '../defaultImports'
 import { getBearerToken, getJiraHost } from '../auth'
 import { executeSafelyAsync, createFailAlert } from '../util'
 import JIRA from '../jira'

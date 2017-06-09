@@ -15,7 +15,7 @@ module.exports = {
             { 
               babelrc: false,
               plugins: [ 'babel-plugin-add-module-exports' ],
-              presets: [ 'es2015', 'react' ] 
+              presets: [ 'es2015', 'react', 'stage-1' ]
             } 
           } 
       } 

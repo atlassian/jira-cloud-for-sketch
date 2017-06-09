@@ -1,3 +1,4 @@
+import '../defaultImports'
 import WebUI from 'sketch-module-web-view'
 import { executeSafely, executeSafelyAsync, openInBrowser } from '../util'
 import { getBearerToken, getJiraHost } from '../auth'
