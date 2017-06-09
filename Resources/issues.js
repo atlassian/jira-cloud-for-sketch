@@ -5,6 +5,7 @@ import AkDynamicTable from '@atlaskit/dynamic-table'
 import Lozenge from '@atlaskit/lozenge';
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
+import { akColorB50 } from '@atlaskit/util-shared-styles';
 
 const TableWrapper = styled.div`
   min-width: 550px;
@@ -23,8 +24,6 @@ const Icon = styled.img`
   vertical-align: middle;
   margin-right: 8px;
 `;
-
-const caption = 'Recent issues';
 
 const head = {
   cells: [
@@ -65,8 +64,59 @@ const statusCategoryToAppearance = function(statusCategory) {
   }
 }
 
-const browseUrl = function(issue) {
+function browseUrl(issue) {
   return issue.self.substring(0, issue.self.indexOf('/rest/')) + '/browse/' + issue.key
+}
+
+class IssueSummary extends Component {
+  constructor(props) {
+    super(props);
+    this.dragEnter = this.dragEnter.bind(this);
+    this.dragLeave = this.dragLeave.bind(this);
+    this.dragStart = this.dragStart.bind(this);
+    this.drop = this.drop.bind(this);
+    this.state = {
+      dragHover: false
+    }
+  }
+  dragEnter(event) {
+    this.setState({dragHover: true});
+    // event.dataTransfer.dropEffect = "copy";
+  }
+  dragLeave(event) {
+    this.setState({dragHover: false});
+  }
+  dragStart(event) {
+    // event.dataTransfer.effectAllowed = "copy";
+  }
+  drop(event) {    
+    var files = event.dataTransfer.files;
+    for (var i = 0; i < files.length; i++) {
+        console.log(" File " + i + ":\n(" + (typeof files[i]) + ") : <" + files[i] + " > " +
+          files[i].name + " " + files[i].size + "\n");
+    }
+    this.setState({dragHover: false});
+    event.preventDefault();
+  }
+  preventDefault(event) {
+    event.preventDefault();
+  }
+  render(props) {
+    var style = {}
+    if (this.state.dragHover) {
+      style.backgroundColor = akColorB50;
+    }
+    return (
+      <div 
+        draggable='true'
+        style={style} 
+        onDragEnter={this.dragEnter} 
+        onDragLeave={this.dragLeave}
+        onDragStart={this.dragStart}
+        onDragOver={this.preventDefault}
+        onDropCapture={this.drop}>{this.props.summary}</div>
+    )
+  }
 }
 
 const rows = function(issues) {
@@ -85,7 +135,7 @@ const rows = function(issues) {
       {
         key: issue.fields.summary,
         content: (
-          <div>{issue.fields.summary}</div>
+          <IssueSummary summary={issue.fields.summary} />
         )
       },
       {
@@ -119,7 +169,7 @@ class IssueTable extends Component {
   }
 
   render (props) {    
-    return (
+    return (      
       <TableWrapper>
         {!this.state.ready && 'loading...'}
         <AkDynamicTable

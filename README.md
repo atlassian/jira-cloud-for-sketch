@@ -4,6 +4,7 @@ A Sketch plugin that provides integration with JIRA, via a companion Atlassian C
 
 # Developing
 
+- `npm install` to install dependencies
 - `npm install -g skpm` to install the [Sketch plugin manager](https://www.npmjs.com/package/skpm)
 - `skpm build` to transpile and package the plugin
 - `skpm link .` to symlink the plugin to the Sketch plugins directory
