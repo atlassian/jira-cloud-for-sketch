@@ -25,6 +25,8 @@ export async function getSketchClientDetails () {
 
 export async function authorizeSketchForJira (context, jiraUrl) {    
     const jiraHost = jiraUrl // TODO extract hostname from URL
+    // for now, let's clear existing auth details if they hit the 'Connect' button in the Sketch client
+    prefs.unset(keys.jiraHost, keys.clientId, keys.sharedSecret)
     const clientDetails = await getSketchClientDetails()    
     const params = {
         clientId: clientDetails.clientId,

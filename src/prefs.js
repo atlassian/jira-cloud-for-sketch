@@ -55,9 +55,23 @@ function isSet(/* [key, keys...] */) {
     return true
 }
 
+function unset(/* [key, keys...] */) {
+    var args = Array.from(arguments)
+    var prefs = getUserPrefs()
+    prefs = mapValues(prefs, (value, key) => {
+        if (args.indexOf(key) > -1) {
+            return null
+        } else {
+            return value
+        }
+    })
+    setUserPrefs(prefs)
+}
+
 export default {
     getString,
     setString,
     isSet,
+    unset,
     keys
 }
