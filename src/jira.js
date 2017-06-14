@@ -1,6 +1,7 @@
 import fetch from 'sketch-module-fetch-polyfill'
 import { jiraSketchIntegrationApi, jiraSketchIntegrationAuthRedirectUrl } from './config'
 import auth from './auth'
+import multipart from './multipart'
 const { format } = require('url')
 
 export default class JIRA {
@@ -19,6 +20,12 @@ export default class JIRA {
             }
         })
         return res.json()
+    }
+
+    async uploadAttachment (issueKey, filepath, filename) {
+        var uploadUrl = this.apiRoot + "/issue/" + issueKey + "/attachments"
+        const res = await multipart(uploadUrl, "Bearer " + this.bearerToken, filepath, filename)
+        return res;
     }
 
 }
