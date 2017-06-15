@@ -1,6 +1,6 @@
 export const pluginName = "jira-sketch-plugin"
 
-export const jiraSketchIntegrationBaseUrl = "https://timboconnect.ngrok.io"
+export const jiraSketchIntegrationBaseUrl = "https://jira-sketch-integration.ap-southeast-2.dev.public.atl-paas.net"
 
 export const jiraSketchIntegrationAuthRedirectUrl = jiraSketchIntegrationBaseUrl + "/auth/jira"
 
