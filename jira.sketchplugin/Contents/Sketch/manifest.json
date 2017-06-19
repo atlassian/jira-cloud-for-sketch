@@ -15,9 +15,9 @@
       "shortcut": "cmd alt j"
     },
     {
-      "name": "Bearer token test",
-      "identifier": "bearer",
-      "script": "bearer.js",
+      "name": "Test action",
+      "identifier": "test",
+      "script": "test.js",
       "shortcut": "cmd alt b"
     }
   ],
@@ -26,7 +26,7 @@
     "items": [
       "connect",
       "issues",
-      "bearer"
+      "test"
     ]
   },
   "version": "0.0.1",
