@@ -59,6 +59,7 @@
     "moment": "^2.18.1",
     "query-string": "^4.3.4",
     "react": "^15.5.4",
+    "react-desktop": "^0.3.1",
     "react-dom": "^15.5.4",
     "sketch-module-fetch-polyfill": "^0.1.4",
     "sketch-module-fs": "^0.1.2",

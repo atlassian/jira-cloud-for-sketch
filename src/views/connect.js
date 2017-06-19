@@ -4,14 +4,15 @@ import { executeSafely, executeSafelyAsync } from '../util'
 import { authorizeSketchForJira } from '../auth'
 
 export default function (context) {
-  executeSafely(context, function() {      
+  executeSafely(context, function() {
     const webUI = new WebUI(context, 'connect.html', {
       identifier: 'jira-sketch-plugin.connect',
-      height: 240,
+      background: MSImmutableColor.colorWithSVGString("#e7e7e7").NSColorWithColorSpace(nil),
+      height: 200,
       width: 400,
       onlyShowCloseButton: true,
-      hideTitleBar: false,
-      title: "Connect to JIRA Cloud",
+      hideTitleBar: true,
+      title: " ",
       handlers: {
         connectToJira (jiraUrl) {
           executeSafelyAsync(context, async function() {
@@ -20,7 +21,7 @@ export default function (context) {
           })
         },
         cancel () {
-          executeSafely(context, function () {            
+          executeSafely(context, function () {
             webUI.panel.close()
           })
         }
