@@ -1,3 +1,5 @@
+import { tempDirName } from './config'
+
 export function setIconForAlert (context, alert) {
   alert.setIcon(NSImage.alloc().initWithContentsOfFile(
     context.plugin.urlForResourceNamed('jira.png').path()))
@@ -37,4 +39,23 @@ export function createFailAlert (context, title, error) {
 export function openInBrowser (urlString) {
   var url = NSURL.URLWithString(urlString)
   NSWorkspace.sharedWorkspace().openURL(url)
+}
+
+export function tempDir(name) {
+  var tmp = NSTemporaryDirectory() + tempDirName + "/"
+  if (name) {
+    tmp += name + "/"
+  }
+  return tmp
+}
+
+export function extractFilenameFromPath(path) {
+  var slashIndex = path.lastIndexOf("/")
+  if (slashIndex == path.length - 1) {
+    throw new Error("Expected file path but received: " + path)
+  } else if (slashIndex > -1) {
+    return path.substring(slashIndex + 1)
+  } else {
+    return path
+  }
 }

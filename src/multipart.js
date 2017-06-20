@@ -57,7 +57,10 @@ export default function multipartPost(url, auth, filepath, filename) {
   return outputString
 }
 
+// with respect to curl
 function encodeFilename(filename) {
-  // with respect to curl
-  return filename.replace(/[,;]/g , "_");
+  // CocoaScript has issues with inline regexps containing square brackets
+  // http://mail.sketchplugins.com/pipermail/dev_sketchplugins.com/2014-October/000734.html
+  var badFilenameChars = new RegExp("[,;]", "g")
+  return filename.replace(badFilenameChars, "_");
 }

@@ -15,6 +15,12 @@
 			"shortcut": "cmd alt j"
 		},
 		{
+			"name": "Export to JIRA",
+			"identifier": "export",
+			"script": "./views/export.js",
+			"shortcut": "cmd alt ;"
+		},
+		{
 			"name": "Test action",
 			"identifier": "test",
 			"script": "./views/test.js",
@@ -26,6 +32,7 @@
 		"items": [
 			"connect",
 			"issues",
+			"export",
 			"test"
 		]
 	}

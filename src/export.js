@@ -1,3 +1,5 @@
+import { tempDir } from './util'
+
 export function exportLayer(context, layer, dir, duplicateCount) {
     var exportedPaths = []
     var slices = MSExportRequest.exportRequestsFromExportableLayer(layer)
@@ -10,11 +12,26 @@ export function exportLayer(context, layer, dir, duplicateCount) {
     return exportedPaths
 }
 
+export function exportSelected(context, dir) {
+    dir = dir || tempDir("export-" + Date.now())
+    console.log("Exporting " + context.selection.count() + " assets to " + dir)
+    var exportedPaths = [];
+    var exportedFilenames = {};
+    for (var i = 0; i < context.selection.count(); i++) {
+        var layer = context.selection[i];
+        var key = encodeLayerNameAsFilename(layer.name().toLowerCase())
+        var count = exportedFilenames[key] || 0
+        exportedPaths = exportedPaths.concat(exportLayer(context, layer, dir, count))
+        exportedFilenames[key] = count + 1
+    }
+    return exportedPaths
+}
+
 function nameForSlice(slice, layer, duplicateCount) {
     var filename = slice.name()
     if (duplicateCount) {
         filename = layer.name() + " (" + duplicateCount + ")"
-        // coerce to strings to avoid cocoascript shenanigins
+        // coerce to strings to avoid CocoaScript shenanigins
         var layerName = layer.name() + ""
         var sliceName = slice.name() + ""
         if (sliceName.length > layerName.length) {
@@ -28,24 +45,12 @@ function nameForSlice(slice, layer, duplicateCount) {
             }
         }
     }
-    filename = normalizeFilename(filename)
+    filename = encodeLayerNameAsFilename(filename)
     filename += "." + slice.format()
     return filename
 }
 
-function normalizeFilename(filename) {
-    return filename.replace(/\//g, "_")
-}
-
-export function exportSelected(context, dir) {
-    var exportedNames = {};
-    var exportedPaths = [];
-    for (var i = 0; i < context.selection.count(); i++) {
-        var layer = context.selection[i];
-        var key = layer.name().toLowerCase()
-        var count = exportedNames[key] || 0
-        exportedPaths = exportedPaths.concat(exportLayer(context, layer, dir, count))
-        exportedNames[key] = count + 1
-    }
-    return exportedPaths
+function encodeLayerNameAsFilename(layerName) {
+    var badFilenameChars = new RegExp("/","g")
+    return layerName.replace(badFilenameChars, "_")
 }
