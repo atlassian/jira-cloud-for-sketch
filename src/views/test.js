@@ -1,12 +1,18 @@
 import '../defaultImports'
-import { executeSafelyAsync, createFailAlert } from '../util'
-import { exportSelected } from '../export'
+import WebUI from 'sketch-module-web-view'
+import { executeSafelyAsync } from '../util'
 
 export default function (context) {
   executeSafelyAsync(context, async function() {
-
-    var exportedPaths = exportSelected(context, "/Users/tpettersen/tmp/sketch-exports/")
-    createFailAlert(context, "Exported!", exportedPaths.join("\n"))
-
+    const webUI = new WebUI(context, 'drop.html', {
+      identifier: 'jira-sketch-plugin.drop',
+      height: 200,
+      width: 200,
+      onlyShowCloseButton: true,
+      hideTitleBar: false,
+      title: "DropZone",
+      handlers: {}
+    })
+    webUI.eval('window.ready=true')
   })
 }

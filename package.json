@@ -6,7 +6,8 @@
   "manifest": "src/manifest.json",
   "resources": [
     "Resources/issues.js",
-    "Resources/connect.js"
+    "Resources/connect.js",
+    "Resources/drop.js"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
