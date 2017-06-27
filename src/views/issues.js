@@ -5,8 +5,7 @@ import { getBearerToken, getJiraHost } from '../auth'
 import JIRA from '../jira'
 
 export default function (context) {
-  executeSafelyAsync(context, async function() {
-
+  executeSafelyAsync(context, async function () {
     const token = await getBearerToken()
     const jiraHost = getJiraHost()
     const jira = new JIRA(jiraHost, token)
@@ -19,10 +18,10 @@ export default function (context) {
       width: 600,
       onlyShowCloseButton: true,
       hideTitleBar: false,
-      title: "Recent Issues",
+      title: 'Recent Issues',
       handlers: {
         openInBrowser (url) {
-          executeSafely(context, function() {
+          executeSafely(context, function () {
             openInBrowser(url)
           })
         },
@@ -44,7 +43,7 @@ export default function (context) {
         }
       }
     })
-    webUI.eval('window.issues=' + JSON.stringify(recentIssues.issues));
+    webUI.eval(`window.issues=${JSON.stringify(recentIssues.issues)}`)
     webUI.eval('window.ready=true')
   })
 }

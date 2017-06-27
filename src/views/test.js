@@ -4,14 +4,14 @@ import { executeSafelyAsync } from '../util'
 import DragUIDelegate from '../dragndrop-uidelegate'
 
 export default function (context) {
-  executeSafelyAsync(context, async function() {
+  executeSafelyAsync(context, async function () {
     const webUI = new WebUI(context, 'drop.html', {
       identifier: 'jira-sketch-plugin.drop',
       height: 200,
       width: 200,
       onlyShowCloseButton: true,
       hideTitleBar: false,
-      title: "DropZone",
+      title: 'DropZone',
       handlers: {}
     })
     var uiDelegate = DragUIDelegate(context, console.log)
