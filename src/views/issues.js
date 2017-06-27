@@ -10,10 +10,6 @@ export default function (context) {
     if (!isAuthorized()) {
       return Connect(context)
     }
-    const jiraHost = getJiraHost()
-    const token = await getBearerToken()
-    const jira = new JIRA(jiraHost, token)
-    const recentIssues = await jira.getRecentIssues()
     const webUI = jiraWebUI(context, {
       name: 'issues',
       height: 280,
@@ -42,6 +38,10 @@ export default function (context) {
         }
       }
     })
+    const jiraHost = getJiraHost()
+    const token = await getBearerToken()
+    const jira = new JIRA(jiraHost, token)
+    const recentIssues = await jira.getRecentIssues()
     webUI.eval(`window.issues=${JSON.stringify(recentIssues.issues)}`)
     webUI.eval('window.ready=true')
   })
