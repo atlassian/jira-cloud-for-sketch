@@ -11,6 +11,8 @@ parserOptions:
   ecmaFeatures:
     jsx: true
 globals:
+  NSClosableWindowMask: false
+  NSTitledWindowMask: false
   NSAlertFirstButtonReturn: false
   NSPasteboard: false
   NSDragPboard: false

@@ -7,11 +7,12 @@ export default function (context) {
   executeSafely(context, function () {
     const webUI = new WebUI(context, 'connect.html', {
       identifier: 'jira-sketch-plugin.connect',
-      height: 240,
-      width: 400,
+      height: 320,
+      width: 340,
       onlyShowCloseButton: true,
       hideTitleBar: false,
-      title: 'Connect to JIRA Cloud',
+      title: ' ',
+      styleMask: (NSTitledWindowMask | NSClosableWindowMask),
       handlers: {
         connectToJira (jiraUrl) {
           executeSafelyAsync(context, async function () {

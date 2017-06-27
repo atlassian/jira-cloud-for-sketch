@@ -11,12 +11,14 @@ class Connect extends Component {
   render () {
     return (
       <FormWrapper className='connect'>
+        <h3>Connect to JIRA Cloud</h3>
         <p>
-          Enter the URL of your JIRA Cloud instance and hit <b>Connect</b>.
-          You'll then be asked to authorize Sketch to act on your behalf.
+          Enter your JIRA Cloud details to connect the Sketch plugin.
         </p>
         <AkFieldText
-          ref={(jiraUrl) => { this.jiraUrl = jiraUrl }}
+          ref={jiraUrl => {
+            this.jiraUrl = jiraUrl
+          }}
           placeholder='sketchfan.atlassian.net'
           label='JIRA Cloud URL'
           onChange={event => this.setState({ jiraUrl: event.target.value })}
@@ -35,6 +37,10 @@ class Connect extends Component {
             Cancel
           </Button>
         </ButtonGroup>
+        <SubtleText>
+          After clicking Connect, you'll be asked to authorise Sketch with JIRA
+          to act on your behalf.
+        </SubtleText>
       </FormWrapper>
     )
   }
@@ -45,8 +51,13 @@ class Connect extends Component {
 }
 
 const FormWrapper = styled.form`
-  min-width: 370px;
-  padding: 10px;
+  min-width: 300px;
+  padding: 15px 20px 20px 20px;
+`
+
+const SubtleText = styled.p`
+  font-size: 12px;
+  color: #7a869a;
 `
 
 ReactDOM.render(<Connect />, document.getElementById('container'))
