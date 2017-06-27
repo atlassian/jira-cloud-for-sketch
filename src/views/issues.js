@@ -1,5 +1,5 @@
 import '../defaultImports'
-import WebUI from 'sketch-module-web-view'
+import jiraWebUI from '../jira-webui'
 import { executeSafely, executeSafelyAsync, openInBrowser } from '../util'
 import { isAuthorized, getBearerToken, getJiraHost } from '../auth'
 import JIRA from '../jira'
@@ -14,14 +14,10 @@ export default function (context) {
     const token = await getBearerToken()
     const jira = new JIRA(jiraHost, token)
     const recentIssues = await jira.getRecentIssues()
-
-    const webUI = new WebUI(context, 'issues.html', {
-      identifier: 'jira-sketch-plugin.issues',
+    const webUI = jiraWebUI(context, {
+      name: 'issues',
       height: 280,
       width: 600,
-      onlyShowCloseButton: true,
-      hideTitleBar: false,
-      title: 'Recent Issues',
       handlers: {
         openInBrowser (url) {
           executeSafely(context, function () {

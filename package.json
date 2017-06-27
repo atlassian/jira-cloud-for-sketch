@@ -58,6 +58,7 @@
     "atlassian-jwt": "^0.1.5",
     "babel-polyfill": "^6.23.0",
     "cocoascript-class": "^0.1.2",
+    "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "query-string": "^4.3.4",
     "react": "^15.5.4",
