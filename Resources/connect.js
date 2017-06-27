@@ -16,7 +16,7 @@ class Connect extends Component {
           You'll then be asked to authorize Sketch to act on your behalf.
         </p>
         <AkFieldText
-          ref='jiraUrl'
+          ref={(jiraUrl) => { this.jiraUrl = jiraUrl }}
           placeholder='sketchfan.atlassian.net'
           label='JIRA Cloud URL'
           onChange={event => this.setState({ jiraUrl: event.target.value })}
@@ -40,7 +40,7 @@ class Connect extends Component {
   }
 
   componentDidMount () {
-    this.refs.jiraUrl.focus()
+    this.jiraUrl.focus()
   }
 }
 
