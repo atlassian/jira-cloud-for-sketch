@@ -1,15 +1,18 @@
 import '../defaultImports'
 import WebUI from 'sketch-module-web-view'
 import { executeSafely, executeSafelyAsync, openInBrowser } from '../util'
-import { getBearerToken, getJiraHost } from '../auth'
+import { isAuthorized, getBearerToken, getJiraHost } from '../auth'
 import JIRA from '../jira'
+import Connect from './connect'
 
 export default function (context) {
   executeSafelyAsync(context, async function () {
-    const token = await getBearerToken()
+    if (!isAuthorized()) {
+      return Connect(context)
+    }
     const jiraHost = getJiraHost()
+    const token = await getBearerToken()
     const jira = new JIRA(jiraHost, token)
-
     const recentIssues = await jira.getRecentIssues()
 
     const webUI = new WebUI(context, 'issues.html', {
