@@ -53,6 +53,7 @@
     "@atlaskit/lozenge": "^3.0.2",
     "atlassian-jwt": "^0.1.5",
     "babel-polyfill": "^6.23.0",
+    "cocoascript-class": "^0.1.2",
     "css-loader": "^0.28.3",
     "eslint-config-sketch": "^0.2.2",
     "eslint-config-standard-react": "^5.0.0",
