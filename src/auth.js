@@ -8,6 +8,7 @@ import prefs, { keys } from './prefs'
 import queryString from 'query-string'
 import jwt from 'atlassian-jwt'
 import moment from 'moment'
+import URL from 'url-parse'
 
 export async function getSketchClientDetails () {
   if (!prefs.isSet(keys.clientId, keys.sharedSecret)) {
@@ -29,7 +30,7 @@ export async function getSketchClientDetails () {
 }
 
 export async function authorizeSketchForJira (context, jiraUrl) {
-  const jiraHost = jiraUrl // TODO extract hostname from URL
+  const jiraHost = parseHostname(jiraUrl)
   // for now, let's clear existing auth details if they hit the 'Connect' button in the Sketch client
   prefs.unset(keys.jiraHost, keys.clientId, keys.sharedSecret)
   const clientDetails = await getSketchClientDetails()
@@ -80,4 +81,14 @@ export async function getBearerToken () {
 
 export function getJiraHost () {
   return prefs.getString(keys.jiraHost)
+}
+
+function parseHostname (partialUrl) {
+  if (!partialUrl) {
+    throw new Error('Blank url')
+  }
+  if (partialUrl.indexOf('://') == -1) {
+    partialUrl = 'https://' + partialUrl
+  }
+  return new URL(partialUrl).hostname
 }
