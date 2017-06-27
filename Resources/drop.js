@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import pluginCall from 'sketch-module-web-view/client'
-import styled from 'styled-components'
 
 class DropZone extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.dragEnter = this.dragEnter.bind(this)
     this.dragLeave = this.dragLeave.bind(this)
@@ -14,36 +12,35 @@ class DropZone extends Component {
       dragHover: false
     }
   }
-  dragEnter(event) {
-    this.setState({dragHover: true})
+  dragEnter (event) {
+    this.setState({ dragHover: true })
     // event.dataTransfer.dropEffect = "copy"
   }
-  dragLeave(event) {
-    this.setState({dragHover: false})
+  dragLeave (event) {
+    this.setState({ dragHover: false })
   }
-  dragStart(event) {
+  dragStart (event) {
     // event.dataTransfer.effectAllowed = "copy"
   }
-  drop(event) {
+  drop (event) {
     var files = event.dataTransfer.files
     console.log(event.dataTransfer)
     for (var i = 0; i < files.length; i++) {
-        console.log(" File " + i + ":\n(" + (typeof files[i]) + ") : <" + files[i] + " > " +
-          files[i].name + " " + files[i].size + "\n")
+      console.log(`File ${i}: ${files[i].name} ${files[i].size}`)
     }
-    this.setState({dragHover: false})
+    this.setState({ dragHover: false })
     event.preventDefault()
   }
-  preventDefault(event) {
+  preventDefault (event) {
     event.preventDefault()
   }
-  render(props) {
+  render (props) {
     var style = {
-        height: "160px",
-        textAlign: "center"
+      height: '160px',
+      textAlign: 'center'
     }
     if (this.state.dragHover) {
-      style.backgroundColor = "cyan"
+      style.backgroundColor = 'cyan'
     }
     return (
       <div
@@ -53,7 +50,9 @@ class DropZone extends Component {
         onDragLeave={this.dragLeave}
         onDragStart={this.dragStart}
         onDragOver={this.preventDefault}
-        onDropCapture={this.drop}>Drop here!
+        onDropCapture={this.drop}
+      >
+        Drop here!
       </div>
     )
   }

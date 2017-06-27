@@ -41,7 +41,5 @@
   "homepage": "https://bitbucket.org/tpettersen/jira-sketch-plugin#readme",
   "name": "jira-for-sketch",
   "disableCocoaScriptPreprocessor": true,
-  "appcast": "https://raw.githubusercontent.com//master/.appcast.xml",
-  "author": "Tim Pettersen",
-  "email": "tim@atlassian.com"
+  "appcast": "https://raw.githubusercontent.com//master/.appcast.xml"
 }
