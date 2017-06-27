@@ -9,19 +9,19 @@
       "shortcut": "cmd alt k"
     },
     {
-      "name": "Recent issues",
+      "name": "View Issues",
       "identifier": "issues",
       "script": "issues.js",
       "shortcut": "cmd alt j"
     },
     {
-      "name": "Export to JIRA",
+      "name": "Export Selection",
       "identifier": "export",
       "script": "export.js",
       "shortcut": "cmd alt ;"
     },
     {
-      "name": "Test action",
+      "name": "Test Action",
       "identifier": "test",
       "script": "test.js",
       "shortcut": "cmd alt b"
