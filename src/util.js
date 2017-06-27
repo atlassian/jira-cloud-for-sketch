@@ -1,8 +1,11 @@
 import { tempDirName } from './config'
 
 export function setIconForAlert (context, alert) {
-  alert.setIcon(NSImage.alloc().initWithContentsOfFile(
-    context.plugin.urlForResourceNamed('jira.png').path()))
+  alert.setIcon(
+    NSImage.alloc().initWithContentsOfFile(
+      context.plugin.urlForResourceNamed('jira.png').path()
+    )
+  )
 }
 
 export function executeSafely (context, func) {
@@ -41,18 +44,18 @@ export function openInBrowser (urlString) {
   NSWorkspace.sharedWorkspace().openURL(url)
 }
 
-export function tempDir(name) {
-  var tmp = NSTemporaryDirectory() + tempDirName + "/"
+export function tempDir (name) {
+  var tmp = NSTemporaryDirectory() + tempDirName + '/'
   if (name) {
-    tmp += name + "/"
+    tmp += name + '/'
   }
   return tmp
 }
 
-export function extractFilenameFromPath(path) {
-  var slashIndex = path.lastIndexOf("/")
+export function extractFilenameFromPath (path) {
+  var slashIndex = path.lastIndexOf('/')
   if (slashIndex == path.length - 1) {
-    throw new Error("Expected file path but received: " + path)
+    throw new Error(`Expected file path but received: ${path}`)
   } else if (slashIndex > -1) {
     return path.substring(slashIndex + 1)
   } else {

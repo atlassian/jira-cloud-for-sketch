@@ -1,4 +1,4 @@
-export default function multipartPost(url, auth, filepath, filename) {
+export default function multipartPost (url, auth, filepath, filename) {
   var task = NSTask.alloc().init()
 
   /*
@@ -27,21 +27,17 @@ export default function multipartPost(url, auth, filepath, filename) {
     [1]: http://sketchplugins.com/d/164-working-with-a-framework-using-swift/7
     [2]: http://nthn.me/posts/2012/objc-multipart-forms.html
   */
-  task.setLaunchPath("/usr/bin/curl")
+  task.setLaunchPath('/usr/bin/curl')
 
   var args = NSArray.arrayWithObjects(
-      "-v", "-S",
-      "-X", "POST",
-      "-H", "X-Atlassian-Token: no-check",
-      "-H", "Authorization: " + auth,
-      "-F", "file=@" + filepath + ";filename=" + encodeFilename(filename),
-      url)
-
-  // console.log('/usr/bin/curl -v -S -X POST' +
-  //             ' -H "X-Atlassian-Token: no-check"' +
-  //             ' -H "Authorization: ' + auth + '"' +
-  //             ' -F file=@' + filepath + ';filename=' + encodeFilename(filename) +
-  //             ' ' + url)
+    '-v',
+    '-S',
+    '-X', 'POST',
+    '-H', 'X-Atlassian-Token: no-check',
+    '-H', `Authorization: ${auth}`,
+    '-F', `file=@${filepath};filename=${encodeFilename(filename)}`,
+    url
+  )
 
   task.setArguments(args)
 
@@ -53,14 +49,17 @@ export default function multipartPost(url, auth, filepath, filename) {
   // var outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
   var outputData = outputPipe.fileHandleForReading().readDataToEndOfFile()
   // var outputString = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding]];
-  var outputString = NSString.alloc().initWithData_encoding_(outputData, NSUTF8StringEncoding)
+  var outputString = NSString.alloc().initWithData_encoding_(
+    outputData,
+    NSUTF8StringEncoding
+  )
   return outputString
 }
 
 // with respect to curl
-function encodeFilename(filename) {
+function encodeFilename (filename) {
   // CocoaScript has issues with inline regexps containing square brackets
   // http://mail.sketchplugins.com/pipermail/dev_sketchplugins.com/2014-October/000734.html
-  var badFilenameChars = new RegExp("[,;]", "g")
-  return filename.replace(badFilenameChars, "_");
+  var badFilenameChars = new RegExp('[,;]', 'g')
+  return filename.replace(badFilenameChars, '_')
 }

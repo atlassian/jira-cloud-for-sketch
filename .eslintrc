@@ -12,3 +12,6 @@ parserOptions:
     jsx: true
 globals:
   NSAlertFirstButtonReturn: false
+  NSPasteboard: false
+  NSDragPboard: false
+  NSTemporaryDirectory: false
