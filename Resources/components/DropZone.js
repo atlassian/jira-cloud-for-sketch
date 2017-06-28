@@ -12,15 +12,25 @@ export default class DropZone extends Component {
     this.dragStart = this.dragStart.bind(this)
     this.drop = this.drop.bind(this)
     this.state = {
-      dragHover: false
+      /*
+      Tracks whether the user is currently dragging an item over the DropZone.
+      Since children of the DropZone trigger their own drag events,
+      we keep a count of dragEnter vs dragLeave and remove the drag hover effect
+      when the counter falls to zero.
+      */
+      dragHover: 0
     }
   }
   dragEnter (event) {
-    this.setState({ dragHover: true })
+    this.setState(function (prevState) {
+      return { dragHover: prevState.dragHover + 1 }
+    })
     // event.dataTransfer.dropEffect = "copy"
   }
   dragLeave (event) {
-    this.setState({ dragHover: false })
+    this.setState(function (prevState) {
+      return { dragHover: prevState.dragHover - 1 }
+    })
   }
   dragStart (event) {
     // event.dataTransfer.effectAllowed = "copy"
@@ -49,14 +59,13 @@ export default class DropZone extends Component {
       display: 'flex',
       alignItems: 'center'
     }
-    if (this.state.dragHover) {
+    if (this.state.dragHover > 0) {
       style.borderWidth = '3px'
       style.padding = '1px'
       style.borderColor = '#ffab00'
     }
     return (
       <div
-        draggable='true'
         style={style}
         onDragEnter={this.dragEnter}
         onDragLeave={this.dragLeave}
