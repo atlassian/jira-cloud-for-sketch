@@ -62,3 +62,12 @@ export function extractFilenameFromPath (path) {
     return path
   }
 }
+
+export function normalizeFilepath (path) {
+  // TODO there's probably a better way to do this
+  if (path.indexOf('file://') == 0) {
+    path = path.substring('file://'.length)
+    path = decodeURIComponent(path)
+  }
+  return path
+}

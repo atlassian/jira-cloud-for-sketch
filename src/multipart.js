@@ -1,3 +1,5 @@
+import { trace } from './logger'
+
 export default function multipartPost (url, auth, filepath, filename) {
   var task = NSTask.alloc().init()
 
@@ -38,6 +40,8 @@ export default function multipartPost (url, auth, filepath, filename) {
     '-F', `file=@${filepath};filename=${encodeFilename(filename)}`,
     url
   )
+
+  trace('curl ' + args.join(' '))
 
   task.setArguments(args)
 

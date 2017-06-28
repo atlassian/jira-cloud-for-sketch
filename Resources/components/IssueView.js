@@ -22,8 +22,8 @@ export default class IssueView extends Component {
   }
   handleDrop (event) {
     /*
-    Dragged files are captured a WebView uiDelegate, so we can determine their
-    location on disk. We only pass back the issue they were dropped onto.
+    Dragged files are looked up from the system pasteboard so we can determine
+    their location on disk. We only pass back the issue they were dropped onto.
     */
     pluginCall('uploadDroppedFiles', this.props.issue.key)
   }
