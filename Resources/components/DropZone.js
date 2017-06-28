@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import AddIcon from '@atlaskit/icon/glyph/add'
 import '@atlaskit/css-reset'
 
 export default class DropZone extends Component {
@@ -39,9 +40,8 @@ export default class DropZone extends Component {
   render (props) {
     var style = {
       height: '40px',
-      textAlign: 'center',
       marginTop: '10px',
-      padding: '5px',
+      padding: '3px',
       borderRadius: '3px',
       borderStyle: 'dashed',
       borderWidth: '1px',
@@ -50,9 +50,8 @@ export default class DropZone extends Component {
       alignItems: 'center'
     }
     if (this.state.dragHover) {
-      style.color = '#707070'
       style.borderWidth = '3px'
-      style.padding = '3px'
+      style.padding = '1px'
       style.borderColor = '#ffab00'
     }
     return (
@@ -65,8 +64,27 @@ export default class DropZone extends Component {
         onDragOver={this.preventDefault}
         onDropCapture={this.drop}
       >
-        <div>Drag artboards and layers here</div>
+        <AddIconWrapper>
+          <AddIcon size='medium' color='#7a869a' label='Upload to JIRA' />
+        </AddIconWrapper>
+        <TextDiv>Drag artboards and layers here</TextDiv>
       </div>
     )
   }
 }
+
+const AddIconWrapper = styled.div`
+  width: 39px;
+  height: 39px;
+  background-color: #b7b7b7;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 3px;
+`
+
+const TextDiv = styled.div`
+  margin-left: 10px;
+  color: #7a869a;
+  font-size: 12px;
+`
