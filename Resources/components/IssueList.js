@@ -123,7 +123,9 @@ IssueKeyField.propTypes = {
 }
 
 const KeyDiv = styled.div`
-  width: 70px;
+  width: 60px;
+  font-size: 12px;
+  color: #7a869a;
 `
 
 class IssueSummaryField extends Component {
@@ -146,6 +148,7 @@ const SummaryDiv = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 280px;
+  width: 285px;
+  margin-right: 5px;
 `
 

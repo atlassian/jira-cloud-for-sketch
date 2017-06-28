@@ -24,9 +24,7 @@ IssueView.propTypes = {
 
 class BackButton extends Component {
   render () {
-    return (
-      <ClickableH3 onClick={this.props.onClose}>&lt; Back</ClickableH3>
-    )
+    return <ClickableH3 onClick={this.props.onClose}>&lt; Back</ClickableH3>
   }
 }
 
@@ -99,9 +97,7 @@ const KeyAndAvatarWrapper = styled.div`
 class IssueType extends Component {
   render () {
     var type = this.props.type
-    return (
-      <img src={type.iconUrl} title={type.name} />
-    )
+    return <img src={type.iconUrl} title={type.name} />
   }
 }
 
@@ -116,7 +112,9 @@ class IssueKey extends Component {
   }
   render () {
     return (
-      <IssueKeyLink onClick={this.handleClick}>{this.props.issue.key}</IssueKeyLink>
+      <IssueKeyLink onClick={this.handleClick} title='Open issue in browser'>
+        {this.props.issue.key}
+      </IssueKeyLink>
     )
   }
   handleClick () {
@@ -133,15 +131,16 @@ IssueKey.propTypes = {
   issue: PropTypes.object.isRequired
 }
 
-const IssueKeyLink = styled.a`
+const IssueKeyLink = styled.div`
+  cursor: pointer;
   margin-right: 10px;
+  color: #7a869a;
+  font-size: 12px;
 `
 
 class DropZone extends Component {
   render () {
-    return (
-      <DropZoneDiv>DropZone</DropZoneDiv>
-    )
+    return <DropZoneDiv>DropZone</DropZoneDiv>
   }
 }
 
