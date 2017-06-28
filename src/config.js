@@ -1,3 +1,5 @@
+export const OFFLINE_DEV = true
+
 export const pluginName = 'jira-sketch-plugin'
 export const tempDirName = pluginName
 

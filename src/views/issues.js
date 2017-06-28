@@ -4,8 +4,7 @@ import { executeSafely, executeSafelyAsync, openInBrowser } from '../util'
 import { isAuthorized, getBearerToken, getJiraHost } from '../auth'
 import JIRA from '../jira'
 import Connect from './connect'
-
-const OFFLINE_DEV = true
+import { OFFLINE_DEV } from '../config'
 
 export default function (context) {
   executeSafelyAsync(context, async function () {
