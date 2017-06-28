@@ -36,11 +36,7 @@ export default class DropZone extends Component {
     // event.dataTransfer.effectAllowed = "copy"
   }
   drop (event) {
-    var files = event.dataTransfer.files
-    console.log(event.dataTransfer)
-    for (var i = 0; i < files.length; i++) {
-      console.log(`File ${i}: ${files[i].name} ${files[i].size}`)
-    }
+    this.props.onDrop(event)
     this.setState({ dragHover: false })
     event.preventDefault()
   }
@@ -80,6 +76,10 @@ export default class DropZone extends Component {
       </div>
     )
   }
+}
+
+DropZone.propTypes = {
+  onDrop: PropTypes.func.isRequired
 }
 
 const AddIconWrapper = styled.div`

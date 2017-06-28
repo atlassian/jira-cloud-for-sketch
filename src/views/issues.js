@@ -5,15 +5,19 @@ import { isAuthorized, getBearerToken, getJiraHost } from '../auth'
 import JIRA from '../jira'
 import Connect from './connect'
 import { OFFLINE_DEV } from '../config'
+import DragUIDelegate from '../dragndrop-uidelegate'
 
 export default function (context) {
   executeSafelyAsync(context, async function () {
     if (!OFFLINE_DEV && !isAuthorized()) {
       return Connect(context)
     }
+    var filesToUpload = []
     const webUI = jiraWebUI(context, {
       name: 'issues',
-      background: MSImmutableColor.colorWithSVGString('#e7e7e7').NSColorWithColorSpace(null),
+      background: MSImmutableColor.colorWithSVGString(
+        '#e7e7e7'
+      ).NSColorWithColorSpace(null),
       height: 320,
       width: 450,
       handlers: {
@@ -22,24 +26,22 @@ export default function (context) {
             openInBrowser(url)
           })
         },
-        viewIssue (key) {
+        uploadDroppedFiles (key) {
           executeSafely(context, function () {
-            var app = NSApp.delegate()
-            app.refreshCurrentDocument()
-            webUI.panel.close()
-            context.document.showMessage(`Viewing issue '${key}'`)
-          })
-        },
-        exportAssets (key) {
-          executeSafely(context, function () {
-            var app = NSApp.delegate()
-            app.refreshCurrentDocument()
-            webUI.panel.close()
-            context.document.showMessage(`Exported assets to '${key}'`)
+            var noun = filesToUpload.length == 1 ? 'attachment' : 'attachments'
+            context.document.showMessage(
+              `Uploading ${filesToUpload.length} ${noun} to ${key}`
+            )
           })
         }
       }
     })
+    var uiDelegate = DragUIDelegate(context, function (draggedFiles) {
+      console.log('Dragged files')
+      console.log(draggedFiles)
+      filesToUpload = draggedFiles
+    })
+    webUI.webView.setUIDelegate_(uiDelegate.new())
     var recentIssues
     if (OFFLINE_DEV) {
       recentIssues = require('../mock-issues.json')
