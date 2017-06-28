@@ -5,9 +5,11 @@ import { isAuthorized, getBearerToken, getJiraHost } from '../auth'
 import JIRA from '../jira'
 import Connect from './connect'
 
+const OFFLINE_DEV = true
+
 export default function (context) {
   executeSafelyAsync(context, async function () {
-    if (!isAuthorized()) {
+    if (!OFFLINE_DEV && !isAuthorized()) {
       return Connect(context)
     }
     const webUI = jiraWebUI(context, {
@@ -39,10 +41,15 @@ export default function (context) {
         }
       }
     })
-    const jiraHost = getJiraHost()
-    const token = await getBearerToken()
-    const jira = new JIRA(jiraHost, token)
-    const recentIssues = await jira.getRecentIssues()
+    var recentIssues
+    if (OFFLINE_DEV) {
+      recentIssues = require('../mock-issues.json')
+    } else {
+      const jiraHost = getJiraHost()
+      const token = await getBearerToken()
+      const jira = new JIRA(jiraHost, token)
+      recentIssues = await jira.getRecentIssues()
+    }
     webUI.eval(`window.issues=${JSON.stringify(recentIssues.issues)}`)
     webUI.eval('window.ready=true')
   })
