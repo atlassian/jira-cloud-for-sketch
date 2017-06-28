@@ -15,7 +15,7 @@ export default class IssueList extends Component {
       list = (
         <div>
           {this.props.issues.map(issue => (
-            <Issue key={issue.key} issue={issue} />
+            <Issue key={issue.key} issue={issue} onSelectIssue={this.props.onSelectIssue} />
           ))}
         </div>
       )
@@ -32,8 +32,9 @@ export default class IssueList extends Component {
 }
 
 IssueList.propTypes = {
-  ready: PropTypes.bool.isRequired,
-  issues: PropTypes.array.isRequired
+  ready: PropTypes.bool,
+  issues: PropTypes.array.isRequired,
+  onSelectIssue: PropTypes.func.isRequired
 }
 
 const ScrollDiv = styled.div`
@@ -47,7 +48,7 @@ class Issue extends Component {
   render () {
     var issue = this.props.issue
     return (
-      <IssueDiv>
+      <IssueDiv onClick={() => { this.props.onSelectIssue(issue) }}>
         <IssueTypeField type={issue.fields.issuetype} />
         <IssueKeyField issueKey={issue.key} />
         <IssueSummaryField summary={issue.fields.summary} />
@@ -58,7 +59,8 @@ class Issue extends Component {
 }
 
 Issue.propTypes = {
-  issue: PropTypes.object.isRequired
+  issue: PropTypes.object.isRequired,
+  onSelectIssue: PropTypes.func.isRequired
 }
 
 const IssueDiv = styled.div`
