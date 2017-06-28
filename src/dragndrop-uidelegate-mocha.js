@@ -1,9 +1,8 @@
-import ObjCClass from 'cocoascript-class'
+import MochaJSDelegate from './mocha-js-delegate'
 import { executeSafely } from './util'
 
 export default function (context, droppedFileCallback) {
-  return new ObjCClass({
-    superclass: Mocha,
+  return new MochaJSDelegate({
     'webView:willPerformDragDestinationAction:forDraggingInfo:' (webView) {
       executeSafely(context, function () {
         // This objective-c function is usually passed an action and
