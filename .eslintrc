@@ -18,3 +18,7 @@ globals:
   NSDragPboard: false
   NSTemporaryDirectory: false
   MSImmutableColor: false
+  MOClassDescription: false
+  NSUUID: false
+  NSClassFromString: false
+  NSSelectorFromString: false

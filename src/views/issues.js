@@ -5,14 +5,14 @@ import { isAuthorized, getBearerToken, getJiraHost } from '../auth'
 import JIRA from '../jira'
 import Connect from './connect'
 import { OFFLINE_DEV } from '../config'
-import DragUIDelegate from '../dragndrop-uidelegate'
+import { getDraggedFiles } from '../pasteboard'
 
 export default function (context) {
   executeSafelyAsync(context, async function () {
     if (!OFFLINE_DEV && !isAuthorized()) {
       return Connect(context)
     }
-    var filesToUpload = []
+    var uploadAttachment
     const webUI = jiraWebUI(context, {
       name: 'issues',
       background: MSImmutableColor.colorWithSVGString(
@@ -26,22 +26,23 @@ export default function (context) {
             openInBrowser(url)
           })
         },
-        uploadDroppedFiles (key) {
+        uploadDroppedFiles (issueKey) {
           executeSafely(context, function () {
+            var filesToUpload = getDraggedFiles()
             var noun = filesToUpload.length == 1 ? 'attachment' : 'attachments'
-            context.document.showMessage(
-              `Uploading ${filesToUpload.length} ${noun} to ${key}`
-            )
+            if (OFFLINE_DEV) {
+              context.document.showMessage(`Can't upload ${filesToUpload.length} ${noun} to ${issueKey} (offline)`)
+            } else {
+              context.document.showMessage(`Uploading ${filesToUpload.length} ${noun} to ${issueKey}`)
+              for (var i = 0; i < filesToUpload.length; i++) {
+                uploadAttachment(issueKey, filesToUpload[i])
+              }
+              context.document.showMessage(`Uploading to ${issueKey} complete`)
+            }
           })
         }
       }
     })
-    var uiDelegate = DragUIDelegate(context, function (draggedFiles) {
-      console.log('Dragged files')
-      console.log(draggedFiles)
-      filesToUpload = draggedFiles
-    })
-    webUI.webView.setUIDelegate_(uiDelegate.new())
     var recentIssues
     if (OFFLINE_DEV) {
       recentIssues = require('../mock-issues.json')
@@ -50,6 +51,10 @@ export default function (context) {
       const token = await getBearerToken()
       const jira = new JIRA(jiraHost, token)
       recentIssues = await jira.getRecentIssues()
+      uploadAttachment = async function (issueKey, filepath) {
+        console.log(`Uploading ${filepath} to ${issueKey}`)
+        await jira.uploadAttachment(issueKey, filepath)
+      }
     }
     webUI.eval(`window.issues=${JSON.stringify(recentIssues.issues)}`)
     webUI.eval('window.ready=true')
