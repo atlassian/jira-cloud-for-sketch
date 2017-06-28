@@ -12,8 +12,9 @@ export default function (context) {
     }
     const webUI = jiraWebUI(context, {
       name: 'issues',
-      height: 280,
-      width: 600,
+      background: MSImmutableColor.colorWithSVGString('#e7e7e7').NSColorWithColorSpace(null),
+      height: 320,
+      width: 450,
       handlers: {
         openInBrowser (url) {
           executeSafely(context, function () {

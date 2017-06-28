@@ -17,3 +17,4 @@ globals:
   NSPasteboard: false
   NSDragPboard: false
   NSTemporaryDirectory: false
+  MSImmutableColor: false

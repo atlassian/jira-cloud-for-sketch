@@ -30,25 +30,39 @@ class ViewIssuesPanel extends Component {
   render () {
     var ready = this.state.ready
     return (
-      <div>
+      <PanelWrapper>
         <h3>JIRA Issues</h3>
-        {ready
-          ? <IssueTable issues={this.state.issues} />
-          : <span>Loading...</span>}
-      </div>
+        <ScrollDiv>
+          {ready
+            ? <IssueTable issues={this.state.issues} />
+            : <span>Loading...</span>}
+        </ScrollDiv>
+      </PanelWrapper>
     )
   }
 }
+
+const PanelWrapper = styled.div`
+  min-width: 410px;
+  padding: 15px 5px 20px 20px;
+`
+
+const ScrollDiv = styled.div`
+  margin-top: 10px;
+  padding-right: 10px;
+  height: 220px;
+  overflow-y: scroll;
+`
 
 class IssueTable extends Component {
   render () {
     var issues = this.props.issues
     return (
-      <table>
-        <tbody>
+      <StyledTable>
+        <TableBody>
           {issues.map(issue => <IssueRow key={issue.key} issue={issue} />)}
-        </tbody>
-      </table>
+        </TableBody>
+      </StyledTable>
     )
   }
 }
@@ -57,16 +71,24 @@ IssueTable.propTypes = {
   issues: PropTypes.array.isRequired
 }
 
+const StyledTable = styled.table`
+  border-spacing: 0 3px;
+`
+
+const TableBody = styled.tbody`
+  border: none;
+`
+
 class IssueRow extends Component {
   render () {
     var issue = this.props.issue
     return (
-      <tr>
+      <TableRow>
         <IssueTypeField type={issue.fields.issuetype} />
         <IssueKeyField issueKey={issue.key} />
         <IssueSummaryField summary={issue.fields.summary} />
         <IssueAssigneeField assignee={issue.fields.assignee} />
-      </tr>
+      </TableRow>
     )
   }
 }
@@ -75,13 +97,21 @@ IssueRow.propTypes = {
   issue: PropTypes.object.isRequired
 }
 
+const TableRow = styled.tr`
+  cursor: pointer;
+  background: white;
+  &:hover {
+    background: #DEEBFF;
+  }
+`
+
 class IssueTypeField extends Component {
   render () {
     var type = this.props.type
     return (
-      <td>
-        <img src={type.iconUrl} title={type.name} />
-      </td>
+      <TypeCell>
+        <TypeImg src={type.iconUrl} title={type.name} />
+      </TypeCell>
     )
   }
 }
@@ -99,6 +129,20 @@ IssueTypeField.propTypes = {
   */
   type: PropTypes.object.isRequired
 }
+
+const TypeCell = styled.td`
+  &:first-child {
+    border-radius: 3px 0 0 3px;
+  }
+  &:last-child {
+    border-radius: 0 3px 3px 0;
+  }
+`
+
+const TypeImg = styled.img`
+  margin-top: 5px;
+  margin-left: 5px;
+`
 
 class IssueKeyField extends Component {
   render () {
@@ -120,7 +164,9 @@ class IssueSummaryField extends Component {
     var summary = this.props.summary
     return (
       <td>
-        {summary}
+        <div title={summary}>
+          {summary}
+        </div>
       </td>
     )
   }
@@ -133,10 +179,18 @@ IssueSummaryField.propTypes = {
 class IssueAssigneeField extends Component {
   render () {
     var assignee = this.props.assignee
-    var avatarUrl = assignee ? assignee.avatarUrls['24x24'] : null
+    var avatarUrl, title
+    if (assignee) {
+      avatarUrl = assignee.avatarUrls['24x24']
+      title = `Assigned to ${assignee.displayName || assignee.name}`
+    } else {
+      title = 'Unassigned'
+    }
     return (
       <td>
-        <Avatar src={avatarUrl} size='small' />
+        <AvatarWrapper title={title}>
+          <Avatar src={avatarUrl} size='small' label={title} />
+        </AvatarWrapper>
       </td>
     )
   }
@@ -163,5 +217,10 @@ IssueAssigneeField.propTypes = {
   */
   assignee: PropTypes.object
 }
+
+const AvatarWrapper = styled.div`
+  margin-top: 5px;
+  margin-right: 5px;
+`
 
 ReactDOM.render(<ViewIssuesPanel />, document.getElementById('container'))
