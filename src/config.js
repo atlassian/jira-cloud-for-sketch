@@ -1,4 +1,13 @@
-export const OFFLINE_DEV = true
+export const OFFLINE_DEV = false
+
+export const logLevels = {
+  TRACE: 10,
+  DEBUG: 20,
+  INFO: 30,
+  WARN: 40,
+  ERROR: 50
+}
+export const logLevel = logLevels.TRACE
 
 export const pluginName = 'jira-sketch-plugin'
 export const tempDirName = pluginName
