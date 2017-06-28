@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import pluginCall from 'sketch-module-web-view/client'
 import AssigneeAvatar from './AssigneeAvatar'
+import DropZone from './DropZone'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 
@@ -136,18 +137,4 @@ const IssueKeyLink = styled.div`
   margin-right: 10px;
   color: #7a869a;
   font-size: 12px;
-`
-
-class DropZone extends Component {
-  render () {
-    return <DropZoneDiv>DropZone</DropZoneDiv>
-  }
-}
-
-const DropZoneDiv = styled.div`
-  margin-top: 10px;
-  padding: 4px;
-  height: 40px;
-  border-radius: 3px;
-  border: dashed 1px gray;
 `
