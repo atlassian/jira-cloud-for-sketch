@@ -4,6 +4,7 @@ import { authorizeSketchForJira } from '../auth'
 import jiraWebUI from '../jira-webui'
 
 export default function (context) {
+  // TODO should close any other open views before allowing the user to reconnect!
   executeSafely(context, function () {
     const webUI = jiraWebUI(context, {
       name: 'connect',
