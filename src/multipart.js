@@ -1,4 +1,5 @@
 import { trace } from './logger'
+import MultipartObserver from './multipart-observer'
 
 export default function multipartPost (url, auth, filepath, filename) {
   var task = NSTask.alloc().init()
@@ -45,19 +46,44 @@ export default function multipartPost (url, auth, filepath, filename) {
 
   task.setArguments(args)
 
-  // var outputPipe = [NSPipe pipe];
   var outputPipe = NSPipe.alloc().init()
-  // [task setStandardOutput:outputPipe];
   task.setStandardOutput(outputPipe)
-  task.launch()
-  // var outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
-  var outputData = outputPipe.fileHandleForReading().readDataToEndOfFile()
-  // var outputString = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding]];
-  var outputString = NSString.alloc().initWithData_encoding_(
-    outputData,
-    NSUTF8StringEncoding
-  )
-  return outputString
+
+  return new Promise(function (resolve, reject) {
+    try {
+      task.launch()
+
+      var fileHandle = outputPipe.fileHandleForReading()
+      var notificationCenter = NSNotificationCenter.defaultCenter()
+
+      var observer = MultipartObserver({
+        fileHandleReadToEndOfFileCompletion () {
+          var outputData = fileHandle.availableData()
+          var outputString = NSString.alloc().initWithData_encoding_(
+            outputData,
+            NSUTF8StringEncoding
+          )
+          trace(`curl output\n${outputString}`)
+          resolve(outputString)
+        }
+      }).new()
+      notificationCenter.addObserver_selector_name_object(
+        observer,
+        'fileHandleReadToEndOfFileCompletion:',
+        NSFileHandleReadToEndOfFileCompletionNotification,
+        fileHandle
+      )
+      notificationCenter.addObserver_selector_name_object(
+        observer,
+        'taskDidTerminate:',
+        NSTaskDidTerminateNotification,
+        task
+      )
+      fileHandle.readToEndOfFileInBackgroundAndNotify()
+    } catch (e) {
+      reject(e)
+    }
+  })
 }
 
 // with respect to curl

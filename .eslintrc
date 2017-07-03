@@ -22,3 +22,6 @@ globals:
   NSUUID: false
   NSClassFromString: false
   NSSelectorFromString: false
+  NSNotificationCenter: false
+  NSTaskDidTerminateNotification: false
+  NSFileHandleReadToEndOfFileCompletionNotification: false
