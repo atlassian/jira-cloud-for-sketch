@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import DropdownMenu from '@atlaskit/dropdown-menu'
 import AssigneeAvatar from './AssigneeAvatar'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
@@ -15,14 +16,21 @@ export default class IssueList extends Component {
       list = (
         <div>
           {this.props.issues.map(issue => (
-            <Issue key={issue.key} issue={issue} onSelectIssue={this.props.onSelectIssue} />
+            <Issue
+              key={issue.key}
+              issue={issue}
+              onSelectIssue={this.props.onSelectIssue}
+            />
           ))}
         </div>
       )
     }
     return (
       <div>
-        <h3>JIRA Issues</h3>
+        <HeaderDiv>
+          <h3>JIRA Issues</h3>
+          <IssueFilter />
+        </HeaderDiv>
         <ScrollDiv>
           {list}
         </ScrollDiv>
@@ -37,6 +45,13 @@ IssueList.propTypes = {
   onSelectIssue: PropTypes.func.isRequired
 }
 
+const HeaderDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 10px;
+`
+
 const ScrollDiv = styled.div`
   margin-top: 10px;
   padding-right: 10px;
@@ -44,11 +59,39 @@ const ScrollDiv = styled.div`
   overflow-y: scroll;
 `
 
+class IssueFilter extends Component {
+  render () {
+    return (
+      <DropdownMenu
+        items={[
+          {
+            items: [
+              { content: 'Recently viewed' },
+              { content: 'Assigned to me' },
+              { content: '@mentioning me' }
+            ]
+          }
+        ]}
+        triggerButtonProps={{ appearance: 'primary' }}
+        triggerType='button'
+        position='bottom right'
+        shouldFlip={false}
+      >
+        Filter
+      </DropdownMenu>
+    )
+  }
+}
+
 class Issue extends Component {
   render () {
     var issue = this.props.issue
     return (
-      <IssueDiv onClick={() => { this.props.onSelectIssue(issue) }}>
+      <IssueDiv
+        onClick={() => {
+          this.props.onSelectIssue(issue)
+        }}
+      >
         <IssueTypeField type={issue.fields.issuetype} />
         <IssueKeyField issueKey={issue.key} />
         <IssueSummaryField summary={issue.fields.summary} />
@@ -151,4 +194,3 @@ const SummaryDiv = styled.div`
   width: 285px;
   margin-right: 5px;
 `
-
