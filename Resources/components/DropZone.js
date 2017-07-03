@@ -18,8 +18,37 @@ export default class DropZone extends Component {
       we keep a count of dragEnter vs dragLeave and remove the drag hover effect
       when the counter falls to zero.
       */
-      dragHover: 0
+      dragHover: 0,
+      uploadsComplete: 0,
+      uploadsTotal: 0
     }
+    window.addEventListener('jira.upload.queued', event => {
+      if (event.detail.issueKey == this.props.issueKey) {
+        this.setState(function (prevState) {
+          if (prevState.uploadsTotal == prevState.uploadsComplete) {
+            // if all pending uploads are complete, reset the counters
+            return {
+              uploadsTotal: event.detail.count,
+              uploadsComplete: 0
+            }
+          } else {
+            // otherwise update the current total
+            return {
+              uploadsTotal: prevState.uploadsTotal + event.detail.count
+            }
+          }
+        })
+      }
+    })
+    window.addEventListener('jira.upload.complete', event => {
+      if (event.detail.issueKey == this.props.issueKey) {
+        this.setState(function (prevState) {
+          return {
+            uploadsComplete: prevState.uploadsComplete + event.detail.count
+          }
+        })
+      }
+    })
   }
   dragEnter (event) {
     this.setState(function (prevState) {
@@ -60,6 +89,22 @@ export default class DropZone extends Component {
       style.padding = '1px'
       style.borderColor = '#ffab00'
     }
+    var text
+    if (this.state.uploadsTotal == 0) {
+      text = 'Drag artboards and layers here'
+    } else if (this.state.uploadsComplete == this.state.uploadsTotal) {
+      if (this.state.uploadsComplete == 1) {
+        text = 'Uploaded 1 file'
+      } else {
+        text = `Uploaded ${this.state.uploadsComplete} of ${this.state.uploadsTotal} files`
+      }
+    } else {
+      if (this.state.uploadsTotal == 1) {
+        text = 'Uploading 1 file...'
+      } else {
+        text = `Uploading ${this.state.uploadsComplete + 1} of ${this.state.uploadsTotal} files...`
+      }
+    }
     return (
       <div
         style={style}
@@ -72,13 +117,14 @@ export default class DropZone extends Component {
         <AddIconWrapper>
           <AddIcon size='medium' color='#7a869a' label='Upload to JIRA' />
         </AddIconWrapper>
-        <TextDiv>Drag artboards and layers here</TextDiv>
+        <TextDiv>{text}</TextDiv>
       </div>
     )
   }
 }
 
 DropZone.propTypes = {
+  issueKey: PropTypes.string.isRequired,
   onDrop: PropTypes.func.isRequired
 }
 

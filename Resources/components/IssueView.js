@@ -16,7 +16,7 @@ export default class IssueView extends Component {
       <div>
         <BackButton onClose={this.props.onClose} />
         <IssueSummary issue={this.props.issue} />
-        <DropZone onDrop={this.handleDrop} />
+        <DropZone issueKey={this.props.issue.key} onDrop={this.handleDrop} />
       </div>
     )
   }

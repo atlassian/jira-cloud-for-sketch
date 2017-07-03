@@ -1,6 +1,11 @@
 import '../defaultImports'
 import jiraWebUI from '../jira-webui'
-import { executeSafely, executeSafelyAsync, openInBrowser, normalizeFilepath } from '../util'
+import {
+  executeSafely,
+  executeSafelyAsync,
+  openInBrowser,
+  normalizeFilepath
+} from '../util'
 import { isAuthorized, getBearerToken, getJiraHost } from '../auth'
 import JIRA from '../jira'
 import Connect from './connect'
@@ -62,19 +67,34 @@ export default async function (context) {
         var files = uploadRequest.files
         var noun = files.length == 1 ? 'attachment' : 'attachments'
         if (OFFLINE_DEV) {
-          context.document.showMessage(`Can't upload ${files.length} ${noun} to ${issueKey} (offline)`)
+          context.document.showMessage(
+            `Can't upload ${files.length} ${noun} to ${issueKey} (offline)`
+          )
         } else {
+          dispatchWindowEvent(webUI, 'jira.upload.queued', {
+            issueKey: issueKey,
+            count: files.length
+          })
           for (var i = 0; i < files.length; i++) {
             var filepath = files[i]
             filepath = normalizeFilepath(filepath)
             var resp = await jira.uploadAttachment(issueKey, filepath)
             trace(resp)
+            dispatchWindowEvent(webUI, 'jira.upload.complete', {
+              issueKey: issueKey,
+              count: 1
+            })
           }
-          context.document.showMessage(`Uploaded ${files.length} ${noun} to ${issueKey}`)
         }
       }
     }
-
     setInterval(processUploadRequests, 100)
   })
+}
+
+function dispatchWindowEvent (webUI, eventName, eventDetail) {
+  var eventJson = JSON.stringify({ detail: eventDetail })
+  webUI.eval(
+    `window.dispatchEvent(new CustomEvent('${eventName}', ${eventJson}))`
+  )
 }
