@@ -1,17 +1,18 @@
-import '../defaultImports'
-import jiraWebUI from '../jira-webui'
+import '../../defaultImports'
+import jiraWebUI from '../../jira-webui'
 import {
   executeSafely,
   executeSafelyAsync,
   openInBrowser,
   normalizeFilepath
-} from '../util'
-import { isAuthorized } from '../auth'
-import Connect from './connect'
-import { getDraggedFiles } from '../pasteboard'
-import { trace } from '../logger'
-import { OFFLINE_DEV } from '../config'
-const JIRA = require(OFFLINE_DEV ? '../mock-jira' : '../jira')
+} from '../../util'
+import { isAuthorized } from '../../auth'
+import Connect from '../connect'
+import { getDraggedFiles } from '../../pasteboard'
+import { trace } from '../../logger'
+import Filters from './filters'
+import { OFFLINE_DEV } from '../../config'
+const JIRA = require(OFFLINE_DEV ? '../../mock-jira' : '../../jira')
 
 export default async function (context) {
   executeSafelyAsync(context, async function () {
@@ -19,12 +20,7 @@ export default async function (context) {
       return Connect(context)
     }
 
-    var jira = new JIRA()
-
-    var ready = false
     var uploadRequests = []
-    var nextFilterKey = null
-    var currentFilterKey = null
 
     const webUI = jiraWebUI(context, {
       name: 'issues',
@@ -35,7 +31,7 @@ export default async function (context) {
       width: 450,
       handlers: {
         onReady () {
-          ready = true
+          filters.onReady()
         },
         openInBrowser (url) {
           executeSafely(context, function () {
@@ -53,22 +49,13 @@ export default async function (context) {
           })
         },
         filterSelected (filterKey) {
-          nextFilterKey = filterKey
+          filters.onFilterChanged(filterKey)
         }
       }
     })
 
-    var checkOnReady = function () {
-      if (ready) {
-        nextFilterKey = 'recently-viewed'
-        dispatchWindowEvent(webUI, 'jira.filters.updated', {
-          filters: jira.jqlFilters,
-          filterSelected: nextFilterKey
-        })
-        /* only run once */
-        checkOnReady = function () {}
-      }
-    }
+    var jira = new JIRA()
+    var filters = new Filters(context, webUI, jira)
 
     var checkingActions = false
 
@@ -76,8 +63,6 @@ export default async function (context) {
       if (!checkingActions) {
         checkingActions = true
         executeSafelyAsync(context, async function () {
-          checkOnReady()
-          await checkNewFilter()
           await checkUploadRequests()
         })
         checkingActions = false
@@ -86,29 +71,12 @@ export default async function (context) {
 
     setInterval(checkActions, 100)
 
-    async function checkNewFilter () {
-      if (nextFilterKey) {
-        let loadingFilter = (currentFilterKey = nextFilterKey)
-        nextFilterKey = null
-        dispatchWindowEvent(webUI, 'jira.issues.loading', {
-          filterKey: loadingFilter
-        })
-        var issues = await jira.getFilteredIssues(loadingFilter)
-        // if another filter has been selected in the meantime, ignore this result
-        if (loadingFilter == currentFilterKey) {
-          dispatchWindowEvent(webUI, 'jira.issues.loaded', {
-            issues: issues
-          })
-        }
-      }
-    }
-
     async function checkUploadRequests () {
       if (uploadRequests.length > 0) {
         var uploadRequest = uploadRequests.pop()
         var issueKey = uploadRequest.issueKey
         var files = uploadRequest.files
-        dispatchWindowEvent(webUI, 'jira.upload.queued', {
+        webUI.dispatchWindowEvent('jira.upload.queued', {
           issueKey: issueKey,
           count: files.length
         })
@@ -117,7 +85,7 @@ export default async function (context) {
           filepath = normalizeFilepath(filepath)
           var resp = await jira.uploadAttachment(issueKey, filepath)
           trace(resp)
-          dispatchWindowEvent(webUI, 'jira.upload.complete', {
+          webUI.dispatchWindowEvent('jira.upload.complete', {
             issueKey: issueKey,
             count: 1
           })
@@ -125,11 +93,4 @@ export default async function (context) {
       }
     }
   })
-}
-
-function dispatchWindowEvent (webUI, eventName, eventDetail) {
-  var eventJson = JSON.stringify({ detail: eventDetail })
-  webUI.eval(
-    `window.dispatchEvent(new CustomEvent('${eventName}', ${eventJson}))`
-  )
 }

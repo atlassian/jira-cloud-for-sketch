@@ -11,5 +11,12 @@ export default function (context, options) {
     title: ' ',
     styleMask: (NSTitledWindowMask | NSClosableWindowMask)
   }, options)
-  return new WebUI(context, options.page, options)
+  var w = new WebUI(context, options.page, options)
+  w.dispatchWindowEvent = function (eventName, eventDetail) {
+    var eventJson = JSON.stringify({ detail: eventDetail })
+    w.eval(
+      `window.dispatchEvent(new CustomEvent('${eventName}', ${eventJson}))`
+    )
+  }
+  return w
 }

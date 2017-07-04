@@ -11,7 +11,7 @@
     {
       "name": "View Issues",
       "identifier": "issues",
-      "script": "issues.js",
+      "script": "index.js",
       "shortcut": "cmd alt j"
     },
     {
