@@ -1,4 +1,4 @@
-module.exports = {  
+module.exports = {
   module: {
     rules: [
       {
@@ -8,18 +8,33 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        use: 
-        { 
+        use: {
           loader: 'babel-loader',
-          options: 
-            { 
-              babelrc: false,
-              plugins: [ 'babel-plugin-add-module-exports' ],
-              presets: [ 'es2015', 'react', 'stage-1' ]
-            } 
-          } 
-      } 
-    ] 
+          options: {
+            babelrc: false,
+            plugins: ['babel-plugin-add-module-exports'],
+            presets: ['es2015', 'react', 'stage-1']
+          }
+        }
+      },
+      {
+        /*
+        Several sketch modules clear the coscript shouldKeepAround flag, which
+        can cause the Mocha context to be prematurely destroyed, which crashes
+        Sketch. This loader removes those statements, allowing our plugin to
+        explicitly handle its own coscript lifecycle.
+        */
+        test: /node_modules\/sketch-.*\/.*\.js/,
+        loader: 'regexp-replace-loader',
+        options: {
+          match: {
+            pattern: '(coscript\\.setShouldKeepAround\\(false\\)|coscript\\.shouldKeepAround = false)',
+            flags: 'ig'
+          },
+          replaceWith: '/* REMOVED coscript shouldKeepAround false */'
+        }
+      }
+    ]
   },
   node: {
     setImmediate: false
