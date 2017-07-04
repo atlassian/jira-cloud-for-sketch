@@ -49,6 +49,7 @@ export function isAuthorized () {
   return prefs.isSet(keys.jiraHost, keys.clientId, keys.sharedSecret)
 }
 
+// TODO cache bearer tokens 'til expiry and allow invalidation
 export async function getBearerToken () {
   if (!isAuthorized()) {
     throw new Error('Please connect Sketch to JIRA before proceeding')

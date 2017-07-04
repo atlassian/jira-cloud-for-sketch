@@ -6,12 +6,12 @@ import {
   openInBrowser,
   normalizeFilepath
 } from '../util'
-import { isAuthorized, getBearerToken, getJiraHost } from '../auth'
-import JIRA from '../jira'
+import { isAuthorized } from '../auth'
 import Connect from './connect'
-import { OFFLINE_DEV } from '../config'
 import { getDraggedFiles } from '../pasteboard'
 import { trace } from '../logger'
+import { OFFLINE_DEV } from '../config'
+const JIRA = require(OFFLINE_DEV ? '../mock-jira' : '../jira')
 
 export default async function (context) {
   executeSafelyAsync(context, async function () {
@@ -19,9 +19,7 @@ export default async function (context) {
       return Connect(context)
     }
 
-    const jiraHost = getJiraHost()
-    const token = OFFLINE_DEV ? null : await getBearerToken()
-    var jira = new JIRA(jiraHost, token)
+    var jira = new JIRA()
 
     var ready = false
     var uploadRequests = []
@@ -95,19 +93,13 @@ export default async function (context) {
         dispatchWindowEvent(webUI, 'jira.issues.loading', {
           filterKey: loadingFilter
         })
-
-        return new Promise(async function (resolve, reject) {
-          setTimeout(async function () {
-            var issues = OFFLINE_DEV ? require('../mock-issues.json') : await jira.getFilteredIssues(loadingFilter)
-            // if another filter has been selected in the meantime, ignore this result
-            if (loadingFilter == currentFilterKey) {
-              dispatchWindowEvent(webUI, 'jira.issues.loaded', {
-                issues: issues.issues
-              })
-            }
-            resolve()
-          }, 5000)
-        })
+        var issues = await jira.getFilteredIssues(loadingFilter)
+        // if another filter has been selected in the meantime, ignore this result
+        if (loadingFilter == currentFilterKey) {
+          dispatchWindowEvent(webUI, 'jira.issues.loaded', {
+            issues: issues
+          })
+        }
       }
     }
 
@@ -116,26 +108,19 @@ export default async function (context) {
         var uploadRequest = uploadRequests.pop()
         var issueKey = uploadRequest.issueKey
         var files = uploadRequest.files
-        var noun = files.length == 1 ? 'attachment' : 'attachments'
-        if (OFFLINE_DEV) {
-          context.document.showMessage(
-            `Can't upload ${files.length} ${noun} to ${issueKey} (offline)`
-          )
-        } else {
-          dispatchWindowEvent(webUI, 'jira.upload.queued', {
+        dispatchWindowEvent(webUI, 'jira.upload.queued', {
+          issueKey: issueKey,
+          count: files.length
+        })
+        for (var i = 0; i < files.length; i++) {
+          var filepath = files[i]
+          filepath = normalizeFilepath(filepath)
+          var resp = await jira.uploadAttachment(issueKey, filepath)
+          trace(resp)
+          dispatchWindowEvent(webUI, 'jira.upload.complete', {
             issueKey: issueKey,
-            count: files.length
+            count: 1
           })
-          for (var i = 0; i < files.length; i++) {
-            var filepath = files[i]
-            filepath = normalizeFilepath(filepath)
-            var resp = OFFLINE_DEV ? 'Upload skipped (offline)' : await jira.uploadAttachment(issueKey, filepath)
-            trace(resp)
-            dispatchWindowEvent(webUI, 'jira.upload.complete', {
-              issueKey: issueKey,
-              count: 1
-            })
-          }
         }
       }
     }

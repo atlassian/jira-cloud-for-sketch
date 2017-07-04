@@ -73,5 +73,9 @@ export function normalizeFilepath (path) {
 }
 
 export function randomHex (max) {
-  return Math.floor(Math.random() * max).toString(16)
+  return randomInt(max).toString(16)
+}
+
+export function randomInt (max) {
+  return Math.floor(Math.random() * max)
 }
