@@ -1,49 +1,74 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import styled from 'styled-components'
-import '@atlaskit/css-reset'
+import pluginCall from 'sketch-module-web-view/client'
+import IssueFilter from './components/IssueFilter'
 import IssueList from './components/IssueList'
 import IssueView from './components/IssueView'
+import '@atlaskit/css-reset'
 
 class ViewIssuesPanel extends Component {
   constructor (props) {
     super(props)
     this.handleSelectIssue = this.handleSelectIssue.bind(this)
     this.handleCloseIssue = this.handleCloseIssue.bind(this)
+    this.handleFilterSelected = this.handleFilterSelected.bind(this)
     this.state = {
-      issues: window.issues || [],
-      ready: window.ready
-    }
-    if (!window.ready) {
-      const interval = setInterval(() => {
-        if (window.ready) {
-          this.setState({
-            issues: window.issues || [],
-            ready: window.ready
-          })
-          clearInterval(interval)
-        }
-      }, 100)
+      loading: true,
+      issues: []
     }
   }
   render () {
     return (
       <PanelWrapper>
+        <HeaderDiv>
+          <h3>JIRA Issues</h3>
+          {this.state.filters &&
+            <IssueFilter
+              filters={this.state.filters}
+              defaultSelected={this.state.defaultFilter}
+              onFilterSelected={this.handleFilterSelected}
+            />
+          }
+        </HeaderDiv>
         <IssueList
-          ready={this.state.ready}
+          loading={this.state.loading}
           issues={this.state.issues}
           onSelectIssue={this.handleSelectIssue}
         />
-        {this.state.currentIssue && (
+        {this.state.currentIssue &&
           <ModalPanel>
             <IssueView
               issue={this.state.currentIssue}
               onClose={this.handleCloseIssue}
             />
-          </ModalPanel>
-        )}
+          </ModalPanel>}
       </PanelWrapper>
     )
+  }
+  componentDidMount () {
+    window.addEventListener('jira.filters.updated', event => {
+      this.setState({
+        filters: event.detail.filters,
+        defaultFilter: event.detail.filterSelected
+      })
+    })
+    window.addEventListener('jira.issues.loading', event => {
+      this.setState({
+        loading: true,
+        issues: []
+      })
+    })
+    window.addEventListener('jira.issues.loaded', event => {
+      this.setState({
+        loading: false,
+        issues: event.detail.issues
+      })
+    })
+    pluginCall('onReady')
+  }
+  handleFilterSelected (filterKey) {
+    pluginCall('filterSelected', filterKey)
   }
   handleSelectIssue (issue) {
     this.setState({
@@ -62,12 +87,19 @@ const PanelWrapper = styled.div`
   padding: 15px 5px 20px 20px;
 `
 
+const HeaderDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 10px;
+`
+
 const ModalPanel = styled.div`
   position: absolute;
   top: 15px;
   left: 20px;
   width: 415px;
-  height: 254px;
+  height: 265px;
   background: #e7e7e7;
 `
 

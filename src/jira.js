@@ -6,11 +6,34 @@ export default class JIRA {
   constructor (jiraHost, bearerToken) {
     this.bearerToken = bearerToken
     this.apiRoot = 'https://' + jiraHost + '/rest/api/2'
+    this.jqlFilters = {
+      'recently-viewed': {
+        displayName: 'Recently viewed',
+        jql: 'issue in issueHistory() ' +
+          'order by lastViewed'
+      },
+      'assigned-to-me': {
+        displayName: 'Assigned to me',
+        jql: 'assignee = currentUser() ' +
+          'and resolution = Unresolved ' +
+          'order by lastViewed'
+      },
+      'mentioning-me': {
+        displayName: '@mentioning me',
+        jql: 'text ~ currentUser() ' +
+          'order by lastViewed'
+      }
+    }
   }
 
-  async getRecentIssues () {
+  async getFilteredIssues (filterKey) {
+    var filter = this.jqlFilters[filterKey]
+    if (!filter) {
+      throw new Error(`No filter defined for ${filterKey}`)
+    }
+    var jql = encodeURIComponent(filter.jql)
     const res = await fetch(
-      `${this.apiRoot}/search?jql=issue+in+issueHistory()+order+by+lastViewed`,
+      `${this.apiRoot}/search?jql=${jql}`,
       {
         headers: {
           Accept: 'application/json',

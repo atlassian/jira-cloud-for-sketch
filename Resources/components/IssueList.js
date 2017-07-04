@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import DropdownMenu from '@atlaskit/dropdown-menu'
 import AssigneeAvatar from './AssigneeAvatar'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
@@ -8,7 +7,7 @@ import '@atlaskit/css-reset'
 export default class IssueList extends Component {
   render () {
     var list
-    if (!this.props.ready) {
+    if (this.props.loading) {
       list = <span>Loading...</span>
     } else if (this.props.issues.length === 0) {
       list = <span>No issues found.</span>
@@ -27,10 +26,6 @@ export default class IssueList extends Component {
     }
     return (
       <div>
-        <HeaderDiv>
-          <h3>JIRA Issues</h3>
-          <IssueFilter />
-        </HeaderDiv>
         <ScrollDiv>
           {list}
         </ScrollDiv>
@@ -40,17 +35,10 @@ export default class IssueList extends Component {
 }
 
 IssueList.propTypes = {
-  ready: PropTypes.bool,
+  loading: PropTypes.bool,
   issues: PropTypes.array.isRequired,
   onSelectIssue: PropTypes.func.isRequired
 }
-
-const HeaderDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 10px;
-`
 
 const ScrollDiv = styled.div`
   margin-top: 10px;
@@ -58,30 +46,6 @@ const ScrollDiv = styled.div`
   height: 220px;
   overflow-y: scroll;
 `
-
-class IssueFilter extends Component {
-  render () {
-    return (
-      <DropdownMenu
-        items={[
-          {
-            items: [
-              { content: 'Recently viewed' },
-              { content: 'Assigned to me' },
-              { content: '@mentioning me' }
-            ]
-          }
-        ]}
-        triggerButtonProps={{ appearance: 'primary' }}
-        triggerType='button'
-        position='bottom right'
-        shouldFlip={false}
-      >
-        Filter
-      </DropdownMenu>
-    )
-  }
-}
 
 class Issue extends Component {
   render () {

@@ -19,16 +19,26 @@ export default async function (context) {
       return Connect(context)
     }
 
+    const jiraHost = getJiraHost()
+    const token = OFFLINE_DEV ? null : await getBearerToken()
+    var jira = new JIRA(jiraHost, token)
+
+    var ready = false
     var uploadRequests = []
+    var nextFilterKey = null
+    var currentFilterKey = null
 
     const webUI = jiraWebUI(context, {
       name: 'issues',
       background: MSImmutableColor.colorWithSVGString(
         '#e7e7e7'
       ).NSColorWithColorSpace(null),
-      height: 320,
+      height: 325,
       width: 450,
       handlers: {
+        onReady () {
+          ready = true
+        },
         openInBrowser (url) {
           executeSafely(context, function () {
             openInBrowser(url)
@@ -43,24 +53,65 @@ export default async function (context) {
               files: getDraggedFiles()
             })
           })
+        },
+        filterSelected (filterKey) {
+          nextFilterKey = filterKey
         }
       }
     })
 
-    var jira
-    var recentIssues
-    if (OFFLINE_DEV) {
-      recentIssues = require('../mock-issues.json')
-    } else {
-      const jiraHost = getJiraHost()
-      const token = await getBearerToken()
-      jira = new JIRA(jiraHost, token)
-      recentIssues = await jira.getRecentIssues()
+    var checkOnReady = function () {
+      if (ready) {
+        nextFilterKey = 'recently-viewed'
+        dispatchWindowEvent(webUI, 'jira.filters.updated', {
+          filters: jira.jqlFilters,
+          filterSelected: nextFilterKey
+        })
+        /* only run once */
+        checkOnReady = function () {}
+      }
     }
-    webUI.eval(`window.issues=${JSON.stringify(recentIssues.issues)}`)
-    webUI.eval('window.ready=true')
 
-    async function processUploadRequests () {
+    var checkingActions = false
+
+    function checkActions () {
+      if (!checkingActions) {
+        checkingActions = true
+        executeSafelyAsync(context, async function () {
+          checkOnReady()
+          await checkNewFilter()
+          await checkUploadRequests()
+        })
+        checkingActions = false
+      }
+    }
+
+    setInterval(checkActions, 100)
+
+    async function checkNewFilter () {
+      if (nextFilterKey) {
+        let loadingFilter = (currentFilterKey = nextFilterKey)
+        nextFilterKey = null
+        dispatchWindowEvent(webUI, 'jira.issues.loading', {
+          filterKey: loadingFilter
+        })
+
+        return new Promise(async function (resolve, reject) {
+          setTimeout(async function () {
+            var issues = OFFLINE_DEV ? require('../mock-issues.json') : await jira.getFilteredIssues(loadingFilter)
+            // if another filter has been selected in the meantime, ignore this result
+            if (loadingFilter == currentFilterKey) {
+              dispatchWindowEvent(webUI, 'jira.issues.loaded', {
+                issues: issues.issues
+              })
+            }
+            resolve()
+          }, 5000)
+        })
+      }
+    }
+
+    async function checkUploadRequests () {
       if (uploadRequests.length > 0) {
         var uploadRequest = uploadRequests.pop()
         var issueKey = uploadRequest.issueKey
@@ -78,7 +129,7 @@ export default async function (context) {
           for (var i = 0; i < files.length; i++) {
             var filepath = files[i]
             filepath = normalizeFilepath(filepath)
-            var resp = await jira.uploadAttachment(issueKey, filepath)
+            var resp = OFFLINE_DEV ? 'Upload skipped (offline)' : await jira.uploadAttachment(issueKey, filepath)
             trace(resp)
             dispatchWindowEvent(webUI, 'jira.upload.complete', {
               issueKey: issueKey,
@@ -88,7 +139,6 @@ export default async function (context) {
         }
       }
     }
-    setInterval(processUploadRequests, 100)
   })
 }
 
