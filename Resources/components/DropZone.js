@@ -7,6 +7,8 @@ import '@atlaskit/css-reset'
 export default class DropZone extends Component {
   constructor (props) {
     super(props)
+    this.onUploadQueued = this.onUploadQueued.bind(this)
+    this.onUploadComplete = this.onUploadComplete.bind(this)
     this.dragEnter = this.dragEnter.bind(this)
     this.dragLeave = this.dragLeave.bind(this)
     this.dragStart = this.dragStart.bind(this)
@@ -22,33 +24,41 @@ export default class DropZone extends Component {
       uploadsComplete: 0,
       uploadsTotal: 0
     }
-    window.addEventListener('jira.upload.queued', event => {
-      if (event.detail.issueKey == this.props.issueKey) {
-        this.setState(function (prevState) {
-          if (prevState.uploadsTotal == prevState.uploadsComplete) {
-            // if all pending uploads are complete, reset the counters
-            return {
-              uploadsTotal: event.detail.count,
-              uploadsComplete: 0
-            }
-          } else {
-            // otherwise update the current total
-            return {
-              uploadsTotal: prevState.uploadsTotal + event.detail.count
-            }
-          }
-        })
-      }
-    })
-    window.addEventListener('jira.upload.complete', event => {
-      if (event.detail.issueKey == this.props.issueKey) {
-        this.setState(function (prevState) {
+  }
+  componentDidMount () {
+    window.addEventListener('jira.upload.queued', this.onUploadQueued)
+    window.addEventListener('jira.upload.complete', this.onUploadComplete)
+  }
+  componentWillUnmount () {
+    window.removeEventListener('jira.upload.queued', this.onUploadQueued)
+    window.removeEventListener('jira.upload.complete', this.onUploadComplete)
+  }
+  onUploadQueued (event) {
+    if (event.detail.issueKey == this.props.issueKey) {
+      this.setState(function (prevState) {
+        if (prevState.uploadsTotal == prevState.uploadsComplete) {
+          // if all pending uploads are complete, reset the counters
           return {
-            uploadsComplete: prevState.uploadsComplete + event.detail.count
+            uploadsTotal: event.detail.count,
+            uploadsComplete: 0
           }
-        })
-      }
-    })
+        } else {
+          // otherwise update the current total
+          return {
+            uploadsTotal: prevState.uploadsTotal + event.detail.count
+          }
+        }
+      })
+    }
+  }
+  onUploadComplete (event) {
+    if (event.detail.issueKey == this.props.issueKey) {
+      this.setState(function (prevState) {
+        return {
+          uploadsComplete: prevState.uploadsComplete + event.detail.count
+        }
+      })
+    }
   }
   dragEnter (event) {
     this.setState(function (prevState) {
