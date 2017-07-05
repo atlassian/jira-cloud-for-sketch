@@ -88,9 +88,9 @@ export default class DropZone extends Component {
   }
   render (props) {
     var style = {
-      height: '96px',
-      width: '128px',
-      marginRight: '3px',
+      height: '128px',
+      width: '122px',
+      marginRight: '7px',
       marginBottom: '3px',
       padding: '3px',
       borderRadius: '3px',

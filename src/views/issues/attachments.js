@@ -16,6 +16,7 @@ export default class Attachments {
         attachments
       })
       for (let i = 0; i < attachments.length; i++) {
+        // TODO parallelize
         const attachment = attachments[i]
         if (attachment.thumbnail && attachment.mimeType) {
           this.webUI.dispatchWindowEvent('jira.attachment.thumbnail', {
