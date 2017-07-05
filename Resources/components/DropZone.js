@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import AddIcon from '@atlaskit/icon/glyph/add'
+import pluginCall from 'sketch-module-web-view/client'
 import '@atlaskit/css-reset'
 
 export default class DropZone extends Component {
@@ -75,8 +75,12 @@ export default class DropZone extends Component {
     // event.dataTransfer.effectAllowed = "copy"
   }
   drop (event) {
-    this.props.onDrop(event)
     this.setState({ dragHover: false })
+    /*
+    Dragged files are looked up from the system pasteboard so we can determine
+    their location on disk. We only pass back the issue they were dropped onto.
+    */
+    pluginCall('uploadDroppedFiles', this.props.issueKey)
     event.preventDefault()
   }
   preventDefault (event) {
@@ -84,7 +88,8 @@ export default class DropZone extends Component {
   }
   render (props) {
     var style = {
-      height: '40px',
+      height: '96px',
+      width: '128px',
       marginTop: '10px',
       padding: '3px',
       borderRadius: '3px',
@@ -92,7 +97,8 @@ export default class DropZone extends Component {
       borderWidth: '1px',
       borderColor: 'gray',
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      justifyContent: 'space-around'
     }
     if (this.state.dragHover > 0) {
       style.borderWidth = '3px'
@@ -101,12 +107,12 @@ export default class DropZone extends Component {
     }
     var text
     if (this.state.uploadsTotal == 0) {
-      text = 'Drag artboards and layers here'
+      text = 'Drag artboards and layers here to upload'
     } else if (this.state.uploadsComplete == this.state.uploadsTotal) {
       if (this.state.uploadsComplete == 1) {
         text = 'Uploaded 1 file'
       } else {
-        text = `Uploaded ${this.state.uploadsComplete} of ${this.state.uploadsTotal} files`
+        text = `Uploaded ${this.state.uploadsTotal} files`
       }
     } else {
       if (this.state.uploadsTotal == 1) {
@@ -124,9 +130,6 @@ export default class DropZone extends Component {
         onDragOver={this.preventDefault}
         onDropCapture={this.drop}
       >
-        <AddIconWrapper>
-          <AddIcon size='medium' color='#7a869a' label='Upload to JIRA' />
-        </AddIconWrapper>
         <TextDiv>{text}</TextDiv>
       </div>
     )
@@ -134,22 +137,12 @@ export default class DropZone extends Component {
 }
 
 DropZone.propTypes = {
-  issueKey: PropTypes.string.isRequired,
-  onDrop: PropTypes.func.isRequired
+  issueKey: PropTypes.string.isRequired
 }
 
-const AddIconWrapper = styled.div`
-  width: 39px;
-  height: 39px;
-  background-color: #b7b7b7;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  border-radius: 3px;
-`
-
 const TextDiv = styled.div`
-  margin-left: 10px;
   color: #7a869a;
   font-size: 12px;
+  width: 100px;
+  text-align: center;
 `

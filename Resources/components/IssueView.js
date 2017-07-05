@@ -2,30 +2,19 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import pluginCall from 'sketch-module-web-view/client'
 import AssigneeAvatar from './AssigneeAvatar'
-import DropZone from './DropZone'
+import Attachments from './Attachments'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 
 export default class IssueView extends Component {
-  constructor (props) {
-    super(props)
-    this.handleDrop = this.handleDrop.bind(this)
-  }
   render () {
     return (
       <div>
         <BackButton onClose={this.props.onClose} />
         <IssueSummary issue={this.props.issue} />
-        <DropZone issueKey={this.props.issue.key} onDrop={this.handleDrop} />
+        <Attachments issueKey={this.props.issue.key} />
       </div>
     )
-  }
-  handleDrop (event) {
-    /*
-    Dragged files are looked up from the system pasteboard so we can determine
-    their location on disk. We only pass back the issue they were dropped onto.
-    */
-    pluginCall('uploadDroppedFiles', this.props.issue.key)
   }
 }
 
