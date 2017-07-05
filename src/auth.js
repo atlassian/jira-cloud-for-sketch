@@ -65,7 +65,7 @@ export async function getBearerToken () {
       'Bad response from jira-sketch-integration /clients/bearer API'
     )
   }
-  trace(`${json.data}`)
+  // trace(JSON.stringify(json.data))
   return json.data.access_token
 }
 

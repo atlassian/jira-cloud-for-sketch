@@ -90,7 +90,8 @@ export default class DropZone extends Component {
     var style = {
       height: '96px',
       width: '128px',
-      marginTop: '10px',
+      marginRight: '3px',
+      marginBottom: '3px',
       padding: '3px',
       borderRadius: '3px',
       borderStyle: 'dashed',

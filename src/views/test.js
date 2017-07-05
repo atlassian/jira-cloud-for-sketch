@@ -1,8 +1,8 @@
 import '../defaultImports'
-import { executeSafely } from '../util'
+import { executeSafelyAsync } from '../util'
 
-export default function (context) {
-  executeSafely(context, function () {
+export default async function (context) {
+  await executeSafelyAsync(context, async function () {
     context.document.showMessage(`Test action`)
   })
 }

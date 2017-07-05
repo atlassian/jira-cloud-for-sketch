@@ -5,6 +5,7 @@ import { isAuthorized } from '../../auth'
 import Connect from '../connect'
 import Filters from './filters'
 import Uploads from './uploads'
+import Attachments from './attachments'
 import { OFFLINE_DEV } from '../../config'
 const JIRA = require(OFFLINE_DEV ? '../../mock-jira' : '../../jira')
 
@@ -28,6 +29,9 @@ export default async function (context) {
         filterSelected (filterKey) {
           filters.onFilterChanged(filterKey)
         },
+        loadAttachments (issueKey) {
+          attachments.loadAttachments(issueKey)
+        },
         uploadDroppedFiles (issueKey) {
           uploads.onFilesDropped(issueKey)
         },
@@ -42,5 +46,6 @@ export default async function (context) {
     var jira = new JIRA()
     var filters = new Filters(context, webUI, jira)
     var uploads = new Uploads(context, webUI, jira)
+    var attachments = new Attachments(context, webUI, jira)
   })
 }

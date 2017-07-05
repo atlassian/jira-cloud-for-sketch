@@ -1,18 +1,9 @@
 import { randomInt } from './util'
+import JQL_FILTERS from './jql-filters'
 
 export default class MockJIRA {
   constructor () {
-    this.jqlFilters = {
-      'recently-viewed': {
-        displayName: 'Recently viewed'
-      },
-      'assigned-to-me': {
-        displayName: 'Assigned to me'
-      },
-      'mentioning-me': {
-        displayName: '@mentioning me'
-      }
-    }
+    this.jqlFilters = JQL_FILTERS
     this.issues = require('./mock-issues.json').issues
   }
 

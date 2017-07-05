@@ -2,46 +2,61 @@ import fetch from 'sketch-module-fetch-polyfill'
 import multipart from './multipart'
 import { extractFilenameFromPath } from './util'
 import { getJiraHost, getBearerToken } from './auth'
+import { trace } from './logger'
+import JQL_FILTERS from './jql-filters'
 
 export default class JIRA {
   constructor () {
-    this.apiRoot = 'https://' + getJiraHost() + '/rest/api/2'
-    this.jqlFilters = {
-      'recently-viewed': {
-        displayName: 'Recently viewed',
-        jql: 'issue in issueHistory() ' +
-             'order by lastViewed'
-      },
-      'assigned-to-me': {
-        displayName: 'Assigned to me',
-        jql: 'assignee = currentUser() ' +
-             'and resolution = Unresolved ' +
-             'order by lastViewed'
-      },
-      'mentioning-me': {
-        displayName: '@mentioning me',
-        jql: 'text ~ currentUser() ' +
-             'order by lastViewed'
-      }
-    }
+    this.baseUrl = `https://${getJiraHost()}`
+    this.apiRoot = `${this.baseUrl}/rest/api/2`
+    this.jqlFilters = JQL_FILTERS
   }
 
+  /**
+   * Retrieves issues using JIRA's search API. Note that this API does not
+   * populate the 'attachment' field for returned issues.
+   */
   async getFilteredIssues (filterKey) {
     var filter = this.jqlFilters[filterKey]
     if (!filter) {
       throw new Error(`No filter defined for ${filterKey}`)
     }
     var jql = encodeURIComponent(filter.jql)
-    const res = await fetch(
-      `${this.apiRoot}/search?jql=${jql}`,
-      {
-        headers: {
-          Accept: 'application/json',
-          Authorization: await authHeader()
-        }
-      })
+    const res = await fetch(`${this.apiRoot}/search?jql=${jql}`, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: await authHeader()
+      }
+    })
     var json = await res.json()
     return json.issues
+  }
+
+  /**
+   * Retrieve a JIRA issue using the issue API. This API does populate the
+   * 'attachment' field.
+   */
+  async getIssue (issueKey) {
+    const res = await fetch(`${this.apiRoot}/issue/${issueKey}`, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: await authHeader()
+      }
+    })
+    return res.json()
+  }
+
+  async getImageAsDataUri (url, mimeType) {
+    const res = await fetch(url, {
+      headers: {
+        Authorization: await authHeader()
+      }
+    })
+    var data = await res.blob()
+    data = data.base64EncodedDataWithOptions(null)
+    data = NSString.alloc().initWithData_encoding(data, NSUTF8StringEncoding)
+    var dataUri = `data:${mimeType};base64,${data}`
+    return dataUri
   }
 
   async uploadAttachment (issueKey, filepath, filename) {
