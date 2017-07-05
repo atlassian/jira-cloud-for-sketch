@@ -9,6 +9,7 @@ import queryString from 'query-string'
 import jwt from 'atlassian-jwt'
 import moment from 'moment'
 import URL from 'url-parse'
+import { trace } from './logger'
 
 export async function getSketchClientDetails () {
   if (!prefs.isSet(keys.clientId, keys.sharedSecret)) {
@@ -51,9 +52,34 @@ export function isAuthorized () {
 
 // TODO cache bearer tokens 'til expiry and allow invalidation
 export async function getBearerToken () {
+  checkAuthorized()
+  const response = await fetch(jiraSketchIntegrationApi.bearer, {
+    method: 'POST',
+    headers: {
+      Authorization: jwtAuthHeader()
+    }
+  })
+  const json = await response.json()
+  if (!json.data.access_token) {
+    throw new Error(
+      'Bad response from jira-sketch-integration /clients/bearer API'
+    )
+  }
+  trace(`${json.data}`)
+  return json.data.access_token
+}
+
+export function getJiraHost () {
+  return prefs.getString(keys.jiraHost)
+}
+
+function checkAuthorized () {
   if (!isAuthorized()) {
     throw new Error('Please connect Sketch to JIRA before proceeding')
   }
+}
+
+function jwtAuthHeader () {
   const now = moment().utc()
   const token = jwt.encode(
     {
@@ -65,23 +91,7 @@ export async function getBearerToken () {
     },
     prefs.getString(keys.sharedSecret)
   )
-  const response = await fetch(jiraSketchIntegrationApi.bearer, {
-    method: 'POST',
-    headers: {
-      Authorization: 'JWT ' + token
-    }
-  })
-  const json = await response.json()
-  if (!json.data.access_token) {
-    throw new Error(
-      'Bad response from jira-sketch-integration /clients/bearer API'
-    )
-  }
-  return json.data.access_token
-}
-
-export function getJiraHost () {
-  return prefs.getString(keys.jiraHost)
+  return `JWT ${token}`
 }
 
 function parseHostname (partialUrl) {
