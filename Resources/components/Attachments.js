@@ -4,6 +4,7 @@ import DropZone from './DropZone'
 import styled from 'styled-components'
 import pluginCall from 'sketch-module-web-view/client'
 import DocumentIcon from '@atlaskit/icon/glyph/document'
+import filesize from 'filesize'
 
 export default class Attachments extends Component {
   constructor (props) {
@@ -78,7 +79,7 @@ class Attachment extends Component {
         <AttachmentFilename>{attachment.filename}</AttachmentFilename>
         <AttachmentDetailWrapper>
           <div>Sometime</div>
-          <div>{attachment.size} B</div>
+          <div>{filesize(attachment.size, {round: 0})}</div>
         </AttachmentDetailWrapper>
       </AttachmentWrapper>
     )
