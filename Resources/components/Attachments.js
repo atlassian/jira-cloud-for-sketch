@@ -4,6 +4,7 @@ import DropZone from './DropZone'
 import styled from 'styled-components'
 import pluginCall from 'sketch-module-web-view/client'
 import DocumentIcon from '@atlaskit/icon/glyph/document'
+import moment from 'moment'
 import filesize from 'filesize'
 
 export default class Attachments extends Component {
@@ -71,19 +72,36 @@ Attachments.propTypes = {
 }
 
 class Attachment extends Component {
+  constructor (props) {
+    super(props)
+    this.handleClick = handleAttachmentClick.bind(this)
+  }
   render () {
     var attachment = this.props.attachment
     return (
       <AttachmentWrapper>
         <AttachmentThumbnail attachment={attachment} />
-        <AttachmentFilename>{attachment.filename}</AttachmentFilename>
+        <AttachmentFilename>
+          <a href={attachment.content} onClick={this.handleClick}>
+            {attachment.filename}
+          </a>
+        </AttachmentFilename>
         <AttachmentDetailWrapper>
-          <div>Sometime</div>
-          <div>{filesize(attachment.size, {round: 0})}</div>
+          <div>
+            {moment(attachment.created).fromNow()}
+          </div>
+          <div>
+            {filesize(attachment.size, { round: 0 })}
+          </div>
         </AttachmentDetailWrapper>
       </AttachmentWrapper>
     )
   }
+}
+
+function handleAttachmentClick (event) {
+  event.preventDefault()
+  pluginCall('openInBrowser', this.props.attachment.content)
 }
 
 Attachment.propTypes = {
@@ -122,33 +140,31 @@ class AttachmentThumbnail extends Component {
   constructor (props) {
     super(props)
     this.onThumbnailLoaded = this.onThumbnailLoaded.bind(this)
+    this.handleClick = handleAttachmentClick.bind(this)
     this.state = {
       thumbnail: null
     }
   }
   render () {
     return (
-      <ThumbnailWrapper>
+      <ThumbnailWrapper onClick={this.handleClick}>
         {this.state.thumbnail ? (
           <ThumbnailImage
             src={this.state.thumbnail}
             alt={this.props.attachment.filename}
             title={this.props.attachment.filename}
-          />
-        ) : (
-          <DocumentIcon
-            label={this.props.attachment.filename}
-            size='large'
-          />
-        )}
+            />
+         ) : (
+           <DocumentIcon
+             label={this.props.attachment.filename}
+             size='large'
+            />
+         )}
       </ThumbnailWrapper>
     )
   }
   componentDidMount () {
-    window.addEventListener(
-      'jira.attachment.thumbnail',
-      this.onThumbnailLoaded
-    )
+    window.addEventListener('jira.attachment.thumbnail', this.onThumbnailLoaded)
   }
   componentWillUnmount () {
     window.removeEventListener(
@@ -180,6 +196,7 @@ const ThumbnailWrapper = styled.div`
   justify-content: space-around;
   align-items: center;
   overflow: hidden;
+  pointer: cursor;
 `
 
 const ThumbnailImage = styled.img`
