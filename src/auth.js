@@ -2,7 +2,8 @@ import fetch from 'sketch-module-fetch-polyfill'
 import { openInBrowser } from './util'
 import {
   jiraSketchIntegrationApi,
-  jiraSketchIntegrationAuthRedirectUrl
+  jiraSketchIntegrationAuthRedirectUrl,
+  bearerTokenExpirySafetyMargin
 } from './config'
 import prefs, { keys } from './prefs'
 import queryString from 'query-string'
@@ -10,6 +11,9 @@ import jwt from 'atlassian-jwt'
 import moment from 'moment'
 import URL from 'url-parse'
 import { trace } from './logger'
+
+var cachedBearerToken = null
+var cachedBearerTokenExpiry = null
 
 export async function getSketchClientDetails () {
   if (!prefs.isSet(keys.clientId, keys.sharedSecret)) {
@@ -34,6 +38,7 @@ export async function authorizeSketchForJira (context, jiraUrl) {
   const jiraHost = parseHostname(jiraUrl)
   // for now, let's clear existing auth details if they hit the 'Connect' button in the Sketch client
   prefs.unset(keys.jiraHost, keys.clientId, keys.sharedSecret)
+  cachedBearerToken = cachedBearerTokenExpiry = null
   const clientDetails = await getSketchClientDetails()
   const params = {
     clientId: clientDetails.clientId,
@@ -50,9 +55,18 @@ export function isAuthorized () {
   return prefs.isSet(keys.jiraHost, keys.clientId, keys.sharedSecret)
 }
 
-// TODO cache bearer tokens 'til expiry and allow invalidation
 export async function getBearerToken () {
   checkAuthorized()
+  const now = moment.utc()
+  if ((!cachedBearerToken) || cachedBearerTokenExpiry < now.unix()) {
+    var token = await _getBearerToken()
+    cachedBearerTokenExpiry = now.unix() + token.expires_in - bearerTokenExpirySafetyMargin
+    cachedBearerToken = token.access_token
+  }
+  return cachedBearerToken
+}
+
+async function _getBearerToken () {
   const response = await fetch(jiraSketchIntegrationApi.bearer, {
     method: 'POST',
     headers: {
@@ -66,7 +80,7 @@ export async function getBearerToken () {
     )
   }
   // trace(JSON.stringify(json.data))
-  return json.data.access_token
+  return json.data
 }
 
 export function getJiraHost () {

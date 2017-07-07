@@ -25,3 +25,5 @@ export const jiraSketchIntegrationApi = {
   client: jiraSketchIntegrationApiBaseUrl + '/clients',
   bearer: jiraSketchIntegrationApiBaseUrl + '/clients/bearer'
 }
+
+export const bearerTokenExpirySafetyMargin = 60 // seconds
