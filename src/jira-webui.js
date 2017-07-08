@@ -28,6 +28,8 @@ export default function (context, options) {
     options
   )
   var w = new WebUI(context, options.page, options)
+  // w.panel.hidesOnDeactivate = false
+  // w.panel.setLevel(NSNormalWindowLevel)
   w.dispatchWindowEvent = function (eventName, eventDetail) {
     var eventJson = JSON.stringify({ detail: eventDetail })
     w.eval(
