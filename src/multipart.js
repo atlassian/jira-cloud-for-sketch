@@ -5,6 +5,8 @@ export default function multipartPost (url, auth, filepath, filename) {
   var task = NSTask.alloc().init()
 
   /*
+    TODO: AFHTTPRequestOperation appears to be in the mocha context! Try it out.
+
     What! Why are we forking cURL?
 
     Short answer:
