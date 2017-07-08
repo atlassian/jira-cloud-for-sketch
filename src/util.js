@@ -1,4 +1,5 @@
 import { tempDirName } from './config'
+import { trace } from './logger'
 
 export function setIconForAlert (context, alert) {
   alert.setIcon(
@@ -44,6 +45,10 @@ export function openInBrowser (urlString) {
   NSWorkspace.sharedWorkspace().openURL(url)
 }
 
+export function openInDefaultApp (filepath) {
+  return NSWorkspace.sharedWorkspace().openFile(filepath)
+}
+
 export function tempDir (name) {
   var tmp = NSTemporaryDirectory() + tempDirName + '/'
   if (name) {
@@ -65,6 +70,7 @@ export function extractFilenameFromPath (path) {
 
 export function normalizeFilepath (path) {
   // TODO there's probably a better way to do this
+  // NSURL.path() ?
   if (path.indexOf('file://') == 0) {
     path = path.substring('file://'.length)
     path = decodeURIComponent(path)
@@ -78,4 +84,16 @@ export function randomHex (max) {
 
 export function randomInt (max) {
   return Math.floor(Math.random() * max)
+}
+
+export function userDownloadsDirectory () {
+  var dirs = NSFileManager.defaultManager().URLsForDirectory_inDomains_(
+    NSDownloadsDirectory,
+    NSUserDomainMask
+  )
+  if (dirs.length) {
+    return dirs[0].path()
+  } else {
+    return tempDir('downloads')
+  }
 }

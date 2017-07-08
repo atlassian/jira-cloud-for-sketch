@@ -1,6 +1,6 @@
 import '../../defaultImports'
 import jiraWebUI from '../../jira-webui'
-import { executeSafely, executeSafelyAsync, openInBrowser } from '../../util'
+import { executeSafely, executeSafelyAsync, openInBrowser, openInDefaultApp } from '../../util'
 import { isAuthorized } from '../../auth'
 import Connect from '../connect'
 import Filters from './filters'
@@ -38,6 +38,14 @@ export default async function (context) {
         openInBrowser (url) {
           executeSafely(context, function () {
             openInBrowser(url)
+          })
+        },
+        openAttachment (url, filename) {
+          executeSafelyAsync(context, async function () {
+            context.document.showMessage(`Downloading ${filename}...`)
+            const filepath = await jira.downloadAttachment(url, filename)
+            context.document.showMessage(`Saved as ${filepath}`)
+            openInDefaultApp(filepath)
           })
         }
       }

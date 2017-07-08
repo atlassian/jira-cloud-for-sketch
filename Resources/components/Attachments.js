@@ -101,7 +101,11 @@ class Attachment extends Component {
 
 function handleAttachmentClick (event) {
   event.preventDefault()
-  pluginCall('openInBrowser', this.props.attachment.content)
+  pluginCall(
+    'openAttachment',
+    this.props.attachment.content,
+    this.props.attachment.filename
+  )
 }
 
 Attachment.propTypes = {
@@ -196,7 +200,7 @@ const ThumbnailWrapper = styled.div`
   justify-content: space-around;
   align-items: center;
   overflow: hidden;
-  pointer: cursor;
+  cursor: pointer;
 `
 
 const ThumbnailImage = styled.img`

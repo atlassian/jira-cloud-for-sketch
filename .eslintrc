@@ -11,6 +11,8 @@ parserOptions:
   ecmaFeatures:
     jsx: true
 globals:
+  COScript: false
+  coscript: false
   NSClosableWindowMask: false
   NSTitledWindowMask: false
   NSAlertFirstButtonReturn: false
@@ -25,3 +27,14 @@ globals:
   NSNotificationCenter: false
   NSTaskDidTerminateNotification: false
   NSFileHandleReadToEndOfFileCompletionNotification: false
+  NSFileManager: false
+  NSDownloadsDirectory: false
+  NSUserDomainMask: false
+  NSMutableURLRequest: false
+  NSURLConnection: false
+  NSOutputStream: false
+  NSURLSession: false
+  NSURLSessionConfiguration: false
+  MOPointer: false
+  NSOperationQueue: false
+  NSURLDownload: false

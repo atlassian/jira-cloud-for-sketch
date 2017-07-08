@@ -1,8 +1,8 @@
 import fetch from 'sketch-module-fetch-polyfill'
 import multipart from './multipart'
+import download from './download'
 import { extractFilenameFromPath } from './util'
 import { getJiraHost, getBearerToken } from './auth'
-import { trace } from './logger'
 import JQL_FILTERS from './jql-filters'
 
 export default class JIRA {
@@ -57,6 +57,16 @@ export default class JIRA {
     data = NSString.alloc().initWithData_encoding(data, NSUTF8StringEncoding)
     var dataUri = `data:${mimeType};base64,${data}`
     return dataUri
+  }
+
+  async downloadAttachment (url, filename) {
+    const filepath = await download(url, {
+      filename,
+      headers: {
+        Authorization: await authHeader()
+      }
+    })
+    return filepath
   }
 
   async uploadAttachment (issueKey, filepath, filename) {
