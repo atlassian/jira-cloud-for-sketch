@@ -1,6 +1,7 @@
 import WebUI from 'sketch-module-web-view'
 import { assign } from 'lodash'
 import { randomHex } from './util'
+import event from './analytics'
 
 /**
  * Important to note:
@@ -36,5 +37,6 @@ export default function (context, options) {
       `window.dispatchEvent(new CustomEvent('${eventName}', ${eventJson}))`
     )
   }
+  event(context, `${options.name}PanelOpened`)
   return w
 }
