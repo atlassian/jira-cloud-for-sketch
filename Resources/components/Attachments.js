@@ -4,28 +4,41 @@ import DropZone from './DropZone'
 import styled from 'styled-components'
 import pluginCall from 'sketch-module-web-view/client'
 import DocumentIcon from '@atlaskit/icon/glyph/document'
+import Spinner from '@atlaskit/spinner'
 import moment from 'moment'
 import filesize from 'filesize'
 
 export default class Attachments extends Component {
   constructor (props) {
     super(props)
+    this.reloadAttachments = this.reloadAttachments.bind(this)
     this.onDetailsLoaded = this.onDetailsLoaded.bind(this)
+    this.onUploadStarted = this.onUploadStarted.bind(this)
+    this.onUploadComplete = this.onUploadComplete.bind(this)
+    this.deltaState = this.deltaState.bind(this)
     this.state = {
-      loading: true,
       attachments: [],
-      thumbs: {}
+      thumbs: {},
+      uploading: 0,
+      downloading: 0
     }
   }
   render () {
+    var loading = this.state.uploading || this.state.downloading
     return (
       <AttachmentsArea>
-        <DropZone issueKey={this.props.issueKey} />
-        {this.state.loading ? (
-          <LoadingDiv>
-            <div>Loading attachments...</div>
-          </LoadingDiv>
-        ) : this.state.attachments.map(attachment => (
+        <AttachmentsHeader>
+          <h4>Attachments</h4>
+          <SpinnerWrapper>
+            <Spinner size='small' isCompleting={!loading} />
+          </SpinnerWrapper>
+        </AttachmentsHeader>
+        <DropZone
+          issueKey={this.props.issueKey}
+          onUploadStarted={this.onUploadStarted}
+          onUploadComplete={this.onUploadComplete}
+        />
+        {this.state.attachments.map(attachment => (
           <Attachment key={attachment.id} attachment={attachment} />
         ))}
       </AttachmentsArea>
@@ -33,18 +46,34 @@ export default class Attachments extends Component {
   }
   componentDidMount () {
     window.addEventListener('jira.attachment.details', this.onDetailsLoaded)
-    pluginCall('loadAttachments', this.props.issueKey)
+    this.reloadAttachments()
   }
   componentWillUnmount () {
     window.removeEventListener('jira.attachment.details', this.onDetailsLoaded)
   }
+  reloadAttachments () {
+    pluginCall('loadAttachments', this.props.issueKey)
+    this.deltaState('downloading', +1)
+  }
   onDetailsLoaded (event) {
     if (event.detail.issueKey == this.props.issueKey) {
       this.setState({
-        attachments: event.detail.attachments,
-        loading: false
+        attachments: event.detail.attachments
       })
+      this.deltaState('downloading', -1)
     }
+  }
+  onUploadStarted (n) {
+    this.deltaState('uploading', n)
+  }
+  onUploadComplete (n) {
+    this.deltaState('uploading', -n)
+    this.reloadAttachments()
+  }
+  deltaState (property, delta) {
+    this.setState(function (prevState) {
+      return { [property]: prevState[property] + delta }
+    })
   }
 }
 
@@ -57,14 +86,17 @@ const AttachmentsArea = styled.div`
   align-content: flex-start;
 `
 
-const LoadingDiv = styled.div`
-  color: #7a869a;
-  font-size: 12px;
-  margin-left: 25px;
-  height: 128px;
+const AttachmentsHeader = styled.div`
+  width: 100%;
+  maring-bottom: 5px;
   display: flex;
-  align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
+  align-content: center;
+`
+
+const SpinnerWrapper = styled.div`
+  margin-left: 5px;
+  height: 25px;
 `
 
 Attachments.propTypes = {

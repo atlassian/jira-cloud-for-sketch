@@ -49,6 +49,7 @@ export default class DropZone extends Component {
           }
         }
       })
+      this.props.onUploadStarted(event.detail.count)
     }
   }
   onUploadComplete (event) {
@@ -58,6 +59,7 @@ export default class DropZone extends Component {
           uploadsComplete: prevState.uploadsComplete + event.detail.count
         }
       })
+      this.props.onUploadComplete(event.detail.count)
     }
   }
   dragEnter (event) {
@@ -138,7 +140,9 @@ export default class DropZone extends Component {
 }
 
 DropZone.propTypes = {
-  issueKey: PropTypes.string.isRequired
+  issueKey: PropTypes.string.isRequired,
+  onUploadStarted: PropTypes.func.isRequired,
+  onUploadComplete: PropTypes.func.isRequired
 }
 
 const TextDiv = styled.div`
