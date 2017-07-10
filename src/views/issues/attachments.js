@@ -1,4 +1,4 @@
-import { executeSafelyAsync } from '../../util'
+import { executeSafelyAsync, openInDefaultApp } from '../../util'
 
 export default class Attachments {
   constructor (context, webUI, jira) {
@@ -29,6 +29,23 @@ export default class Attachments {
           })
         }
       }
+    })
+  }
+
+  async deleteAttachment (issueKey, id) {
+    executeSafelyAsync(this.context, async () => {
+      await this.jira.deleteAttachment(id)
+      this.loadAttachments(issueKey)
+    })
+  }
+
+  async openAttachment (issueKey, url, filename) {
+    executeSafelyAsync(this.context, async () => {
+      const eventPayload = { issueKey, url }
+      this.webUI.dispatchWindowEvent('jira.attachment.downloading', eventPayload)
+      const filepath = await this.jira.downloadAttachment(url, filename)
+      this.webUI.dispatchWindowEvent('jira.attachment.opened', eventPayload)
+      openInDefaultApp(filepath)
     })
   }
 }

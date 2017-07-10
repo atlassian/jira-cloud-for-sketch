@@ -17,6 +17,8 @@ export default class Attachments extends Component {
     this.onUploadStarted = this.onUploadStarted.bind(this)
     this.onUploadComplete = this.onUploadComplete.bind(this)
     this.onDeleteStarted = this.onDeleteStarted.bind(this)
+    this.onAttachmentDownloading = this.onAttachmentDownloading.bind(this)
+    this.onAttachmentOpened = this.onAttachmentOpened.bind(this)
     this.deltaState = this.deltaState.bind(this)
     this.state = {
       attachments: [],
@@ -51,10 +53,14 @@ export default class Attachments extends Component {
   }
   componentDidMount () {
     window.addEventListener('jira.attachment.details', this.onDetailsLoaded)
+    window.addEventListener('jira.attachment.downloading', this.onAttachmentDownloading)
+    window.addEventListener('jira.attachment.opened', this.onAttachmentOpened)
     this.reloadAttachments()
   }
   componentWillUnmount () {
     window.removeEventListener('jira.attachment.details', this.onDetailsLoaded)
+    window.removeEventListener('jira.attachment.downloading', this.onAttachmentDownloading)
+    window.removeEventListener('jira.attachment.opened', this.onAttachmentOpened)
   }
   reloadAttachments () {
     pluginCall('loadAttachments', this.props.issueKey)
@@ -65,6 +71,16 @@ export default class Attachments extends Component {
       this.setState({
         attachments: event.detail.attachments
       })
+      this.deltaState('tasks', -1)
+    }
+  }
+  onAttachmentDownloading (event) {
+    if (event.detail.issueKey == this.props.issueKey) {
+      this.deltaState('tasks', 1)
+    }
+  }
+  onAttachmentOpened (event) {
+    if (event.detail.issueKey == this.props.issueKey) {
       this.deltaState('tasks', -1)
     }
   }
@@ -162,6 +178,7 @@ class Attachment extends Component {
     if (!this.state.deleting) {
       pluginCall(
         'openAttachment',
+        this.props.issueKey,
         this.props.attachment.content,
         this.props.attachment.filename
       )

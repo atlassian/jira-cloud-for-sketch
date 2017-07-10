@@ -1,6 +1,6 @@
 import '../../defaultImports'
 import jiraWebUI from '../../jira-webui'
-import { executeSafely, executeSafelyAsync, openInBrowser, openInDefaultApp } from '../../util'
+import { executeSafely, executeSafelyAsync, openInBrowser } from '../../util'
 import { isAuthorized } from '../../auth'
 import Connect from '../connect'
 import Filters from './filters'
@@ -29,9 +29,6 @@ export default async function (context) {
         filterSelected (filterKey) {
           filters.onFilterChanged(filterKey)
         },
-        loadAttachments (issueKey) {
-          attachments.loadAttachments(issueKey)
-        },
         uploadDroppedFiles (issueKey) {
           uploads.onFilesDropped(issueKey)
         },
@@ -40,19 +37,14 @@ export default async function (context) {
             openInBrowser(url)
           })
         },
-        openAttachment (url, filename) {
-          executeSafelyAsync(context, async function () {
-            context.document.showMessage(`Downloading ${filename}...`)
-            const filepath = await jira.downloadAttachment(url, filename)
-            context.document.showMessage(`Saved as ${filepath}`)
-            openInDefaultApp(filepath)
-          })
+        loadAttachments (issueKey) {
+          attachments.loadAttachments(issueKey)
+        },
+        openAttachment (issueKey, url, filename) {
+          attachments.openAttachment(issueKey, url, filename)
         },
         deleteAttachment (issueKey, id) {
-          executeSafelyAsync(context, async function () {
-            await jira.deleteAttachment(id)
-            attachments.loadAttachments(issueKey)
-          })
+          attachments.deleteAttachment(issueKey, id)
         }
       }
     })
