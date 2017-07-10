@@ -12,6 +12,8 @@ export const logLevel = logLevels.TRACE
 export const pluginName = 'jira-sketch-plugin'
 export const tempDirName = pluginName
 
+export const pluginVersion = '0.0.1'
+
 export const jiraSketchIntegrationBaseUrl =
   'https://jira-sketch-integration.ap-southeast-2.dev.public.atl-paas.net'
 
@@ -25,5 +27,8 @@ export const jiraSketchIntegrationApi = {
   client: jiraSketchIntegrationApiBaseUrl + '/clients',
   bearer: jiraSketchIntegrationApiBaseUrl + '/clients/bearer'
 }
+
+export const analyticsApi = 'https://mgas.prod.public.atl-paas.net/v1/event'
+export const analyticsIdKey = 'atlassian.analytics.id'
 
 export const bearerTokenExpirySafetyMargin = 60 // seconds

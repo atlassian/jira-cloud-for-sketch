@@ -83,6 +83,10 @@ async function _getBearerToken () {
   return json.data
 }
 
+export function getClientId () {
+  return prefs.getString(keys.clientId)
+}
+
 export function getJiraHost () {
   return prefs.getString(keys.jiraHost)
 }
@@ -97,11 +101,11 @@ function jwtAuthHeader () {
   const now = moment().utc()
   const token = jwt.encode(
     {
-      iss: prefs.getString(keys.clientId),
+      iss: getClientId(),
       iat: now.unix(),
       exp: now.add(60, 'minutes').unix(),
       aud: ['jira-sketch-integration'],
-      sub: prefs.getString(keys.jiraHost)
+      sub: getJiraHost()
     },
     prefs.getString(keys.sharedSecret)
   )
