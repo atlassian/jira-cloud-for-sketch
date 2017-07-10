@@ -47,6 +47,12 @@ export default async function (context) {
             context.document.showMessage(`Saved as ${filepath}`)
             openInDefaultApp(filepath)
           })
+        },
+        deleteAttachment (issueKey, id) {
+          executeSafelyAsync(context, async function () {
+            await jira.deleteAttachment(id)
+            attachments.loadAttachments(issueKey)
+          })
         }
       }
     })

@@ -80,6 +80,17 @@ export default class JIRA {
     )
     return res
   }
+
+  async deleteAttachment (id) {
+    var deleteUrl = `${this.apiRoot}/attachment/${id}`
+    const res = await fetch(deleteUrl, {
+      method: 'DELETE',
+      headers: {
+        Authorization: await authHeader()
+      }
+    })
+    return res
+  }
 }
 
 async function authHeader () {
