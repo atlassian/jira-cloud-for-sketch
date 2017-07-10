@@ -99,7 +99,7 @@ const ModalPanel = styled.div`
   top: 15px;
   left: 20px;
   width: 415px;
-  height: 265px;
+  height: 275px;
   background: #e7e7e7;
 `
 

@@ -20,7 +20,7 @@ export default async function (context) {
       background: MSImmutableColor.colorWithSVGString(
         '#e7e7e7'
       ).NSColorWithColorSpace(null),
-      height: 325,
+      height: 335,
       width: 450,
       handlers: {
         onReady () {

@@ -43,7 +43,7 @@ IssueList.propTypes = {
 const ScrollDiv = styled.div`
   margin-top: 10px;
   padding-right: 10px;
-  height: 220px;
+  height: 230px;
   overflow-y: scroll;
 `
 
