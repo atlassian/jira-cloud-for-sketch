@@ -12,8 +12,13 @@ export default class Attachment extends Component {
     super(props)
     this.onAttachmentClick = this.onAttachmentClick.bind(this)
     this.onDeleteStarted = this.onDeleteStarted.bind(this)
+    this.dragEnter = this.dragEnter.bind(this)
+    this.dragLeave = this.dragLeave.bind(this)
+    this.drop = this.drop.bind(this)
+
     this.state = {
-      deleting: false
+      deleting: false,
+      dragHover: 0
     }
   }
   render () {
@@ -24,10 +29,17 @@ export default class Attachment extends Component {
     }
     var created = moment(attachment.created)
     return (
-      <AttachmentWrapper style={style}>
+      <AttachmentWrapper
+        style={style}
+        onDragEnter={this.dragEnter}
+        onDragLeave={this.dragLeave}
+        onDragOver={(event) => { event.preventDefault() }}
+        onDropCapture={this.drop}
+      >
         <AttachmentThumbnail
           attachment={attachment}
           onClick={this.onAttachmentClick}
+          dragHover={this.state.dragHover > 0}
         />
         <AttachmentFilename>
           <a href={attachment.content} onClick={this.onAttachmentClick}>
@@ -69,6 +81,28 @@ export default class Attachment extends Component {
     })
     this.props.onDeleteStarted()
   }
+  dragEnter (event) {
+    this.setState(function (prevState) {
+      return { dragHover: prevState.dragHover + 1 }
+    })
+  }
+  dragLeave (event) {
+    this.setState(function (prevState) {
+      return { dragHover: prevState.dragHover - 1 }
+    })
+  }
+  drop (event) {
+    this.setState({ dragHover: false })
+    event.preventDefault()
+    if (!this.state.deleting) {
+      pluginCall(
+        'replaceAttachment',
+        this.props.issueKey,
+        this.props.attachment.id
+      )
+      this.onDeleteStarted() // hack - TODO refactor spinner logic
+    }
+  }
 }
 
 Attachment.propTypes = {
@@ -84,9 +118,6 @@ Attachment.propTypes = {
 const AttachmentWrapper = styled.div`
   margin-right: 3px;
   margin-bottom: 3px;
-  &:nth-child(3n) {
-    margin-right: 0px;
-  }
   position: relative;
   &:hover {
     > .attachment-delete-button.attachment-delete-button {
@@ -124,8 +155,15 @@ class AttachmentThumbnail extends Component {
     }
   }
   render () {
+    var style = {}
+    if (this.props.dragHover) {
+      style.borderWidth = '3px'
+      style.borderColor = '#ffab00'
+      style.borderStyle = 'dashed'
+      style.padding = '1px'
+    }
     return (
-      <ThumbnailWrapper onClick={this.props.onClick}>
+      <ThumbnailWrapper style={style} onClick={this.props.onClick}>
         {this.state.thumbnail ? (
           <ThumbnailImage
             src={this.state.thumbnail}
@@ -161,14 +199,16 @@ class AttachmentThumbnail extends Component {
 
 AttachmentThumbnail.propTypes = {
   attachment: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  dragHover: PropTypes.bool.isRequired
 }
 
 const ThumbnailWrapper = styled.div`
-  width: 128px;
-  height: 96px;
+  width: 122px;
+  height: 90px;
   color: #c1c7d0;
   background-color: #f2f2f2;
+  padding: 3px;
   border: 1px solid gray;
   border-radius: 3px;
   display: flex;
@@ -179,8 +219,8 @@ const ThumbnailWrapper = styled.div`
 `
 
 const ThumbnailImage = styled.img`
-  max-width: 128px;
-  max-height: 96px;
+  max-width: 122px;
+  max-height: 90px;
 `
 
 class AttachmentDeleteButton extends Component {

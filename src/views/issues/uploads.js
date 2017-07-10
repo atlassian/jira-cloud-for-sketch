@@ -12,7 +12,7 @@ export default class Uploads {
   }
 
   async onFilesDropped (issueKey) {
-    executeSafelyAsync(this.context, async () => {
+    return executeSafelyAsync(this.context, async () => {
       const upload = {
         issueKey: issueKey,
         files: getDraggedFiles()
@@ -22,12 +22,12 @@ export default class Uploads {
         issueKey: issueKey,
         count: upload.files.length
       })
-      this.processUploads()
+      return this.processUploads()
     })
   }
 
   async processUploads () {
-    executeSafelyAsync(this.context, async () => {
+    return executeSafelyAsync(this.context, async () => {
       try {
         if (!this.uploading) {
           this.uploading = true

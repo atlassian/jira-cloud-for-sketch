@@ -45,6 +45,12 @@ export default async function (context) {
         },
         deleteAttachment (issueKey, id) {
           attachments.deleteAttachment(issueKey, id)
+        },
+        replaceAttachment (issueKey, id) {
+          executeSafelyAsync(context, async function () {
+            await uploads.onFilesDropped(issueKey)
+            attachments.deleteAttachment(issueKey, id)
+          })
         }
       }
     })

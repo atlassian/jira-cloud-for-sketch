@@ -85,9 +85,6 @@ export default class DropZone extends Component {
     pluginCall('uploadDroppedFiles', this.props.issueKey)
     event.preventDefault()
   }
-  preventDefault (event) {
-    event.preventDefault()
-  }
   render (props) {
     var style = {
       height: '128px',
@@ -130,7 +127,7 @@ export default class DropZone extends Component {
         onDragEnter={this.dragEnter}
         onDragLeave={this.dragLeave}
         onDragStart={this.dragStart}
-        onDragOver={this.preventDefault}
+        onDragOver={(event) => { event.preventDefault() }}
         onDropCapture={this.drop}
       >
         <TextDiv>{text}</TextDiv>
