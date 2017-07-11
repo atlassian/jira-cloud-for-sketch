@@ -13,6 +13,8 @@ import URL from 'url-parse'
 import { trace } from './logger'
 import analytics from './analytics'
 
+// TODO this cache is not shared across Sketch command invocations,
+// so we need to write it to disk in order to reuse & invalidate it
 var cachedBearerToken = null
 var cachedBearerTokenExpiry = null
 
@@ -38,8 +40,8 @@ export async function getSketchClientDetails () {
 
 export async function authorizeSketchForJira (context, jiraUrl) {
   const jiraHost = parseHostname(jiraUrl)
-  // for now, let's clear existing auth details if they hit the 'Connect' button in the Sketch client
-  prefs.unset(keys.jiraHost, keys.clientId, keys.sharedSecret)
+  // for now, let's clear existing host if they hit the 'Connect' button in the Sketch client
+  prefs.unset(keys.jiraHost)
   cachedBearerToken = cachedBearerTokenExpiry = null
   const clientDetails = await getSketchClientDetails()
   const params = {
