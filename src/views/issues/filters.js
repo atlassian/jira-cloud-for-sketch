@@ -23,7 +23,7 @@ export default class Filters {
   }
 
   async onFilterChanged (newFilter) {
-    postSingle('viewIssueListFilterChangeTo' + newFilter, { from: this.currentFilter })
+    postSingle('viewIssueListFilterChangeTo' + newFilter, { previous: this.currentFilter })
     this._onFilterChanged(newFilter)
   }
 
