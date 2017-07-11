@@ -120,6 +120,7 @@ class IssueKey extends Component {
   }
   handleClick () {
     pluginCall('openInBrowser', this.browseUrl())
+    pluginCall('analytics', 'viewIssueOpenInBrowser')
   }
   browseUrl () {
     var issue = this.props.issue

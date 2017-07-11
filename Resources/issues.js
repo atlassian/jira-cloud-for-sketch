@@ -74,11 +74,13 @@ class ViewIssuesPanel extends Component {
     this.setState({
       currentIssue: issue
     })
+    pluginCall('analytics', 'viewIssue')
   }
   handleCloseIssue () {
     this.setState({
       currentIssue: null
     })
+    pluginCall('analytics', 'backToViewIssueList')
   }
 }
 

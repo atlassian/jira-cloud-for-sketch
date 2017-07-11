@@ -11,6 +11,7 @@ import jwt from 'atlassian-jwt'
 import moment from 'moment'
 import URL from 'url-parse'
 import { trace } from './logger'
+import analytics from './analytics'
 
 var cachedBearerToken = null
 var cachedBearerTokenExpiry = null
@@ -27,6 +28,7 @@ export async function getSketchClientDetails () {
     }
     prefs.setString(keys.clientId, json.data.id)
     prefs.setString(keys.sharedSecret, json.data.sharedSecret)
+    analytics.clientIdRetrieved()
   }
   return {
     clientId: prefs.getString(keys.clientId),
@@ -58,10 +60,13 @@ export function isAuthorized () {
 export async function getBearerToken () {
   checkAuthorized()
   const now = moment.utc()
-  if ((!cachedBearerToken) || cachedBearerTokenExpiry < now.unix()) {
+  if (cachedBearerToken && cachedBearerTokenExpiry > now.unix()) {
+    analytics.bearerTokenCacheHit()
+  } else {
     var token = await _getBearerToken()
     cachedBearerTokenExpiry = now.unix() + token.expires_in - bearerTokenExpirySafetyMargin
     cachedBearerToken = token.access_token
+    analytics.bearerTokenCacheMiss()
   }
   return cachedBearerToken
 }

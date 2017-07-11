@@ -1,6 +1,7 @@
 import { executeSafelyAsync, normalizeFilepath } from '../../util'
 import { getDraggedFiles } from '../../pasteboard'
 import { trace } from '../../logger'
+import { postMultiple, event } from '../../analytics'
 
 export default class Uploads {
   constructor (context, webUI, jira) {
@@ -22,6 +23,7 @@ export default class Uploads {
         issueKey: issueKey,
         count: upload.files.length
       })
+      postAnalytics(upload, this.uploading)
       return this.processUploads()
     })
   }
@@ -49,4 +51,25 @@ export default class Uploads {
       }
     })
   }
+}
+
+async function postAnalytics (upload, alreadyUploading) {
+  var events = upload.files.map((file) => {
+    var props = null
+    var lastSlash = file.lastIndexOf('/')
+    var extIndex = file.lastIndexOf('.')
+    if (extIndex > lastSlash && extIndex < file.length() - 1) {
+      props = {extension: file.substring(extIndex + 1)}
+    }
+    return event('viewIssueAttachmentUpload', props)
+  })
+  if (upload.files.length > 1) {
+    events.push(event('viewIssueMultipleAttachmentUpload', {
+      count: upload.files.length,
+      alreadyUploading
+    }))
+  } else {
+    events.push(event('viewIssueSingleAttachmentUpload', { alreadyUploading }))
+  }
+  postMultiple(events)
 }

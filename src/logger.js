@@ -1,28 +1,48 @@
 import { logLevels, logLevel } from './config'
 
 export function trace (message) {
-  logLevel <= logLevels.TRACE && log(message)
+  isTraceEnabled() && log(message)
   return message
+}
+
+export function isTraceEnabled () {
+  return logLevel <= logLevels.TRACE
 }
 
 export function debug (message) {
-  logLevel <= logLevels.DEBUG && log(message)
+  isDebugEnabled() && log(message)
   return message
+}
+
+export function isDebugEnabled () {
+  return logLevel <= logLevels.DEBUG
 }
 
 export function info (message) {
-  logLevel <= logLevels.INFO && log(message)
+  isInfoEnabled() && log(message)
   return message
+}
+
+export function isInfoEnabled () {
+  return logLevel <= logLevels.INFO
 }
 
 export function warn (message) {
-  logLevel <= logLevels.WARN && log(message)
+  isWarnEnabled() && log(message)
   return message
 }
 
+export function isWarnEnabled () {
+  return logLevel <= logLevels.WARN
+}
+
 export function error (message) {
-  logLevel <= logLevels.ERROR && log(message)
+  isErrorEnabled() && log(message)
   return message
+}
+
+export function isErrorEnabled () {
+  return logLevel <= logLevels.ERROR
 }
 
 function log (message) {

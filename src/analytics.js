@@ -1,8 +1,40 @@
 import fetch from 'sketch-module-fetch-polyfill'
 import moment from 'moment'
-import { OFFLINE_DEV, pluginVersion, analyticsApi, analyticsIdKey } from './config'
+import {
+  OFFLINE_DEV,
+  pluginVersion,
+  analyticsApiSingleEvent,
+  analyticsApiMultipleEvents,
+  analyticsIdKey
+} from './config'
 import { isAuthorized, getJiraHost } from './auth'
-import { trace, warn } from './logger'
+import { trace, isTraceEnabled, warn } from './logger'
+
+const eventNames = [
+  'clientIdRetrieved',
+  'bearerTokenCacheMiss',
+  'bearerTokenCacheHit',
+  'jiraConnectPanelOpen',
+  'jiraConnectInitiateDance',
+  'jiraDisconnect', // not implemented yet
+  'viewIssueListPanelOpen',
+  'viewIssueListPanelOpenNotConnected',
+  'viewIssueListDefaultFilter', // suffixed with keys from ./jql-filters
+  'viewIssueListFilterChangeTo', // suffixed with keys from ./jql-filters
+  'viewIssueListFilterLoaded', // suffixed with keys from ./jql-filters
+  'viewIssue',
+  'viewIssue10Seconds', // not implemented yet
+  'backToViewIssueList',
+  'viewIssueAttachmentsLoaded',
+  'viewIssueAttachmentLoaded',
+  'viewIssueSingleAttachmentUpload',
+  'viewIssueMultipleAttachmentUpload',
+  'viewIssueAttachmentUpload',
+  'viewIssueAttachmentReplace',
+  'viewIssueAttachmentDelete',
+  'viewIssueAttachmentOpen',
+  'viewIssueOpenInBrowser'
+]
 
 var analyticsId = NSUserDefaults.standardUserDefaults().objectForKey(
   analyticsIdKey
@@ -15,9 +47,9 @@ if (!analyticsId) {
   )
 }
 
-export default async function (context, eventName) {
+export function event (eventName, properties) {
   // https://extranet.atlassian.com/display/MOD/Public+Analytics+aka+GAS
-  var payload = {
+  const payload = {
     name: eventName,
     server: (!OFFLINE_DEV && isAuthorized()) ? getJiraHost() : '-',
     product: 'atlassian-sketch-plugin',
@@ -26,20 +58,46 @@ export default async function (context, eventName) {
     user: analyticsId,
     serverTime: moment.now()
   }
-  var body = JSON.stringify(payload)
-  trace(`analytics event ${body}`)
+  if (properties) {
+    payload.properties = properties
+  }
+  return payload
+}
+
+export async function postSingle (eventName, properties) {
+  return _postToAnalyticsApi(analyticsApiSingleEvent, event(eventName, properties))
+}
+
+export async function postMultiple (events) {
+  return _postToAnalyticsApi(analyticsApiMultipleEvents, {events: events})
+}
+
+const events = {}
+eventNames.map(function (eventName) {
+  events[eventName] = function (properties) {
+    return postSingle(eventName, properties)
+  }
+})
+export default events
+
+async function _postToAnalyticsApi (api, payload) {
+  const body = JSON.stringify(payload)
+  trace(`analytics event(s) ${body}`)
   if (!OFFLINE_DEV) {
     try {
-      const res = await fetch(analyticsApi, {
+      const res = await fetch(api, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: body
       })
-      trace(`analytics posted (${res.status})`)
+      if (isTraceEnabled()) {
+        trace(`analytics posted (${res.status})`)
+        trace(await res.text())
+      }
     } catch (e) {
-      warn(`Failed to send analytics event ${e}`)
+      warn(`Failed to send analytics event(s) ${e}`)
     }
   }
 }

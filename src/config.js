@@ -28,7 +28,9 @@ export const jiraSketchIntegrationApi = {
   bearer: jiraSketchIntegrationApiBaseUrl + '/clients/bearer'
 }
 
-export const analyticsApi = 'https://mgas.prod.public.atl-paas.net/v1/event'
+export const analyticsApiBaseUrl = 'https://mgas.prod.public.atl-paas.net/v1'
+export const analyticsApiSingleEvent = analyticsApiBaseUrl + '/event'
+export const analyticsApiMultipleEvents = analyticsApiBaseUrl + '/events'
 export const analyticsIdKey = 'atlassian.analytics.id'
 
 export const bearerTokenExpirySafetyMargin = 60 // seconds

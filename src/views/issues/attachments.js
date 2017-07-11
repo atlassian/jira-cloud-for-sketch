@@ -1,4 +1,5 @@
 import { executeSafelyAsync, openInDefaultApp } from '../../util'
+import analytics, { postMultiple, event } from '../../analytics'
 
 export default class Attachments {
   constructor (context, webUI, jira) {
@@ -15,6 +16,7 @@ export default class Attachments {
         issueKey,
         attachments
       })
+      postAnalytics(attachments)
       for (let i = 0; i < attachments.length; i++) {
         // TODO parallelize
         const attachment = attachments[i]
@@ -46,6 +48,19 @@ export default class Attachments {
       const filepath = await this.jira.downloadAttachment(url, filename)
       this.webUI.dispatchWindowEvent('jira.attachment.opened', eventPayload)
       openInDefaultApp(filepath)
+      analytics.viewIssueAttachmentOpen()
     })
   }
+}
+
+async function postAnalytics (attachments) {
+  var analyticsEvents = attachments.map((attachment) => {
+    return event('viewIssueAttachmentLoaded', {
+      mimeType: attachment.mimeType,
+      thumbnail: attachment.thumbnail && true,
+      size: attachment.size
+    })
+  })
+  analyticsEvents.push(event('viewIssueAttachmentsLoaded', {count: attachments.length}))
+  postMultiple(analyticsEvents)
 }

@@ -1,7 +1,7 @@
 import WebUI from 'sketch-module-web-view'
 import { assign } from 'lodash'
-import { randomHex } from './util'
-import event from './analytics'
+import { executeSafely, randomHex, openInBrowser } from './util'
+import analytics from './analytics'
 
 /**
  * Important to note:
@@ -17,6 +17,7 @@ import event from './analytics'
  * via https://stackoverflow.com/a/7389032
  */
 export default function (context, options) {
+  // default options
   options = assign(
     {
       identifier: `jira-sketch-plugin.${options.name}.` + randomHex(0xffffffff),
@@ -28,15 +29,33 @@ export default function (context, options) {
     },
     options
   )
-  var w = new WebUI(context, options.page, options)
-  // w.panel.hidesOnDeactivate = false
-  // w.panel.setLevel(NSNormalWindowLevel)
-  w.dispatchWindowEvent = function (eventName, eventDetail) {
+
+  // default handlers
+  options.handlers = assign(
+    {
+      analytics (eventName, properties) {
+        analytics[eventName](properties)
+      },
+      openInBrowser (url) {
+        executeSafely(context, function () {
+          openInBrowser(url)
+        })
+      }
+    },
+    options.handlers
+  )
+
+  var webUI = new WebUI(context, options.page, options)
+
+  // default panel behaviour
+  // webUI.panel.hidesOnDeactivate = false
+  // webUI.panel.setLevel(NSNormalWindowLevel)
+
+  webUI.dispatchWindowEvent = function (eventName, eventDetail) {
     var eventJson = JSON.stringify({ detail: eventDetail })
-    w.eval(
+    webUI.eval(
       `window.dispatchEvent(new CustomEvent('${eventName}', ${eventJson}))`
     )
   }
-  event(context, `${options.name}PanelOpened`)
-  return w
+  return webUI
 }

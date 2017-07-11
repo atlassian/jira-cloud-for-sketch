@@ -1,12 +1,13 @@
 import '../defaultImports'
 import { executeSafely, executeSafelyAsync } from '../util'
 import { authorizeSketchForJira } from '../auth'
-import jiraWebUI from '../jira-webui'
+import analytics from '../analytics'
+import createWebUI from '../webui-common'
 
 export default function (context) {
   // TODO should close any other open views before allowing the user to reconnect!
   executeSafely(context, function () {
-    const webUI = jiraWebUI(context, {
+    const webUI = createWebUI(context, {
       name: 'connect',
       height: 320,
       width: 340,
@@ -15,6 +16,7 @@ export default function (context) {
           executeSafelyAsync(context, async function () {
             webUI.panel.close()
             await authorizeSketchForJira(context, jiraUrl)
+            analytics.jiraConnectInitiateDance()
           })
         },
         cancel () {
@@ -24,5 +26,6 @@ export default function (context) {
         }
       }
     })
+    analytics.jiraConnectPanelOpen()
   })
 }

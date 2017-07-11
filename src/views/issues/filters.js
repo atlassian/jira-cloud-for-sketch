@@ -1,5 +1,6 @@
 import { keys } from 'lodash'
 import { executeSafelyAsync } from '../../util'
+import { postSingle } from '../../analytics'
 
 export default class Filters {
   constructor (context, webUI, jira) {
@@ -16,11 +17,17 @@ export default class Filters {
         filters: this.jira.jqlFilters,
         filterSelected: defaultFilter
       })
-      this.onFilterChanged(defaultFilter)
+      this._onFilterChanged(defaultFilter)
+      postSingle('viewIssueListDefaultFilter' + defaultFilter)
     })
   }
 
   async onFilterChanged (newFilter) {
+    postSingle('viewIssueListFilterChangeTo' + newFilter, { from: this.currentFilter })
+    this._onFilterChanged(newFilter)
+  }
+
+  async _onFilterChanged (newFilter) {
     executeSafelyAsync(this.context, async () => {
       this.currentFilter = newFilter
       this.webUI.dispatchWindowEvent('jira.issues.loading', {
@@ -31,6 +38,9 @@ export default class Filters {
       if (newFilter == this.currentFilter) {
         this.webUI.dispatchWindowEvent('jira.issues.loaded', {
           issues: issues
+        })
+        postSingle('viewIssueListFilterLoaded' + newFilter, {
+          count: issues.length
         })
       }
     })
