@@ -11,9 +11,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            babelrc: false,
-            plugins: ['babel-plugin-add-module-exports'],
-            presets: ['es2015', 'react', 'stage-1']
+            babelrc: true
           }
         }
       },
