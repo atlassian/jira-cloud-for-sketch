@@ -91,8 +91,33 @@ export default class JIRA {
     })
     return res
   }
+
+  async addComment (issueKey, comment) {
+    var commentUrl = `${this.apiRoot}/issue/${issueKey}/comment`
+    var body = JSON.stringify({body: comment})
+    const res = await fetch(commentUrl, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: await authHeader()
+      },
+      body
+    })
+    return commentPermalink(issueKey, await res.json())
+  }
 }
 
 async function authHeader () {
   return 'Bearer ' + (await getBearerToken())
+}
+
+function commentPermalink (issueKey, commentJson) {
+  const baseUrl = commentJson.self.substring(0, commentJson.self.indexOf('/rest/'))
+  const commentId = commentJson.id
+  const path = `${baseUrl}/browse/${issueKey}`
+  const query = `?focusedCommentId=${commentId}` +
+                '&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel'
+  const fragment = `#comment-${commentId}`
+  return `${path}${query}${fragment}`
 }

@@ -6,6 +6,7 @@ import Connect from '../connect'
 import Filters from './filters'
 import Uploads from './uploads'
 import Attachments from './attachments'
+import Comments from './comments'
 import analytics from '../../analytics'
 import { OFFLINE_DEV } from '../../config'
 const JIRA = require(OFFLINE_DEV ? '../../mock-jira' : '../../jira')
@@ -50,6 +51,9 @@ export default async function (context) {
             attachments.deleteAttachment(issueKey, id)
             analytics.viewIssueAttachmentReplace()
           })
+        },
+        addComment (issueKey, comment) {
+          comments.addComment(issueKey, comment)
         }
       }
     })
@@ -58,6 +62,7 @@ export default async function (context) {
     var filters = new Filters(context, webUI, jira)
     var uploads = new Uploads(context, webUI, jira)
     var attachments = new Attachments(context, webUI, jira)
+    var comments = new Comments(context, webUI, jira)
 
     analytics.viewIssueListPanelOpen()
   })

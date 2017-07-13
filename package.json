@@ -65,6 +65,7 @@
     "@atlaskit/css-reset": "^1.1.4",
     "@atlaskit/dropdown-menu": "^3.0.1",
     "@atlaskit/dynamic-table": "^3.0.0",
+    "@atlaskit/field-base": "^7.0.1",
     "@atlaskit/field-text": "^2.6.2",
     "@atlaskit/icon": "^7.0.1",
     "@atlaskit/lozenge": "^3.0.2",

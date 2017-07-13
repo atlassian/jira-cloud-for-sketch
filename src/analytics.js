@@ -33,7 +33,8 @@ const eventNames = [
   'viewIssueAttachmentReplace',
   'viewIssueAttachmentDelete',
   'viewIssueAttachmentOpen',
-  'viewIssueOpenInBrowser'
+  'viewIssueOpenInBrowser',
+  'viewIssueCommentAdd'
 ]
 
 var analyticsId = NSUserDefaults.standardUserDefaults().objectForKey(

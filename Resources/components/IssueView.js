@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import pluginCall from 'sketch-module-web-view/client'
 import AssigneeAvatar from './AssigneeAvatar'
 import Attachments from './Attachments'
+import Comments from './Comments'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 
@@ -13,6 +14,7 @@ export default class IssueView extends Component {
         <BackButton onClose={this.props.onClose} />
         <IssueSummary issue={this.props.issue} />
         <Attachments issueKey={this.props.issue.key} />
+        <Comments issueKey={this.props.issue.key} />
       </div>
     )
   }

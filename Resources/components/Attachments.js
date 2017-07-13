@@ -110,7 +110,6 @@ const AttachmentsArea = styled.div`
 
 const AttachmentsHeader = styled.div`
   width: 100%;
-  maring-bottom: 5px;
   display: flex;
   justify-content: flex-start;
   align-content: center;
