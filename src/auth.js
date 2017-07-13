@@ -2,24 +2,21 @@ import fetch from 'sketch-module-fetch-polyfill'
 import { openInBrowser } from './util'
 import {
   jiraSketchIntegrationApi,
-  jiraSketchIntegrationAuthRedirectUrl,
-  bearerTokenExpirySafetyMargin
+  jiraSketchIntegrationAuthRedirectUrl
 } from './config'
-import prefs, { keys } from './prefs'
+import { isSet, setString, getString, unset, keys } from './prefs'
 import queryString from 'query-string'
 import jwt from 'atlassian-jwt'
 import moment from 'moment'
 import URL from 'url-parse'
 import { trace } from './logger'
 import analytics from './analytics'
+import TokenCache from './token-cache'
 
-// TODO this cache is not shared across Sketch command invocations,
-// so we need to write it to disk in order to reuse & invalidate it
-var cachedBearerToken = null
-var cachedBearerTokenExpiry = null
+const tokenCache = new TokenCache(_getBearerToken)
 
 export async function getSketchClientDetails () {
-  if (!prefs.isSet(keys.clientId, keys.sharedSecret)) {
+  if (!isSet(keys.clientId, keys.sharedSecret)) {
     // let any http errors bubble up for now
     const response = await fetch(jiraSketchIntegrationApi.client, {
       method: 'POST'
@@ -28,21 +25,21 @@ export async function getSketchClientDetails () {
     if (!json.data.id || !json.data.sharedSecret) {
       throw new Error('Bad response from jira-sketch-integration /clients API')
     }
-    prefs.setString(keys.clientId, json.data.id)
-    prefs.setString(keys.sharedSecret, json.data.sharedSecret)
+    setString(keys.clientId, json.data.id)
+    setString(keys.sharedSecret, json.data.sharedSecret)
     analytics.clientIdRetrieved()
   }
   return {
-    clientId: prefs.getString(keys.clientId),
-    sharedSecret: prefs.getString(keys.sharedSecret)
+    clientId: getString(keys.clientId),
+    sharedSecret: getString(keys.sharedSecret)
   }
 }
 
 export async function authorizeSketchForJira (context, jiraUrl) {
   const jiraHost = parseHostname(jiraUrl)
   // for now, let's clear existing host if they hit the 'Connect' button in the Sketch client
-  prefs.unset(keys.jiraHost)
-  cachedBearerToken = cachedBearerTokenExpiry = null
+  unset(keys.jiraHost)
+  tokenCache.flush()
   const clientDetails = await getSketchClientDetails()
   const params = {
     clientId: clientDetails.clientId,
@@ -52,25 +49,16 @@ export async function authorizeSketchForJira (context, jiraUrl) {
     `${jiraSketchIntegrationAuthRedirectUrl}?${queryString.stringify(params)}`
   )
   // store the JIRA host (TODO multi-instance support)
-  prefs.setString(keys.jiraHost, jiraHost)
+  setString(keys.jiraHost, jiraHost)
 }
 
 export function isAuthorized () {
-  return prefs.isSet(keys.jiraHost, keys.clientId, keys.sharedSecret)
+  return isSet(keys.jiraHost, keys.clientId, keys.sharedSecret)
 }
 
 export async function getBearerToken () {
   checkAuthorized()
-  const now = moment.utc()
-  if (cachedBearerToken && cachedBearerTokenExpiry > now.unix()) {
-    analytics.bearerTokenCacheHit()
-  } else {
-    var token = await _getBearerToken()
-    cachedBearerTokenExpiry = now.unix() + token.expires_in - bearerTokenExpirySafetyMargin
-    cachedBearerToken = token.access_token
-    analytics.bearerTokenCacheMiss()
-  }
-  return cachedBearerToken
+  return tokenCache.get()
 }
 
 async function _getBearerToken () {
@@ -86,16 +74,15 @@ async function _getBearerToken () {
       'Bad response from jira-sketch-integration /clients/bearer API'
     )
   }
-  // trace(JSON.stringify(json.data))
-  return json.data
+  return [json.data.access_token, json.data.expires_in]
 }
 
 export function getClientId () {
-  return prefs.getString(keys.clientId)
+  return getString(keys.clientId)
 }
 
 export function getJiraHost () {
-  return prefs.getString(keys.jiraHost)
+  return getString(keys.jiraHost)
 }
 
 function checkAuthorized () {
@@ -114,7 +101,7 @@ function jwtAuthHeader () {
       aud: ['jira-sketch-integration'],
       sub: getJiraHost()
     },
-    prefs.getString(keys.sharedSecret)
+    getString(keys.sharedSecret)
   )
   return `JWT ${token}`
 }

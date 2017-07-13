@@ -7,31 +7,27 @@ const _NOT_SET = '__NOT_SET'
 export const keys = {
   clientId: 'clientId',
   sharedSecret: 'sharedSecret',
-  jiraHost: 'jiraHost'
+  jiraHost: 'jiraHost',
+  authToken: 'authToken',
+  authTokenExpiry: 'authTokenExpiry'
 }
 
-var cachedPrefs = null
-
 function getUserPrefs () {
-  if (!cachedPrefs) {
-    cachedPrefs = prefsManager.getUserPreferences(
-      pluginName,
-      mapValues(keys, () => _NOT_SET)
-    )
-  }
-  return cachedPrefs
+  return prefsManager.getUserPreferences(
+    pluginName,
+    mapValues(keys, () => _NOT_SET)
+  )
 }
 
 function setUserPrefs (prefs) {
   prefsManager.setUserPreferences(pluginName, prefs)
-  cachedPrefs = null
 }
 
 function isValueSet (value) {
   return value && value !== _NOT_SET && value !== 'null'
 }
 
-function getString (key) {
+export function getString (key) {
   const prefs = getUserPrefs()
   const value = prefs[key]
   if (isValueSet(value)) {
@@ -40,13 +36,17 @@ function getString (key) {
   throw new Error(`No preference set for key "${key}"`)
 }
 
-function setString (key, value) {
+export function getInt (key) {
+  return parseInt(getString(key))
+}
+
+export function setString (key, value) {
   var prefs = getUserPrefs()
-  prefs[key] = value
+  prefs[key] = value + ''
   setUserPrefs(prefs)
 }
 
-function isSet (/* [key, keys...] */) {
+export function isSet (/* key, keys... */) {
   var prefs = getUserPrefs()
   for (var i = 0; i < arguments.length; i++) {
     var key = arguments[i]
@@ -58,7 +58,7 @@ function isSet (/* [key, keys...] */) {
   return true
 }
 
-function unset (/* [key, keys...] */) {
+export function unset (/* [key, keys...] */) {
   var args = Array.from(arguments)
   var prefs = getUserPrefs()
   prefs = mapValues(prefs, (value, key) => {
@@ -69,12 +69,4 @@ function unset (/* [key, keys...] */) {
     }
   })
   setUserPrefs(prefs)
-}
-
-export default {
-  getString,
-  setString,
-  isSet,
-  unset,
-  keys
 }

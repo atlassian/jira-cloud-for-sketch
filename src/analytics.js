@@ -14,6 +14,7 @@ const eventNames = [
   'clientIdRetrieved',
   'bearerTokenCacheMiss',
   'bearerTokenCacheHit',
+  'bearerTokenCacheFlush',
   'jiraConnectPanelOpen',
   'jiraConnectInitiateDance',
   'jiraDisconnect', // not implemented yet
