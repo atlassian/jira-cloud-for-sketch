@@ -16,13 +16,12 @@ export default class DropZone extends Component {
     this.state = {
       /*
       Tracks whether the user is currently dragging an item over the DropZone.
-      Since children of the DropZone trigger their own drag events,
-      we keep a count of dragEnter vs dragLeave and remove the drag hover effect
-      when the counter falls to zero.
+      Since children of the DropZone trigger their own drag events, we keep a
+      count of dragEnter vs dragLeave and remove the drag hover effect when the
+      counter falls to zero.
       */
       dragHover: 0,
-      uploadsComplete: 0,
-      uploadsTotal: 0
+      uploading: 0
     }
   }
   componentDidMount () {
@@ -36,17 +35,8 @@ export default class DropZone extends Component {
   onUploadQueued (event) {
     if (event.detail.issueKey == this.props.issueKey) {
       this.setState(function (prevState) {
-        if (prevState.uploadsTotal == prevState.uploadsComplete) {
-          // if all pending uploads are complete, reset the counters
-          return {
-            uploadsTotal: event.detail.count,
-            uploadsComplete: 0
-          }
-        } else {
-          // otherwise update the current total
-          return {
-            uploadsTotal: prevState.uploadsTotal + event.detail.count
-          }
+        return {
+          uploading: prevState.uploading + event.detail.count
         }
       })
       this.props.onUploadStarted(event.detail.count)
@@ -56,7 +46,7 @@ export default class DropZone extends Component {
     if (event.detail.issueKey == this.props.issueKey) {
       this.setState(function (prevState) {
         return {
-          uploadsComplete: prevState.uploadsComplete + event.detail.count
+          uploading: prevState.uploading - event.detail.count
         }
       })
       this.props.onUploadComplete(event.detail.count)
@@ -86,43 +76,18 @@ export default class DropZone extends Component {
     event.preventDefault()
   }
   render (props) {
-    var style = {
-      height: '128px',
-      width: '122px',
-      marginRight: '7px',
-      marginBottom: '3px',
-      padding: '3px',
-      borderRadius: '3px',
-      borderStyle: 'dashed',
-      borderWidth: '1px',
-      borderColor: 'gray',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-around'
-    }
+    var style = {}
     if (this.state.dragHover > 0) {
       style.borderWidth = '3px'
-      style.padding = '1px'
+      style.padding = '2px'
       style.borderColor = '#ffab00'
     }
-    var text
-    if (this.state.uploadsTotal == 0) {
-      text = 'Drag artboards and layers here to upload'
-    } else if (this.state.uploadsComplete == this.state.uploadsTotal) {
-      if (this.state.uploadsComplete == 1) {
-        text = 'Uploaded 1 file'
-      } else {
-        text = `Uploaded ${this.state.uploadsTotal} files`
-      }
-    } else {
-      if (this.state.uploadsTotal == 1) {
-        text = 'Uploading 1 file...'
-      } else {
-        text = `Uploading ${this.state.uploadsComplete + 1} of ${this.state.uploadsTotal} files...`
-      }
+    var text = 'Drag your artboards and layers here'
+    if (this.state.uploading > 0) {
+      text = 'Uploading...'
     }
     return (
-      <div
+      <DropZoneDiv
         style={style}
         onDragEnter={this.dragEnter}
         onDragLeave={this.dragLeave}
@@ -130,8 +95,9 @@ export default class DropZone extends Component {
         onDragOver={(event) => { event.preventDefault() }}
         onDropCapture={this.drop}
       >
+        <DocumentsImg src='documents.png' alt='Documents' />
         <TextDiv>{text}</TextDiv>
-      </div>
+      </DropZoneDiv>
     )
   }
 }
@@ -142,9 +108,27 @@ DropZone.propTypes = {
   onUploadComplete: PropTypes.func.isRequired
 }
 
+const DropZoneDiv = styled.div`
+  height: 64px;
+  width: 462px;
+  margin-right: 7px;
+  margin-bottom: 3px;
+  padding: 3px;
+  border-radius: 3px;
+  border-style: dashed;
+  border-width: 2px;
+  border-color: #C1C7D0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const DocumentsImg = styled.img`
+  width: 48px;
+`
+
 const TextDiv = styled.div`
+  margin-left: 8px;
   color: #7a869a;
   font-size: 12px;
-  width: 100px;
-  text-align: center;
 `
