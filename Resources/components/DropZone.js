@@ -110,9 +110,8 @@ DropZone.propTypes = {
 
 const DropZoneDiv = styled.div`
   height: 64px;
-  width: 462px;
-  margin-right: 7px;
-  margin-bottom: 3px;
+  width: 456px;
+  margin-bottom: 16px;
   padding: 3px;
   border-radius: 3px;
   border-style: dashed;

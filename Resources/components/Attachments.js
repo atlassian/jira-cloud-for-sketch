@@ -95,7 +95,6 @@ export default class Attachments extends Component {
 
 const AttachmentsArea = styled.div`
   padding-top: 10px;
-  padding-bottom: 10px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;

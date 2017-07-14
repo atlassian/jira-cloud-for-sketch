@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import pluginCall from 'sketch-module-web-view/client'
-import DocumentIcon from '@atlaskit/icon/glyph/document'
+import { CardView } from '@atlaskit/media-card'
 import RemoveIcon from '@atlaskit/icon/glyph/remove'
 import moment from 'moment'
-import filesize from 'filesize'
 
 export default class Attachment extends Component {
   constructor (props) {
@@ -15,7 +14,6 @@ export default class Attachment extends Component {
     this.dragEnter = this.dragEnter.bind(this)
     this.dragLeave = this.dragLeave.bind(this)
     this.drop = this.drop.bind(this)
-
     this.state = {
       deleting: false,
       dragHover: 0
@@ -24,10 +22,6 @@ export default class Attachment extends Component {
   render () {
     var attachment = this.props.attachment
     var style = {}
-    if (this.state.deleting) {
-      style.opacity = '0.3'
-    }
-    var created = moment(attachment.created)
     return (
       <AttachmentWrapper
         style={style}
@@ -36,31 +30,13 @@ export default class Attachment extends Component {
         onDragOver={(event) => { event.preventDefault() }}
         onDropCapture={this.drop}
       >
-        <AttachmentThumbnail
+        <AttachmentCard
           attachment={attachment}
           onClick={this.onAttachmentClick}
           dragHover={this.state.dragHover > 0}
+          issueKey={this.props.issueKey}
+          onDeleteStarted={this.props.onDeleteStarted}
         />
-        <AttachmentFilename>
-          <a href={attachment.content} onClick={this.onAttachmentClick}>
-            {attachment.filename}
-          </a>
-        </AttachmentFilename>
-        <AttachmentDetailWrapper>
-          <div title={created.format('LLL')}>
-            {created.fromNow()}
-          </div>
-          <div>
-            {filesize(attachment.size, { round: 0 })}
-          </div>
-        </AttachmentDetailWrapper>
-        {!this.state.deleting && (
-          <AttachmentDeleteButton
-            issueKey={this.props.issueKey}
-            attachment={this.props.attachment}
-            onDeleteStarted={this.onDeleteStarted}
-          />
-        )}
       </AttachmentWrapper>
     )
   }
@@ -116,8 +92,11 @@ Attachment.propTypes = {
   selector more specific, ensuring the display:block; takes precedence.
 */
 const AttachmentWrapper = styled.div`
-  margin-right: 3px;
-  margin-bottom: 3px;
+  margin-bottom: 16px;
+  margin-left: 16px;
+  &:nth-of-type(3n-1) {
+    margin-left: 0px;
+  }
   position: relative;
   &:hover {
     > .attachment-delete-button.attachment-delete-button {
@@ -126,27 +105,7 @@ const AttachmentWrapper = styled.div`
   }
 `
 
-const AttachmentFilename = styled.div`
-  color: #7a869a;
-  font-size: 12px;
-  width: 128px;
-  padding: 2px 3px 0 3px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-`
-
-const AttachmentDetailWrapper = styled.div`
-  color: #7a869a;
-  font-size: 10px;
-  width: 128px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 3px;
-`
-
-class AttachmentThumbnail extends Component {
+class AttachmentCard extends Component {
   constructor (props) {
     super(props)
     this.onThumbnailLoaded = this.onThumbnailLoaded.bind(this)
@@ -162,21 +121,39 @@ class AttachmentThumbnail extends Component {
       style.borderStyle = 'dashed'
       style.padding = '1px'
     }
+    var attachment = this.props.attachment
+    var imageMetadata = {
+      id: attachment.id,
+      mediaType: 'image',
+      mimeType: attachment.mimeType,
+      name: attachment.filename,
+      size: attachment.size,
+      creationDate: moment(attachment.created).valueOf()
+    }
+    var actions = [{
+      label: 'Delete',
+      type: 'delete',
+      handler: (item, event) => {
+        this.props.onDeleteStarted()
+        pluginCall(
+          'deleteAttachment',
+          this.props.issueKey,
+          this.props.attachment.id
+        )
+      }
+    }]
     return (
-      <ThumbnailWrapper style={style} onClick={this.props.onClick}>
-        {this.state.thumbnail ? (
-          <ThumbnailImage
-            src={this.state.thumbnail}
-            alt={this.props.attachment.filename}
-            title={this.props.attachment.filename}
-            />
-          ) : (
-            <DocumentIcon
-              label={this.props.attachment.filename}
-              size='large'
-            />
-          )}
-      </ThumbnailWrapper>
+      <CardWrapper style={style} onClick={this.props.onClick}>
+        <CardView
+          status='complete'
+          appearance='image'
+          metadata={imageMetadata}
+          dataURI={this.state.thumbnail}
+          dimensions={{width: 144}}
+          resizeMode='full-fit'
+          actions={actions}
+        />
+      </CardWrapper>
     )
   }
   componentDidMount () {
@@ -197,30 +174,16 @@ class AttachmentThumbnail extends Component {
   }
 }
 
-AttachmentThumbnail.propTypes = {
+AttachmentCard.propTypes = {
+  issueKey: PropTypes.string.isRequired,
   attachment: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
-  dragHover: PropTypes.bool.isRequired
+  dragHover: PropTypes.bool.isRequired,
+  onDeleteStarted: PropTypes.func.isRequired
 }
 
-const ThumbnailWrapper = styled.div`
-  width: 122px;
-  height: 90px;
-  color: #c1c7d0;
-  background-color: #f2f2f2;
-  padding: 3px;
-  border: 1px solid gray;
-  border-radius: 3px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  overflow: hidden;
-  cursor: pointer;
-`
-
-const ThumbnailImage = styled.img`
-  max-width: 122px;
-  max-height: 90px;
+const CardWrapper = styled.div`
+  width: 145px;
 `
 
 class AttachmentDeleteButton extends Component {
