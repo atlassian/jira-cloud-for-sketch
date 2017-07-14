@@ -118,6 +118,8 @@ const ModalPanel = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+  width: 470px;
+  height: 320px;
   padding: 10px 20px 20px 20px;
   background-color: white;
 `

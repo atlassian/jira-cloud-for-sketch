@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import pluginCall from 'sketch-module-web-view/client'
-import AssigneeAvatar from './AssigneeAvatar'
+import { akColorN100, akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import Attachments from './Attachments'
 import Comments from './Comments'
 import styled from 'styled-components'
@@ -11,7 +11,7 @@ export default class IssueView extends Component {
   render () {
     return (
       <div>
-        <BackButton onClose={this.props.onClose} />
+        <Breadcrumbs issue={this.props.issue} onClose={this.props.onClose} />
         <IssueSummary issue={this.props.issue} />
         <Attachments issueKey={this.props.issue.key} />
         <Comments issueKey={this.props.issue.key} />
@@ -25,89 +25,52 @@ IssueView.propTypes = {
   onClose: PropTypes.func.isRequired
 }
 
-class BackButton extends Component {
+class Breadcrumbs extends Component {
   render () {
-    return <ClickableH3 onClick={this.props.onClose}>&lt; Back</ClickableH3>
+    return (
+      <BreadcrumbsWrapper>
+        <BackLink onClose={this.props.onClose} />
+        <Separator>/</Separator>
+        <IssueKey issue={this.props.issue} />
+      </BreadcrumbsWrapper>
+    )
   }
 }
 
-BackButton.propTypes = {
+Breadcrumbs.propTypes = {
+  issue: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired
 }
 
-const ClickableH3 = styled.h3`
+const BreadcrumbsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+class BackLink extends Component {
+  render () {
+    return <ClickableSpan onClick={this.props.onClose}>
+      &lt; Sketch JIRA plugin
+    </ClickableSpan>
+  }
+}
+
+BackLink.propTypes = {
+  onClose: PropTypes.func.isRequired
+}
+
+const ClickableSpan = styled.span`
   cursor: pointer;
 `
 
-class IssueSummary extends Component {
-  render () {
-    var issue = this.props.issue
-    return (
-      <SummaryDiv>
-        <SummaryText>{issue.fields.summary}</SummaryText>
-        <SummaryInfoBar issue={issue} />
-      </SummaryDiv>
-    )
-  }
-}
-
-IssueSummary.propTypes = {
-  issue: PropTypes.object.isRequired
-}
-
-const SummaryDiv = styled.div`
-  margin-top: 10px;
-  padding: 12px 12px 3px 12px;
-  border-radius: 3px;
-  background-color: #FAFBFC;
-  border-radius: 3px;
+const Separator = styled.div`
+  color: ${akColorN100};
+  padding-left: ${akGridSizeUnitless}px;
+  text-align: center;
+  width: ${akGridSizeUnitless}px;
+  font-size: 16px;
+  height: 24px;
 `
-
-const SummaryText = styled.div`
-  max-height: 70px;
-`
-
-class SummaryInfoBar extends Component {
-  render () {
-    var issue = this.props.issue
-    return (
-      <InfoBarDiv>
-        <IssueType type={issue.fields.issuetype} />
-        <KeyAndAvatarWrapper>
-          <IssueKey issue={issue} />
-          <AssigneeAvatar assignee={issue.fields.assignee} />
-        </KeyAndAvatarWrapper>
-      </InfoBarDiv>
-    )
-  }
-}
-
-SummaryInfoBar.propTypes = {
-  issue: PropTypes.object.isRequired
-}
-
-const InfoBarDiv = styled.div`
-  margin-top: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-
-const KeyAndAvatarWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-class IssueType extends Component {
-  render () {
-    var type = this.props.type
-    return <img src={type.iconUrl} title={type.name} />
-  }
-}
-
-IssueType.propTypes = {
-  type: PropTypes.object.isRequired
-}
 
 class IssueKey extends Component {
   constructor (props) {
@@ -117,6 +80,7 @@ class IssueKey extends Component {
   render () {
     return (
       <IssueKeyLink onClick={this.handleClick} title='Open issue in browser'>
+        <IssueType type={this.props.issue.fields.issuetype} />
         {this.props.issue.key}
       </IssueKeyLink>
     )
@@ -138,7 +102,45 @@ IssueKey.propTypes = {
 
 const IssueKeyLink = styled.div`
   cursor: pointer;
-  margin-right: 10px;
+  margin-left: ${akGridSizeUnitless}px;
   color: #7a869a;
   font-size: 12px;
+  display: flex;
+  align-items: center;
+`
+
+class IssueType extends Component {
+  render () {
+    var type = this.props.type
+    return (
+      <TypeIcon src={type.iconUrl} title={type.name} />
+    )
+  }
+}
+
+IssueType.propTypes = {
+  type: PropTypes.object.isRequired
+}
+
+const TypeIcon = styled.img`
+  margin-right: 4px;
+`
+
+class IssueSummary extends Component {
+  render () {
+    var issue = this.props.issue
+    return (
+      <SummaryDiv>
+        <h5>{issue.fields.summary}</h5>
+      </SummaryDiv>
+    )
+  }
+}
+
+IssueSummary.propTypes = {
+  issue: PropTypes.object.isRequired
+}
+
+const SummaryDiv = styled.div`
+  margin-top: 10px;
 `

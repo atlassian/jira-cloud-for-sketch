@@ -26,12 +26,6 @@ export default class Attachments extends Component {
   render () {
     return (
       <AttachmentsArea>
-        <AttachmentsHeader>
-          <h4>Attachments</h4>
-          <SpinnerWrapper>
-            <Spinner size='small' isCompleting={!this.state.tasks} />
-          </SpinnerWrapper>
-        </AttachmentsHeader>
         <DropZone
           issueKey={this.props.issueKey}
           onUploadStarted={this.onUploadStarted}
@@ -106,18 +100,6 @@ const AttachmentsArea = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
   align-content: flex-start;
-`
-
-const AttachmentsHeader = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-content: center;
-`
-
-const SpinnerWrapper = styled.div`
-  margin-left: 5px;
-  height: 25px;
 `
 
 Attachments.propTypes = {
