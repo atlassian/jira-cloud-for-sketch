@@ -7,6 +7,7 @@ import Filters from './filters'
 import Uploads from './uploads'
 import Attachments from './attachments'
 import Comments from './comments'
+import Profile from './profile'
 import analytics from '../../analytics'
 import { OFFLINE_DEV } from '../../config'
 const JIRA = require(OFFLINE_DEV ? '../../mock-jira' : '../../jira')
@@ -25,6 +26,7 @@ export default async function (context) {
       handlers: {
         onReady () {
           filters.onReady()
+          profile.onReady()
         },
         filterSelected (filterKey) {
           filters.onFilterChanged(filterKey)
@@ -60,6 +62,7 @@ export default async function (context) {
     var uploads = new Uploads(context, webUI, jira)
     var attachments = new Attachments(context, webUI, jira)
     var comments = new Comments(context, webUI, jira)
+    var profile = new Profile(context, webUI, jira)
 
     analytics.viewIssueListPanelOpen()
   })

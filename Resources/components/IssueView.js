@@ -14,7 +14,10 @@ export default class IssueView extends Component {
         <Breadcrumbs issue={this.props.issue} onClose={this.props.onClose} />
         <IssueSummary issue={this.props.issue} />
         <Attachments issueKey={this.props.issue.key} />
-        <Comments issueKey={this.props.issue.key} />
+        <Comments
+          issueKey={this.props.issue.key}
+          profile={this.props.profile}
+        />
       </div>
     )
   }
@@ -22,6 +25,7 @@ export default class IssueView extends Component {
 
 IssueView.propTypes = {
   issue: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired
 }
 

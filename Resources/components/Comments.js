@@ -13,8 +13,13 @@ export default class Comments extends Component {
     }
   }
   render () {
+    var avatarUrl = this.props.profile.avatarUrls['32x32']
+    var displayName = this.props.profile.displayName
     return (
       <CommentsArea>
+        <AvatarWrapper>
+          <Avatar src={avatarUrl} size='medium' label={displayName} />
+        </AvatarWrapper>
         <CommentEditor
           issueKey={this.props.issueKey}
           onSubmitStart={() => { this.setState({posting: true}) }}
@@ -26,9 +31,15 @@ export default class Comments extends Component {
 }
 
 Comments.propTypes = {
-  issueKey: PropTypes.string.isRequired
+  issueKey: PropTypes.string.isRequired,
+  profile: PropTypes.object.isRequired
 }
 
+const AvatarWrapper = styled.div`
+  margin-right: 8px;
+`
+
 const CommentsArea = styled.div`
-  padding-bottom: 20px;
+  display: flex;
+  padding-bottom: 24px;
 `

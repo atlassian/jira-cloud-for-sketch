@@ -106,6 +106,17 @@ export default class JIRA {
     })
     return commentPermalink(issueKey, await res.json())
   }
+
+  async getProfile () {
+    var myselfUrl = `${this.apiRoot}/myself`
+    const res = await fetch(myselfUrl, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: await authHeader()
+      }
+    })
+    return res.json()
+  }
 }
 
 async function authHeader () {

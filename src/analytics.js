@@ -26,6 +26,7 @@ const eventNames = [
   'viewIssue',
   'viewIssue10Seconds', // not implemented yet
   'backToViewIssueList',
+  'viewIssueProfileLoaded',
   'viewIssueAttachmentsLoaded',
   'viewIssueAttachmentLoaded',
   'viewIssueSingleAttachmentUpload',

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import pluginCall from 'sketch-module-web-view/client'
 import FieldBase from '@atlaskit/field-base'
+import TextArea from 'react-textarea-autosize'
 
 export default class CommentEditor extends Component {
   constructor (props) {
@@ -17,14 +18,28 @@ export default class CommentEditor extends Component {
     }
   }
   render () {
+    var style = {
+      border: 'none',
+      font: 'inherit',
+      background: 'inherit',
+      padding: '6px 6px 4px 6px',
+      width: '410px',
+      height: '22px'
+    }
     return (
       <FieldBase isPaddingDisabled>
         <TextArea
+          useCacheForDOMMeasurements
+          style={style}
           disabled={this.state.posting}
           placeholder='Add a comment...'
           value={this.state.value}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
+          onHeightChange={(height, instance) => {
+            // scroll to bottom of page
+            window.scrollTo(0, document.body.scrollHeight)
+          }}
         />
       </FieldBase>
     )
@@ -71,11 +86,3 @@ CommentEditor.propTypes = {
   onSubmitStart: PropTypes.func.isRequired,
   onSubmitDone: PropTypes.func.isRequired
 }
-
-const TextArea = styled.textarea`
-  border: none;
-  font: inherit;
-  background: inherit;
-  padding: 4px 6px;
-  width: 390px;
-`

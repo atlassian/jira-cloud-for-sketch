@@ -15,12 +15,17 @@ class ViewIssuesPanel extends Component {
     this.handleCloseIssue = this.handleCloseIssue.bind(this)
     this.handleFilterSelected = this.handleFilterSelected.bind(this)
     this.state = {
-      loading: true,
+      issuesLoading: true,
+      profileLoading: true,
       spinnerCompleting: false,
       issues: []
     }
   }
   render () {
+    var loading =
+      this.state.issuesLoading ||
+      this.state.profileLoading ||
+      this.state.spinnerCompleting
     return (
       <PanelWrapper>
         <HeaderDiv>
@@ -33,7 +38,7 @@ class ViewIssuesPanel extends Component {
             />
           }
         </HeaderDiv>
-        {this.state.loading || this.state.spinnerCompleting ? (
+        {loading ? (
           <SpinnerWrapper>
             <Spinner
               size='large'
@@ -51,6 +56,7 @@ class ViewIssuesPanel extends Component {
           <ModalPanel>
             <IssueView
               issue={this.state.currentIssue}
+              profile={this.state.profile}
               onClose={this.handleCloseIssue}
             />
           </ModalPanel>}
@@ -66,15 +72,27 @@ class ViewIssuesPanel extends Component {
     })
     window.addEventListener('jira.issues.loading', event => {
       this.setState({
-        loading: true,
+        issuesLoading: true,
+        spinnerCompleting: false,
         issues: []
       })
     })
     window.addEventListener('jira.issues.loaded', event => {
-      this.setState({
-        loading: false,
-        spinnerCompleting: true,
-        issues: event.detail.issues
+      this.setState(function (prevState) {
+        return {
+          issuesLoading: false,
+          spinnerCompleting: !prevState.profileLoading,
+          issues: event.detail.issues
+        }
+      })
+    })
+    window.addEventListener('jira.profile.loaded', event => {
+      this.setState(function (prevState) {
+        return {
+          profileLoading: false,
+          spinnerCompleting: !prevState.issuesLoading,
+          profile: event.detail.profile
+        }
       })
     })
     pluginCall('onReady')
