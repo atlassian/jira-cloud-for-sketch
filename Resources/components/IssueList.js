@@ -6,9 +6,7 @@ import '@atlaskit/css-reset'
 export default class IssueList extends Component {
   render () {
     var list
-    if (this.props.loading) {
-      list = <span>Loading...</span>
-    } else if (this.props.issues.length === 0) {
+    if (this.props.issues.length === 0) {
       list = <span>No issues found.</span>
     } else {
       list = (
@@ -34,7 +32,6 @@ export default class IssueList extends Component {
 }
 
 IssueList.propTypes = {
-  loading: PropTypes.bool,
   issues: PropTypes.array.isRequired,
   onSelectIssue: PropTypes.func.isRequired
 }

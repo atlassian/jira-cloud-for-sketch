@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import pluginCall from 'sketch-module-web-view/client'
+import Spinner from '@atlaskit/spinner'
 import IssueFilter from './components/IssueFilter'
 import IssueList from './components/IssueList'
 import IssueView from './components/IssueView'
@@ -15,6 +16,7 @@ class ViewIssuesPanel extends Component {
     this.handleFilterSelected = this.handleFilterSelected.bind(this)
     this.state = {
       loading: true,
+      spinnerCompleting: false,
       issues: []
     }
   }
@@ -31,11 +33,20 @@ class ViewIssuesPanel extends Component {
             />
           }
         </HeaderDiv>
-        <IssueList
-          loading={this.state.loading}
-          issues={this.state.issues}
-          onSelectIssue={this.handleSelectIssue}
-        />
+        {this.state.loading || this.state.spinnerCompleting ? (
+          <SpinnerWrapper>
+            <Spinner
+              size='large'
+              isCompleting={this.state.spinnerCompleting}
+              onComplete={() => this.setState({spinnerCompleting: false})}
+            />
+          </SpinnerWrapper>
+        ) : (
+          <IssueList
+            issues={this.state.issues}
+            onSelectIssue={this.handleSelectIssue}
+          />
+        )}
         {this.state.currentIssue &&
           <ModalPanel>
             <IssueView
@@ -62,6 +73,7 @@ class ViewIssuesPanel extends Component {
     window.addEventListener('jira.issues.loaded', event => {
       this.setState({
         loading: false,
+        spinnerCompleting: true,
         issues: event.detail.issues
       })
     })
@@ -93,6 +105,13 @@ const HeaderDiv = styled.div`
   justify-content: space-between;
   align-items: center;
   padding-right: 10px;
+`
+
+const SpinnerWrapper = styled.div`
+  height: 283px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 `
 
 const ModalPanel = styled.div`
