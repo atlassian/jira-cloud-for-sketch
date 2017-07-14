@@ -20,11 +20,8 @@ export default async function (context) {
 
     const webUI = createWebUI(context, {
       name: 'issues',
-      background: MSImmutableColor.colorWithSVGString(
-        '#e7e7e7'
-      ).NSColorWithColorSpace(null),
-      height: 335,
-      width: 450,
+      height: 382,
+      width: 510,
       handlers: {
         onReady () {
           filters.onReady()

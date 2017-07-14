@@ -30,6 +30,12 @@ export default function (context, options) {
     options
   )
 
+  if (options.backgroundColor) {
+    options.background = MSImmutableColor.colorWithSVGString(
+        options.backgroundColor
+      ).NSColorWithColorSpace(null)
+  }
+
   // default handlers
   options.handlers = assign(
     {

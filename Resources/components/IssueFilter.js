@@ -23,7 +23,6 @@ export default class IssueFilter extends Component {
     return (
       <DropdownMenu
         items={[{ items: filterItems }]}
-        triggerButtonProps={{ appearance: 'primary' }}
         triggerType='button'
         position='bottom right'
         shouldFlip={false}

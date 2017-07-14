@@ -59,7 +59,8 @@ const SummaryDiv = styled.div`
   margin-top: 10px;
   padding: 12px 12px 3px 12px;
   border-radius: 3px;
-  background: white;
+  background-color: #FAFBFC;
+  border-radius: 3px;
 `
 
 const SummaryText = styled.div`

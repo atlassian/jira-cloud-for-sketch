@@ -22,7 +22,7 @@ class ViewIssuesPanel extends Component {
     return (
       <PanelWrapper>
         <HeaderDiv>
-          <h3>JIRA Issues</h3>
+          <h4>JIRA issues</h4>
           {this.state.filters &&
             <IssueFilter
               filters={this.state.filters}
@@ -85,8 +85,7 @@ class ViewIssuesPanel extends Component {
 }
 
 const PanelWrapper = styled.div`
-  min-width: 410px;
-  padding: 15px 5px 20px 20px;
+  padding: 10px 12px 20px 20px;
 `
 
 const HeaderDiv = styled.div`
@@ -98,11 +97,10 @@ const HeaderDiv = styled.div`
 
 const ModalPanel = styled.div`
   position: absolute;
-  top: 15px;
-  left: 20px;
-  width: 415px;
-  height: 275px;
-  background: #e7e7e7;
+  top: 0;
+  left: 0;
+  padding: 10px 20px 20px 20px;
+  background-color: white;
 `
 
 ReactDOM.render(<ViewIssuesPanel />, document.getElementById('container'))

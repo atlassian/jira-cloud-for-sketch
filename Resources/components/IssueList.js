@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import AssigneeAvatar from './AssigneeAvatar'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 
@@ -43,7 +42,7 @@ IssueList.propTypes = {
 const ScrollDiv = styled.div`
   margin-top: 10px;
   padding-right: 10px;
-  height: 230px;
+  height: 283px;
   overflow-y: scroll;
 `
 
@@ -59,7 +58,6 @@ class Issue extends Component {
         <IssueTypeField type={issue.fields.issuetype} />
         <IssueKeyField issueKey={issue.key} />
         <IssueSummaryField summary={issue.fields.summary} />
-        <AssigneeAvatar assignee={issue.fields.assignee} />
       </IssueDiv>
     )
   }
@@ -73,14 +71,21 @@ Issue.propTypes = {
 const IssueDiv = styled.div`
   display: flex;
   align-items: center;
-  border-radius: 3px;
-  margin: 2px;
-  height: 40px;
-  background: white;
-  &:hover {
-    background: #DEEBFF;
-  }
+  border: 1px #F4F5F7 solid;
+  border-bottom: none;
+  height: 46px;
+  background-color: white;
   cursor: pointer;
+  &:hover {
+    background-color: #EBECF0;
+  }
+  &:first-of-type {
+    border-radius: 3px 3px 0 0;
+  }
+  &:last-of-type {
+    border-radius: 0 0 3px 3px;
+    border-bottom: 1px #F4F5F7 solid;
+  }
 `
 
 class IssueTypeField extends Component {
@@ -88,7 +93,7 @@ class IssueTypeField extends Component {
     var type = this.props.type
     return (
       <TypeDiv>
-        <img src={type.iconUrl} title={type.name} />
+        <TypeImage src={type.iconUrl} title={type.name} />
       </TypeDiv>
     )
   }
@@ -109,9 +114,14 @@ IssueTypeField.propTypes = {
 }
 
 const TypeDiv = styled.div`
-  width: 22px;
+  width: 20px;
   height: 16px;
-  margin-left: 5px;
+  margin-left: 14px;
+`
+
+const TypeImage = styled.img`
+  width: 16px;
+  height: 16px;
 `
 
 class IssueKeyField extends Component {
@@ -130,7 +140,7 @@ IssueKeyField.propTypes = {
 }
 
 const KeyDiv = styled.div`
-  width: 60px;
+  width: 72px;
   font-size: 12px;
   color: #7a869a;
 `
@@ -155,6 +165,7 @@ const SummaryDiv = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 285px;
+  width: 340px;
   margin-right: 5px;
+  font-family: -apple-system;
 `
