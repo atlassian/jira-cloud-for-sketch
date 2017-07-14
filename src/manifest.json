@@ -14,6 +14,11 @@
 			"shortcut": "cmd alt j"
 		},
 		{
+			"name": "Feedback...",
+			"identifier": "feedback",
+			"script": "./views/feedback.js"
+		},
+		{
 			"name": "Export Selection",
 			"identifier": "export",
 			"script": "./views/export.js",
@@ -30,7 +35,8 @@
 		"title": "JIRA",
 		"items": [
 			"connect",
-			"issues"
+			"issues",
+			"feedback"
 		]
 	}
 }

@@ -34,3 +34,5 @@ export const analyticsApiMultipleEvents = analyticsApiBaseUrl + '/events'
 export const analyticsIdKey = 'atlassian.analytics.id'
 
 export const bearerTokenExpirySafetyMargin = 60 // seconds
+
+export const feedbackUrl = 'https://goo.gl/forms/OrIB4RoEePhL3lkv2'
