@@ -76,7 +76,7 @@ export default class CommentEditor extends Component {
       this.setState({
         posting: false
       })
-      this.props.onSubmitDone()
+      this.props.onSubmitDone(event.detail.href)
     }
   }
 }
