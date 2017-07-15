@@ -64,10 +64,14 @@ class CommentStatus extends Component {
   render () {
     var status = null
     if (this.props.posting) {
-      status = <Spinner size='small' />
+      status = (
+        <SpinnerWrapper>
+          <Spinner size='small' />
+        </SpinnerWrapper>
+      )
     } else if (this.props.commentHref) {
       status = (
-        <div>
+        <SuccessWrapper>
           <CheckIcon
             size='small'
             label='Success'
@@ -82,7 +86,7 @@ class CommentStatus extends Component {
               }}
             >View in JIRA</a>)
           </CommentLinkWrapper>
-        </div>
+        </SuccessWrapper>
       )
     }
     return (
@@ -98,11 +102,21 @@ CommentStatus.propTypes = {
 
 const StatusWrapper = styled.div`
   margin-left: 40px;
-  padding-top: 4px;
+  display: flex;
+  align-items: center;
+`
+
+const SpinnerWrapper = styled.div`
+  margin-top: 4px;
+`
+
+const SuccessWrapper = styled.div`
   display: flex;
   align-items: center;
 `
 
 const CommentLinkWrapper = styled.span`
   margin-left: 4px;
+  font-size: 12px;
+  color: #5E6C84;
 `
