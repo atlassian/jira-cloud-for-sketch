@@ -13,6 +13,7 @@ pipelines:
             - skpm build
             - apt-get update && apt-get install -y zip
             - zip -r "jira.sketchplugin-$BITBUCKET_COMMIT.zip" jira.sketchplugin
+            - pip install boto3
             - python s3_upload.py atlassian-sketch-plugin "jira.sketchplugin-$BITBUCKET_COMMIT.zip" "jira.sketchplugin-$BITBUCKET_COMMIT.zip"
             - python s3_upload.py atlassian-sketch-plugin "jira.sketchplugin-$BITBUCKET_COMMIT.zip" "jira.sketchplugin-latest.zip"
             
@@ -24,7 +25,8 @@ pipelines:
           - npm install -g skpm@0.9.16
           - npm install
           - npm test
-          - skpm build     
+          - skpm build
           - apt-get update && apt-get install -y zip
           - zip -r "jira.sketchplugin-$BITBUCKET_COMMIT.zip" jira.sketchplugin
+          - pip install boto3
           - python s3_upload.py atlassian-sketch-plugin "jira.sketchplugin-$BITBUCKET_COMMIT.zip" "jira.sketchplugin-$BITBUCKET_COMMIT.zip"
