@@ -1,6 +1,20 @@
 image: node:7.10.0
 
 pipelines:
+  branches:
+    master:
+      - step:
+          caches:
+            - node
+          script:
+            - npm install -g skpm@0.9.16
+            - npm install
+            - npm test
+            - skpm build
+            - zip -r "jira.sketchplugin-$BITBUCKET_COMMIT.zip" jira.sketchplugin
+            - python s3_upload.py atlassian-sketch-plugin "jira.sketchplugin-$BITBUCKET_COMMIT.zip" "jira.sketchplugin-$BITBUCKET_COMMIT.zip"
+            - python s3_upload.py atlassian-sketch-plugin "jira.sketchplugin-$BITBUCKET_COMMIT.zip" "jira.sketchplugin-latest.zip"
+            
   default:
     - step:
         caches:
@@ -9,4 +23,6 @@ pipelines:
           - npm install -g skpm@0.9.16
           - npm install
           - npm test
-          - skpm build
+          - skpm build            
+          - zip -r "jira.sketchplugin-$BITBUCKET_COMMIT.zip" jira.sketchplugin
+          - python s3_upload.py atlassian-sketch-plugin "jira.sketchplugin-$BITBUCKET_COMMIT.zip" "jira.sketchplugin-$BITBUCKET_COMMIT.zip"
