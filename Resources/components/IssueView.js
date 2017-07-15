@@ -11,7 +11,7 @@ export default class IssueView extends Component {
   render () {
     return (
       <div>
-        <Breadcrumbs issue={this.props.issue} onClose={this.props.onClose} />
+        <Breadcrumbs filter={this.props.filter} issue={this.props.issue} onClose={this.props.onClose} />
         <IssueSummary issue={this.props.issue} />
         <Attachments issueKey={this.props.issue.key} />
         <Comments
@@ -24,6 +24,7 @@ export default class IssueView extends Component {
 }
 
 IssueView.propTypes = {
+  filter: PropTypes.object.isRequired,
   issue: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired
@@ -33,7 +34,9 @@ class Breadcrumbs extends Component {
   render () {
     return (
       <BreadcrumbsWrapper>
-        <BackLink onClose={this.props.onClose} />
+        <BackLink onClose={this.props.onClose}>
+          {this.props.filter.displayName}
+        </BackLink>
         <Separator>/</Separator>
         <IssueKey issue={this.props.issue} />
       </BreadcrumbsWrapper>
@@ -42,6 +45,7 @@ class Breadcrumbs extends Component {
 }
 
 Breadcrumbs.propTypes = {
+  filter: PropTypes.object.isRequired,
   issue: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired
 }
@@ -54,17 +58,22 @@ const BreadcrumbsWrapper = styled.div`
 class BackLink extends Component {
   render () {
     return <ClickableSpan onClick={this.props.onClose}>
-      &lt; Sketch JIRA plugin
+      &lt; {this.props.children}
     </ClickableSpan>
   }
 }
 
 BackLink.propTypes = {
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  children: React.PropTypes.element.isRequired
 }
 
 const ClickableSpan = styled.span`
   cursor: pointer;
+  font-size: 12px
+  font-weight: 600
+  character-spacing: 0
+  color: #5E6C84
 `
 
 const Separator = styled.div`

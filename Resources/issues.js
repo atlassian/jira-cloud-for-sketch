@@ -18,7 +18,8 @@ class ViewIssuesPanel extends Component {
       issuesLoading: true,
       profileLoading: true,
       spinnerCompleting: false,
-      issues: []
+      issues: [],
+      currentFilter: null
     }
   }
   render () {
@@ -58,6 +59,7 @@ class ViewIssuesPanel extends Component {
               issue={this.state.currentIssue}
               profile={this.state.profile}
               onClose={this.handleCloseIssue}
+              filter={this.state.currentFilter}
             />
           </ModalPanel>}
       </PanelWrapper>
@@ -82,7 +84,8 @@ class ViewIssuesPanel extends Component {
         return {
           issuesLoading: false,
           spinnerCompleting: !prevState.profileLoading,
-          issues: event.detail.issues
+          issues: event.detail.issues,
+          currentFilter: event.detail.filter
         }
       })
     })

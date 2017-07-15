@@ -37,7 +37,8 @@ export default class Filters {
       // if another filter has been selected in the meantime, ignore the result
       if (newFilter == this.currentFilter) {
         this.webUI.dispatchWindowEvent('jira.issues.loaded', {
-          issues: issues
+          issues: issues,
+          filter: this.jira.jqlFilters[newFilter]
         })
         postSingle('viewIssueListFilterLoaded' + newFilter, {
           count: issues.length
