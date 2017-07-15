@@ -6,7 +6,7 @@ pipelines:
         caches:
           - node
         script:
-          - npm install -g skpm 
+          - npm install -g skpm@0.9.16
           - npm install
           - npm test
           - skpm build
