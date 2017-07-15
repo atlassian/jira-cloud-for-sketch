@@ -1,0 +1,12 @@
+image: node:7.10.0
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - node
+        script:
+          - npm install -g skpm 
+          - npm install
+          - npm test
+          - skpm build
