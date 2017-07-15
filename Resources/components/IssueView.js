@@ -65,7 +65,7 @@ class BackLink extends Component {
 
 BackLink.propTypes = {
   onClose: PropTypes.func.isRequired,
-  children: React.PropTypes.element.isRequired
+  children: React.PropTypes.node.isRequired
 }
 
 const ClickableSpan = styled.span`

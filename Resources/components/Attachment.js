@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import pluginCall from 'sketch-module-web-view/client'
 import { CardView } from '@atlaskit/media-card'
-import RemoveIcon from '@atlaskit/icon/glyph/remove'
 import moment from 'moment'
 
 export default class Attachment extends Component {
@@ -110,16 +109,15 @@ class AttachmentCard extends Component {
     super(props)
     this.onThumbnailLoaded = this.onThumbnailLoaded.bind(this)
     this.state = {
-      thumbnail: null
+      thumbnail: null,
+      status: this.props.attachment.thumbnail ? 'loading' : 'complete'
     }
   }
   render () {
     var style = {}
     if (this.props.dragHover) {
-      style.borderWidth = '3px'
-      style.borderColor = '#ffab00'
-      style.borderStyle = 'dashed'
-      style.padding = '1px'
+      style.padding = '0'
+      style.border = '2px dashed #FF5630'
     }
     var attachment = this.props.attachment
     var imageMetadata = {
@@ -140,16 +138,19 @@ class AttachmentCard extends Component {
           this.props.issueKey,
           this.props.attachment.id
         )
+        this.setState({
+          status: 'processing'
+        })
       }
     }]
     return (
       <CardWrapper style={style} onClick={this.props.onClick}>
         <CardView
-          status='complete'
+          status={this.state.status}
           appearance='image'
           metadata={imageMetadata}
           dataURI={this.state.thumbnail}
-          dimensions={{width: 144}}
+          dimensions={{width: 141}}
           resizeMode='full-fit'
           actions={actions}
         />
@@ -168,7 +169,8 @@ class AttachmentCard extends Component {
   onThumbnailLoaded (event) {
     if (event.detail.id == this.props.attachment.id) {
       this.setState({
-        thumbnail: event.detail.dataUri
+        thumbnail: event.detail.dataUri,
+        status: 'complete'
       })
     }
   }
@@ -183,48 +185,6 @@ AttachmentCard.propTypes = {
 }
 
 const CardWrapper = styled.div`
-  width: 145px;
-`
-
-class AttachmentDeleteButton extends Component {
-  constructor (props) {
-    super(props)
-    this.handleClick = this.handleClick.bind(this)
-  }
-  render () {
-    return (
-      <DeleteButtonWrapper
-        className='attachment-delete-button'
-        onClick={this.handleClick}
-      >
-        <RemoveIcon label='Delete attachment' size='small' />
-      </DeleteButtonWrapper>
-    )
-  }
-  handleClick (event) {
-    event.preventDefault()
-    this.props.onDeleteStarted()
-    pluginCall(
-      'deleteAttachment',
-      this.props.issueKey,
-      this.props.attachment.id
-    )
-  }
-}
-
-AttachmentDeleteButton.propTypes = {
-  issueKey: PropTypes.string.isRequired,
-  attachment: PropTypes.object.isRequired,
-  onDeleteStarted: PropTypes.func.isRequired
-}
-
-const DeleteButtonWrapper = styled.div`
-  display: none;
-  position: absolute;
-  right: 8px;
-  top: 4px;
-  width: 16px;
-  height: 16px;
-  background-color: #f2f2f2;
-  cursor: pointer;
+  width: 141px;
+  padding: 2px;
 `

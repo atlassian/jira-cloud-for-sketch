@@ -97,7 +97,7 @@ class CommentStatus extends Component {
 
 CommentStatus.propTypes = {
   posting: PropTypes.bool.isRequired,
-  commentHref: PropTypes.string.isRequired
+  commentHref: PropTypes.string
 }
 
 const StatusWrapper = styled.div`
