@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>JIRA Sketch Plugin</title>
+    <link>http://sparkle-project.org/files/sparkletestcast.xml</link>
+    <description>Streamlined uploads of Sketch assets to JIRA.</description>
+    <language>en</language>
+      <item>
+        <title>Version 1.0 Beta 1</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Internal Beta 1</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-1.0.0-beta1.zip" sparkle:version="100" />
+      </item>
+  </channel>
+</rss>
