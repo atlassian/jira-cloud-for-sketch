@@ -9,6 +9,14 @@ pipelines:
           script:
             - PIPELINES_DEPLOY_AS_LATEST=1 ./bitbucket-pipelines.sh
 
+  tags:
+    '**':
+      - step:
+          caches:
+            - node
+          script:
+            - PIPELINES_DEPLOY_TAG=1 ./bitbucket-pipelines.sh
+
   default:
     - step:
         caches:

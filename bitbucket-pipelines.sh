@@ -19,6 +19,9 @@ python s3_upload.py atlassian-sketch-plugin $PLUGIN_ZIP $PLUGIN_ZIP
 if [ -v PIPELINES_DEPLOY_AS_LATEST ]; then
   python s3_upload.py atlassian-sketch-plugin "jira.sketchplugin-$BITBUCKET_COMMIT.zip" "jira.sketchplugin-latest.zip"
 fi
+if [ -v PIPELINES_DEPLOY_TAG ]; then
+  python s3_upload.py atlassian-sketch-plugin "jira.sketchplugin-$BITBUCKET_COMMIT.zip" "jira.sketchplugin-$BITBUCKET_TAG.zip"
+fi
 
 # publish build status
 export S3_URL="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/${PLUGIN_ZIP}"
