@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>JIRA Sketch Plugin</title>
-    <link>http://sparkle-project.org/files/sparkletestcast.xml</link>
+    <link>https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/appcast.xml</link>
     <description>Streamlined uploads of Sketch assets to JIRA.</description>
     <language>en</language>
       <item>
