@@ -75,6 +75,7 @@
     "@atlaskit/util-shared-styles": "^2.6.0",
     "atlassian-jwt": "^0.1.5",
     "babel-polyfill": "^6.23.0",
+    "bluebird": "^3.5.0",
     "cocoascript-class": "^0.1.2",
     "filesize": "^3.5.10",
     "lodash": "^4.17.4",

@@ -1,5 +1,7 @@
 import { executeSafelyAsync, openInDefaultApp } from '../../util'
+import { thumbnailDownloadConcurrency } from '../../config'
 import analytics, { postMultiple, event } from '../../analytics'
+import { map } from 'bluebird'
 
 export default class Attachments {
   constructor (context, webUI, jira) {
@@ -17,10 +19,9 @@ export default class Attachments {
         attachments
       })
       postAnalytics(attachments)
-      for (let i = 0; i < attachments.length; i++) {
-        // TODO parallelize
-        const attachment = attachments[i]
-        if (attachment.thumbnail && attachment.mimeType) {
+      map(
+        attachments.filter(attachment => attachment.thumbnail && attachment.mimeType),
+        async (attachment) => {
           this.webUI.dispatchWindowEvent('jira.attachment.thumbnail', {
             issueKey,
             id: attachment.id,
@@ -29,8 +30,9 @@ export default class Attachments {
               attachment.mimeType
             )
           })
-        }
-      }
+        },
+        { concurrency: thumbnailDownloadConcurrency }
+      )
     })
   }
 

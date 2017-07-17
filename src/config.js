@@ -38,4 +38,6 @@ export const analyticsIdKey = 'atlassian.analytics.id'
 export const bearerTokenExpirySafetyMargin = 60 // seconds
 export const bearerTokenRefreshInterval = 1000 * 60 * 10 // milliseconds
 
+export const thumbnailDownloadConcurrency = 4
+
 export const feedbackUrl = 'https://goo.gl/forms/OrIB4RoEePhL3lkv2'
