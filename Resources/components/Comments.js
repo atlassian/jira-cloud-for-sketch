@@ -15,13 +15,21 @@ export default class Comments extends Component {
     }
   }
   render () {
-    var avatarUrl = this.props.profile.avatarUrls['32x32']
-    var displayName = this.props.profile.displayName
+    var avatar
+    if (this.props.profile) {
+      avatar = <Avatar
+        size='medium'
+        src={this.props.profile.avatarUrls['32x32']}
+        label={this.props.profile.displayName}
+      />
+    } else {
+      avatar = <Avatar size='medium' />
+    }
     return (
       <CommentsArea>
         <CommentInput>
           <AvatarWrapper>
-            <Avatar src={avatarUrl} size='medium' label={displayName} />
+            {avatar}
           </AvatarWrapper>
           <CommentEditor
             issueKey={this.props.issueKey}
@@ -45,7 +53,7 @@ export default class Comments extends Component {
 
 Comments.propTypes = {
   issueKey: PropTypes.string.isRequired,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object
 }
 
 const CommentsArea = styled.div`

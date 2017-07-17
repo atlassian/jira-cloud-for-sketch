@@ -16,17 +16,11 @@ class ViewIssuesPanel extends Component {
     this.handleFilterSelected = this.handleFilterSelected.bind(this)
     this.state = {
       issuesLoading: true,
-      profileLoading: true,
-      spinnerCompleting: false,
       issues: [],
       currentFilter: null
     }
   }
   render () {
-    var loading =
-      this.state.issuesLoading ||
-      this.state.profileLoading ||
-      this.state.spinnerCompleting
     return (
       <PanelWrapper>
         <HeaderDiv>
@@ -39,7 +33,7 @@ class ViewIssuesPanel extends Component {
             />
           }
         </HeaderDiv>
-        {loading ? (
+        {this.state.issuesLoading ? (
           <SpinnerWrapper>
             <Spinner
               size='large'
@@ -75,27 +69,19 @@ class ViewIssuesPanel extends Component {
     window.addEventListener('jira.issues.loading', event => {
       this.setState({
         issuesLoading: true,
-        spinnerCompleting: false,
         issues: []
       })
     })
     window.addEventListener('jira.issues.loaded', event => {
-      this.setState(function (prevState) {
-        return {
-          issuesLoading: false,
-          spinnerCompleting: !prevState.profileLoading,
-          issues: event.detail.issues,
-          currentFilter: event.detail.filter
-        }
+      this.setState({
+        issuesLoading: false,
+        issues: event.detail.issues,
+        currentFilter: event.detail.filter
       })
     })
     window.addEventListener('jira.profile.loaded', event => {
-      this.setState(function (prevState) {
-        return {
-          profileLoading: false,
-          spinnerCompleting: !prevState.issuesLoading,
-          profile: event.detail.profile
-        }
+      this.setState({
+        profile: event.detail.profile
       })
     })
     pluginCall('onReady')
