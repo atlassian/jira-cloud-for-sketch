@@ -6,7 +6,7 @@
     <description>Streamlined uploads of Sketch assets to JIRA.</description>
     <language>en</language>
       <item>
-        <title>Version 1.0 Beta 1</title>
+        <title>v0.0.1</title>
         <description>
           <![CDATA[
             <ul>
@@ -14,7 +14,7 @@
             </ul>
           ]]>
         </description>
-        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-1.0.0-beta1.zip" sparkle:version="100" />
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-0.0.1.zip" sparkle:version="0.0.1" />
       </item>
   </channel>
 </rss>
