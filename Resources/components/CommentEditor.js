@@ -11,6 +11,7 @@ export default class CommentEditor extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleTextAreaHeightChange = this.handleTextAreaHeightChange.bind(this)
     this.onCommentAdded = this.onCommentAdded.bind(this)
     this.state = {
       value: '',
@@ -36,10 +37,7 @@ export default class CommentEditor extends Component {
           value={this.state.value}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
-          onHeightChange={(height, instance) => {
-            // scroll to bottom of page
-            window.scrollTo(0, document.body.scrollHeight)
-          }}
+          onHeightChange={this.handleTextAreaHeightChange}
         />
       </FieldBase>
     )
@@ -70,6 +68,13 @@ export default class CommentEditor extends Component {
         posting: true
       })
     }
+  }
+  handleTextAreaHeightChange (height, instance) {
+    if (this.prevRowCount && instance.rowCount > this.prevRowCount) {
+      // scroll to bottom of page
+      window.scrollTo(0, document.body.scrollHeight)
+    }
+    this.prevRowCount = instance.rowCount
   }
   onCommentAdded (event) {
     if (event.detail.issueKey == this.props.issueKey) {
