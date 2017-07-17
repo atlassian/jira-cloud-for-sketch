@@ -9,29 +9,39 @@
 		{
 			"name": "Connect to JIRA Cloud",
 			"identifier": "connect",
-			"script": "./views/connect.js"
+			"script": "./commands/connect.js"
 		},
 		{
 			"name": "View Issues",
 			"identifier": "issues",
-			"script": "./views/issues/index.js",
+			"script": "./commands/issues/index.js",
 			"shortcut": "cmd alt j"
 		},
 		{
 			"name": "Feedback...",
 			"identifier": "feedback",
-			"script": "./views/feedback.js"
+			"script": "./commands/feedback.js"
+		},
+		{
+			"name": "StartUp",
+			"identifier": "startup",
+			"script": "./commands/startup.js",
+			"handlers": {
+				"actions": {
+					"Startup": "onRun"
+				}
+			}
 		},
 		{
 			"name": "Export Selection",
 			"identifier": "export",
-			"script": "./views/export.js",
+			"script": "./commands/export.js",
 			"shortcut": "cmd alt ;"
 		},
 		{
 			"name": "Test Action",
 			"identifier": "test",
-			"script": "./views/test.js",
+			"script": "./commands/test.js",
 			"shortcut": "cmd alt b"
 		}
 	],

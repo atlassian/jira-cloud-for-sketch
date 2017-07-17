@@ -12,7 +12,7 @@ export const logLevel = logLevels.TRACE
 export const pluginName = 'jira-sketch-plugin'
 export const tempDirName = pluginName
 
-export const pluginVersion = '0.0.1'
+export const pluginVersion = '0.0.3'
 
 export const jiraSketchIntegrationBaseUrl =
   'https://jira-sketch-integration.ap-southeast-2.dev.public.atl-paas.net'
@@ -36,5 +36,6 @@ export const analyticsApiMultipleEvents = analyticsApiBaseUrl + '/events'
 export const analyticsIdKey = 'atlassian.analytics.id'
 
 export const bearerTokenExpirySafetyMargin = 60 // seconds
+export const bearerTokenRefreshInterval = 1000 * 60 * 10 // milliseconds
 
 export const feedbackUrl = 'https://goo.gl/forms/OrIB4RoEePhL3lkv2'

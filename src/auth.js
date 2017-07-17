@@ -56,9 +56,9 @@ export function isAuthorized () {
   return isSet(keys.jiraHost, keys.clientId, keys.sharedSecret)
 }
 
-export async function getBearerToken () {
+export async function getBearerToken (force) {
   checkAuthorized()
-  return tokenCache.get()
+  return tokenCache.get(force)
 }
 
 async function _getBearerToken () {

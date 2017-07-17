@@ -15,6 +15,7 @@ const eventNames = [
   'bearerTokenCacheMiss',
   'bearerTokenCacheHit',
   'bearerTokenCacheFlush',
+  'bearerTokenForceRefresh',
   'jiraConnectPanelOpen',
   'jiraConnectInitiateDance',
   'jiraDisconnect', // not implemented yet
