@@ -1,4 +1,6 @@
 {
+	"author": "Atlassian",
+	"email": "tim@atlassian.com",
 	"appcast": "https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/appcast.xml",
 	"compatibleVersion": 3,
 	"bundleVersion": 1,
