@@ -13,7 +13,7 @@ export default class IssueView extends Component {
       <div>
         <Breadcrumbs filter={this.props.filter} issue={this.props.issue} onClose={this.props.onClose} />
         <IssueSummary issue={this.props.issue} />
-        <Attachments issueKey={this.props.issue.key} />
+        <Attachments issue={this.props.issue} />
         <Comments
           issueKey={this.props.issue.key}
           profile={this.props.profile}

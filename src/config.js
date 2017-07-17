@@ -23,6 +23,8 @@ export const jiraSketchIntegrationAuthRedirectUrl =
 export const jiraSketchIntegrationApiBaseUrl =
   jiraSketchIntegrationBaseUrl + '/api'
 
+export const standardIssueFields = ['issuetype', 'summary', 'attachment']
+
 export const jiraSketchIntegrationApi = {
   client: jiraSketchIntegrationApiBaseUrl + '/clients',
   bearer: jiraSketchIntegrationApiBaseUrl + '/clients/bearer'

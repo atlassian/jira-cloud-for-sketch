@@ -8,11 +8,11 @@ export default class Attachments {
     this.jira = jira
   }
 
-  async loadAttachments (issueKey) {
+  async reloadAttachments (issueKey) {
     executeSafelyAsync(this.context, async () => {
-      const issue = await this.jira.getIssue(issueKey)
+      const issue = await this.jira.getIssue(issueKey, {fields: ['attachment']})
       const attachments = issue.fields.attachment
-      this.webUI.dispatchWindowEvent('jira.attachment.details', {
+      this.webUI.dispatchWindowEvent('jira.attachment.reloaded', {
         issueKey,
         attachments
       })

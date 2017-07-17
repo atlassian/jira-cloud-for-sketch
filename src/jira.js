@@ -16,13 +16,23 @@ export default class JIRA {
    * Retrieves issues using JIRA's search API. Note that this API does not
    * populate the 'attachment' field for returned issues.
    */
-  async getFilteredIssues (filterKey) {
+  async getFilteredIssues (filterKey, opts) {
     var filter = this.jqlFilters[filterKey]
     if (!filter) {
       throw new Error(`No filter defined for ${filterKey}`)
     }
     var jql = encodeURIComponent(filter.jql)
-    const res = await fetch(`${this.apiRoot}/search?jql=${jql}`, {
+    var searchUrl = `${this.apiRoot}/search?jql=${jql}`
+    if (opts.startAt) {
+      searchUrl += `&startAt=${opts.startAt}`
+    }
+    if (opts.maxResults) {
+      searchUrl += `&maxResults=${opts.maxResults}`
+    }
+    if (opts.fields) {
+      searchUrl += `&fields=${opts.fields.join(',')}`
+    }
+    const res = await fetch(searchUrl, {
       headers: {
         Accept: 'application/json',
         Authorization: await authHeader()
@@ -36,8 +46,12 @@ export default class JIRA {
    * Retrieve a JIRA issue using the issue API. This API does populate the
    * 'attachment' field.
    */
-  async getIssue (issueKey) {
-    const res = await fetch(`${this.apiRoot}/issue/${issueKey}`, {
+  async getIssue (issueKey, opts) {
+    var issueUrl = `${this.apiRoot}/issue/${issueKey}`
+    if (opts.fields) {
+      issueUrl += `?fields=${opts.fields.join(',')}`
+    }
+    const res = await fetch(issueUrl, {
       headers: {
         Accept: 'application/json',
         Authorization: await authHeader()

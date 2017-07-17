@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import DropZone from './DropZone'
 import styled from 'styled-components'
 import pluginCall from 'sketch-module-web-view/client'
-import Spinner from '@atlaskit/spinner'
 import Attachment from './Attachment'
 
 export default class Attachments extends Component {
@@ -18,7 +17,7 @@ export default class Attachments extends Component {
     this.onAttachmentOpened = this.onAttachmentOpened.bind(this)
     this.deltaState = this.deltaState.bind(this)
     this.state = {
-      attachments: [],
+      attachments: this.props.issue.fields.attachment,
       thumbs: {},
       tasks: 0
     }
@@ -27,14 +26,14 @@ export default class Attachments extends Component {
     return (
       <AttachmentsArea>
         <DropZone
-          issueKey={this.props.issueKey}
+          issueKey={this.props.issue.key}
           onUploadStarted={this.onUploadStarted}
           onUploadComplete={this.onUploadComplete}
         />
         {this.state.attachments.map(attachment => (
           <Attachment
             key={attachment.id}
-            issueKey={this.props.issueKey}
+            issueKey={this.props.issue.key}
             attachment={attachment}
             onDeleteStarted={this.onDeleteStarted}
           />
@@ -54,11 +53,11 @@ export default class Attachments extends Component {
     window.removeEventListener('jira.attachment.opened', this.onAttachmentOpened)
   }
   reloadAttachments () {
-    pluginCall('loadAttachments', this.props.issueKey)
+    pluginCall('reloadAttachments', this.props.issue.key)
     this.deltaState('tasks', 1)
   }
   onDetailsLoaded (event) {
-    if (event.detail.issueKey == this.props.issueKey) {
+    if (event.detail.issueKey == this.props.issue.key) {
       this.setState({
         attachments: event.detail.attachments
       })
@@ -66,12 +65,12 @@ export default class Attachments extends Component {
     }
   }
   onAttachmentDownloading (event) {
-    if (event.detail.issueKey == this.props.issueKey) {
+    if (event.detail.issueKey == this.props.issue.key) {
       this.deltaState('tasks', 1)
     }
   }
   onAttachmentOpened (event) {
-    if (event.detail.issueKey == this.props.issueKey) {
+    if (event.detail.issueKey == this.props.issue.key) {
       this.deltaState('tasks', -1)
     }
   }
@@ -102,5 +101,5 @@ const AttachmentsArea = styled.div`
 `
 
 Attachments.propTypes = {
-  issueKey: PropTypes.string.isRequired
+  issue: PropTypes.object.isRequired
 }

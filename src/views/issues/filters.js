@@ -1,4 +1,5 @@
 import { keys } from 'lodash'
+import { standardIssueFields } from '../../config'
 import { executeSafelyAsync } from '../../util'
 import { postSingle } from '../../analytics'
 
@@ -33,7 +34,9 @@ export default class Filters {
       this.webUI.dispatchWindowEvent('jira.issues.loading', {
         filterKey: newFilter
       })
-      var issues = await this.jira.getFilteredIssues(newFilter)
+      var issues = await this.jira.getFilteredIssues(newFilter, {
+        fields: standardIssueFields
+      })
       // if another filter has been selected in the meantime, ignore the result
       if (newFilter == this.currentFilter) {
         this.webUI.dispatchWindowEvent('jira.issues.loaded', {
