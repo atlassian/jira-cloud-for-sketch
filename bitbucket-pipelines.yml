@@ -7,7 +7,7 @@ pipelines:
           caches:
             - node
           script:
-            - PIPELINES_DEPLOY_AS_LATEST=1 ./bitbucket-pipelines.sh
+            - PIPELINES_DEPLOY_AS_LATEST=1 PIPELINES_UPDATE_APPCAST=1 ./bitbucket-pipelines.sh
 
   tags:
     '**':

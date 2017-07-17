@@ -23,6 +23,11 @@ if [ -v PIPELINES_DEPLOY_TAG ]; then
   python s3_upload.py atlassian-sketch-plugin "jira.sketchplugin-$BITBUCKET_COMMIT.zip" "jira.sketchplugin-$BITBUCKET_TAG.zip"
 fi
 
+# deploy appcast.xml
+if [ -v PIPELINES_UPDATE_APPCAST ]; then
+  python s3_upload.py atlassian-sketch-plugin appcast.xml appcast.xml
+fi
+
 # publish build status
 export S3_URL="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/${PLUGIN_ZIP}"
 export BUILD_STATUS="{\"key\": \"sketch-plugin-zip\", \"state\": \"SUCCESSFUL\", \"name\": \"Sketch Plugin ZIP\", \"url\": \"${S3_URL}\"}"
