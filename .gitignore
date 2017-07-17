@@ -1,5 +1,6 @@
 # build artefacts
 jira.sketchplugin/Contents/**/*.js
+jira.sketchplugin/Contents/**/*.json
 
 # npm
 node_modules
