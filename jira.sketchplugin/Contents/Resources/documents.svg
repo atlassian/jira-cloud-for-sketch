@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248.9217 207.3391">
+  <defs>
+    <style>
+      .cls-1 {
+        isolation: isolate;
+      }
+
+      .cls-2 {
+        fill: #253858;
+      }
+
+      .cls-3 {
+        fill: #505f79;
+      }
+
+      .cls-11, .cls-14, .cls-15, .cls-4, .cls-7, .cls-9 {
+        fill: none;
+        stroke-width: 2px;
+      }
+
+      .cls-4 {
+        stroke: #6c798f;
+      }
+
+      .cls-14, .cls-15, .cls-4, .cls-9 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-5 {
+        fill: #e5e8ec;
+        mix-blend-mode: multiply;
+      }
+
+      .cls-6 {
+        fill: #ff5230;
+      }
+
+      .cls-7, .cls-9 {
+        stroke: #ff7143;
+      }
+
+      .cls-11, .cls-7 {
+        stroke-linejoin: round;
+      }
+
+      .cls-8 {
+        fill: #ff7143;
+      }
+
+      .cls-9 {
+        stroke-dasharray: 5.6279 5.5397;
+      }
+
+      .cls-10 {
+        fill: #ffd5c4;
+      }
+
+      .cls-11, .cls-14 {
+        stroke: #fff;
+      }
+
+      .cls-12 {
+        fill: #0065ff;
+      }
+
+      .cls-13 {
+        fill: #3384ff;
+      }
+
+      .cls-15 {
+        stroke: #ff5230;
+        stroke-linecap: square;
+      }
+    </style>
+  </defs>
+  <title>Mult Document</title>
+  <g class="cls-1">
+    <g id="Layer_2" data-name="Layer 2">
+      <g id="Objects">
+        <polygon id="_Path_" data-name="&lt;Path&gt;" class="cls-2" points="96.272 88.084 121.187 183.726 30.542 207.339 0 90.096 89.485 66.785 96.255 88.088 96.272 88.084"/>
+        <path class="cls-3" d="M60.1922,135.3887l26.4649-6.8942a27.3482,27.3482,0,1,1-33.3591-19.5708l.0108-.0028Z"/>
+        <path class="cls-3" d="M65.3768,127.29l-6.8942-26.4649a27.4788,27.4788,0,0,1,33.3591,19.5708q.03.1165.06.2334Z"/>
+        <line class="cls-4" x1="34.286" y1="183.5096" x2="68.7858" y2="174.5224"/>
+        <line class="cls-4" x1="36.5196" y1="192.084" x2="62.4339" y2="185.3333"/>
+        <polygon class="cls-5" points="96.272 88.084 96.255 88.088 89.485 66.785 47.26 77.784 47.26 141.733 110.248 141.733 96.272 88.084"/>
+        <rect id="_Rectangle_" data-name="&lt;Rectangle&gt;" class="cls-6" x="141.0054" y="62.501" width="93.6713" height="121.1536" transform="translate(38.8445 -44.9473) rotate(15.2012)"/>
+        <path class="cls-7" d="M205.8,154.8936l7.1005-26.132a6.8355,6.8355,0,0,0-4.804-8.3887l-37.23-10.116a6.8355,6.8355,0,0,0-8.3887,4.804l-7.1005,26.132"/>
+        <circle class="cls-8" cx="155.377" cy="141.1928" r="9.9894" transform="translate(-21.6169 254.1113) rotate(-74.7988)"/>
+        <polygon class="cls-8" points="218.737 148.83 197.867 142.961 203.22 163.97 218.737 148.83"/>
+        <line class="cls-9" x1="197.4755" y1="85.8937" x2="180.7462" y2="147.4625"/>
+        <rect class="cls-8" x="171.7157" y="138.1719" width="18.7755" height="18.7755" transform="translate(45.0282 -42.3241) rotate(15.2012)"/>
+        <rect id="_Rectangle_2" data-name="&lt;Rectangle&gt;" class="cls-8" x="176.7959" y="83.8414" width="40.3783" height="11.1673" transform="translate(30.3404 -48.5225) rotate(15.2012)"/>
+        <polygon class="cls-8" points="175.959 22.322 175.959 121.156 82.289 121.156 82.289 0 153.62 0 175.942 22.322 175.959 22.322"/>
+        <polygon class="cls-10" points="175.942 22.322 153.62 22.322 153.62 0 175.942 22.322"/>
+        <line class="cls-11" x1="91.919" y1="99.04" x2="127.5702" y2="99.04"/>
+        <line class="cls-11" x1="91.919" y1="107.9006" x2="118.6982" y2="107.9006"/>
+        <polygon class="cls-12" points="175.959 22.322 175.959 121.156 82.289 121.156 82.289 0 153.62 0 175.942 22.322 175.959 22.322"/>
+        <polygon class="cls-13" points="175.942 22.322 153.62 22.322 153.62 0 175.942 22.322"/>
+        <line class="cls-11" x1="91.919" y1="99.04" x2="127.5702" y2="99.04"/>
+        <line class="cls-11" x1="91.919" y1="107.9006" x2="118.6982" y2="107.9006"/>
+        <line class="cls-11" x1="91.919" y1="11.161" x2="127.5702" y2="11.161"/>
+        <line class="cls-11" x1="91.919" y1="20.0216" x2="129.58" y2="20.0216"/>
+        <polyline class="cls-14" points="94.095 43.435 94.095 88.251 163.265 88.251"/>
+        <path class="cls-15" d="M162.1917,44.8689c-39.4481,0-28.2806,43.3819-68.1725,43.3819"/>
+      </g>
+    </g>
+  </g>
+</svg>
