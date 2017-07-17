@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/tpettersen/jira-sketch-plugin.git"
+    "url": "git+https://bitbucket.org/atlassian/jira-sketch-plugin.git"
   },
   "keywords": [
     "sketch",
@@ -33,7 +33,7 @@
   ],
   "author": "Tim Pettersen <tim@atlassian.com>",
   "license": "BSD-2-Clause",
-  "homepage": "https://bitbucket.org/tpettersen/jira-sketch-plugin#readme",
+  "homepage": "https://bitbucket.org/atlassian/jira-sketch-plugin#readme",
   "engines": {
     "sketch": ">=3.0"
   },
