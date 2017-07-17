@@ -39,7 +39,7 @@ export default class Attachments {
   async deleteAttachment (issueKey, id) {
     executeSafelyAsync(this.context, async () => {
       await this.jira.deleteAttachment(id)
-      this.loadAttachments(issueKey)
+      this.reloadAttachments(issueKey)
     })
   }
 
