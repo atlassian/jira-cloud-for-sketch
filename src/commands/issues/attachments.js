@@ -19,7 +19,7 @@ export default class Attachments {
         attachments
       })
       postAnalytics(attachments)
-      map(
+      await map(
         attachments.filter(attachment => attachment.thumbnail && attachment.mimeType),
         async (attachment) => {
           this.webUI.dispatchWindowEvent('jira.attachment.thumbnail', {

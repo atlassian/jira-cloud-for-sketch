@@ -9,7 +9,7 @@ export default class Attachments extends Component {
   constructor (props) {
     super(props)
     this.reloadAttachments = this.reloadAttachments.bind(this)
-    this.onDetailsLoaded = this.onDetailsLoaded.bind(this)
+    this.onAttachmentsReloaded = this.onAttachmentsReloaded.bind(this)
     this.onUploadStarted = this.onUploadStarted.bind(this)
     this.onUploadComplete = this.onUploadComplete.bind(this)
     this.onDeleteStarted = this.onDeleteStarted.bind(this)
@@ -42,13 +42,13 @@ export default class Attachments extends Component {
     )
   }
   componentDidMount () {
-    window.addEventListener('jira.attachment.details', this.onDetailsLoaded)
+    window.addEventListener('jira.attachment.reloaded', this.onAttachmentsReloaded)
     window.addEventListener('jira.attachment.downloading', this.onAttachmentDownloading)
     window.addEventListener('jira.attachment.opened', this.onAttachmentOpened)
     this.reloadAttachments()
   }
   componentWillUnmount () {
-    window.removeEventListener('jira.attachment.details', this.onDetailsLoaded)
+    window.removeEventListener('jira.attachment.reloaded', this.onAttachmentsReloaded)
     window.removeEventListener('jira.attachment.downloading', this.onAttachmentDownloading)
     window.removeEventListener('jira.attachment.opened', this.onAttachmentOpened)
   }
@@ -56,7 +56,7 @@ export default class Attachments extends Component {
     pluginCall('reloadAttachments', this.props.issue.key)
     this.deltaState('tasks', 1)
   }
-  onDetailsLoaded (event) {
+  onAttachmentsReloaded (event) {
     if (event.detail.issueKey == this.props.issue.key) {
       this.setState({
         attachments: event.detail.attachments
@@ -83,7 +83,7 @@ export default class Attachments extends Component {
   }
   onDeleteStarted () {
     this.deltaState('tasks', 1)
-    // tasks will be decremented by onDetailsLoaded after attachment list refreshes
+    // tasks will be decremented by onAttachmentsReloaded after attachment list refreshes
   }
   deltaState (property, delta) {
     this.setState(function (prevState) {
