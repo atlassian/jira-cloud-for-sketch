@@ -1,6 +1,7 @@
 import { executeSafelyAsync, openInDefaultApp } from '../../util'
 import { thumbnailDownloadConcurrency } from '../../config'
 import analytics, { postMultiple, event } from '../../analytics'
+import { sortBy } from 'lodash'
 import { map } from 'bluebird'
 
 export default class Attachments {
@@ -13,7 +14,7 @@ export default class Attachments {
   async reloadAttachments (issueKey) {
     executeSafelyAsync(this.context, async () => {
       const issue = await this.jira.getIssue(issueKey, {fields: ['attachment']})
-      const attachments = issue.fields.attachment
+      const attachments = sortByDate(issue.fields.attachment)
       this.webUI.dispatchWindowEvent('jira.attachment.reloaded', {
         issueKey,
         attachments
@@ -65,4 +66,8 @@ async function postAnalytics (attachments) {
   })
   analyticsEvents.push(event('viewIssueAttachmentsLoaded', {count: attachments.length}))
   postMultiple(analyticsEvents)
+}
+
+function sortByDate (attachments) {
+  return sortBy(attachments, 'created').reverse()
 }

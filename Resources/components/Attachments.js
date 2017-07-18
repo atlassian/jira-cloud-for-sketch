@@ -4,6 +4,7 @@ import DropZone from './DropZone'
 import styled from 'styled-components'
 import pluginCall from 'sketch-module-web-view/client'
 import Attachment from './Attachment'
+import { sortBy } from 'lodash'
 
 export default class Attachments extends Component {
   constructor (props) {
@@ -17,7 +18,7 @@ export default class Attachments extends Component {
     this.onAttachmentOpened = this.onAttachmentOpened.bind(this)
     this.deltaState = this.deltaState.bind(this)
     this.state = {
-      attachments: this.props.issue.fields.attachment,
+      attachments: sortByDate(this.props.issue.fields.attachment),
       thumbs: {},
       tasks: 0
     }
@@ -59,7 +60,7 @@ export default class Attachments extends Component {
   onAttachmentsReloaded (event) {
     if (event.detail.issueKey == this.props.issue.key) {
       this.setState({
-        attachments: event.detail.attachments
+        attachments: sortByDate(event.detail.attachments)
       })
       this.deltaState('tasks', -1)
     }
@@ -90,6 +91,10 @@ export default class Attachments extends Component {
       return { [property]: prevState[property] + delta }
     })
   }
+}
+
+function sortByDate (attachments) {
+  return sortBy(attachments, 'created').reverse()
 }
 
 const AttachmentsArea = styled.div`
