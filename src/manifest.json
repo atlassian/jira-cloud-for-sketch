@@ -50,7 +50,8 @@
 		"items": [
 			"connect",
 			"issues",
-			"feedback"
+			"feedback",
+			"test"
 		]
 	}
 }

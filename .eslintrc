@@ -38,3 +38,4 @@ globals:
   MOPointer: false
   NSOperationQueue: false
   NSURLDownload: false
+  NSASCIIStringEncoding: false
