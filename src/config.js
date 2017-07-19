@@ -12,7 +12,7 @@ export const logLevel = logLevels.TRACE
 export const pluginName = 'jira-sketch-plugin'
 export const tempDirName = pluginName
 
-export const pluginVersion = '0.0.3'
+export const pluginVersion = '0.0.4'
 
 export const jiraSketchIntegrationBaseUrl =
   'https://jira-sketch-integration.ap-southeast-2.dev.public.atl-paas.net'
