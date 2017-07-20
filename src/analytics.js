@@ -41,16 +41,17 @@ const eventNames = [
   'feedbackOpenInBrowser'
 ]
 
-var analyticsId = NSUserDefaults.standardUserDefaults().objectForKey(
-  analyticsIdKey
-) + ''
-if (!analyticsId) {
+var analyticsId = NSUserDefaults.standardUserDefaults().objectForKey(analyticsIdKey)
+// an early bug meant we serialized the string 'null' and stored it
+if (!analyticsId || analyticsId == 'null') {
   analyticsId = NSUUID.UUID().UUIDString() + ''
   NSUserDefaults.standardUserDefaults().setObject_forKey(
     analyticsId,
     analyticsIdKey
   )
 }
+// convert to js string
+analyticsId = analyticsId + ''
 
 export function event (eventName, properties) {
   // https://extranet.atlassian.com/display/MOD/Public+Analytics+aka+GAS
