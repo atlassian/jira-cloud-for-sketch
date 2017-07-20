@@ -5,26 +5,48 @@ import { trace } from './logger'
 var DelegateClass
 
 export default async function upload (url, filePath, opts) {
-  if (!opts.filename) {
-    throw new Error('Must specify filename to upload')
+  if (!opts.filename || !opts.mimeType) {
+    throw new Error('Must specify filename & mimeType to upload')
   }
 
-  var fileUrl = NSURL.fileURLWithPath(filePath)
+  // var fileUrl = NSURL.fileURLWithPath(filePath)
   var serializer = AFHTTPRequestSerializer.alloc().init()
   var request = serializer.requestWithMethod_URLString_parameters_error('POST', url, null, null)
+
+  // next thing to try -- subclass NSInputStream and use
+    // appendPartWithInputStream:name:fileName:length:mimeType:
+  // to report on progress
 
   Object.keys(opts.headers || {}).forEach(function (i) {
     request.setValue_forHTTPHeaderField(opts.headers[i], i)
   })
 
+  var fileError = MOPointer.alloc().init()
+  var fileAttributes = NSFileManager.defaultManager().attributesOfItemAtPath_error(filePath, fileError)
+  var inputLength = fileAttributes.fileSize()
+
+  var inputStream = NSInputStream.inputStreamWithFileAtPath(filePath)
+
+  // sniff mimetype from fileAttributes.fileType() ?
+
   var formData = AFStreamingMultipartFormData.alloc().initWithURLRequest_stringEncoding(request, NSUTF8StringEncoding)
-  var error = MOPointer.alloc().init()
-  formData.appendPartWithFileURL_name_error(fileUrl, 'file', error)
-  error = error.value()
-  if (error) {
-    trace(error)
-    throw error
-  }
+
+  // var error = MOPointer.alloc().init()
+  // formData.appendPartWithFileURL_name_error(fileUrl, 'file', error)
+  // error = error.value()
+  // if (error) {
+  //   trace(error)
+  //   throw error
+  // }
+
+  formData.appendPartWithInputStream_name_fileName_length_mimeType(
+    inputStream,
+    'file',
+    opts.filename,
+    inputLength,
+    opts.mimeType
+  )
+
   var finalizedRequest = formData.requestByFinalizingMultipartFormData()
 
   if (!DelegateClass) {
@@ -40,8 +62,7 @@ export default async function upload (url, filePath, opts) {
       },
       'connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:':
         function (connection /*, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite */) {
-          // trace(`wrote ${bytesWritten} bytes (${totalBytesWritten} of ${totalBytesExpectedToWrite}`)
-          // this.callbacks.progress(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)
+          // including any of these arguments here causes Sketch to crash! :(
         },
       'connection:didFailWithError:': function (connection, error) {
         return this.callbacks.reject(error)

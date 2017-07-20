@@ -39,3 +39,4 @@ globals:
   NSOperationQueue: false
   NSURLDownload: false
   NSASCIIStringEncoding: false
+  NSInputStream: false

@@ -13,6 +13,7 @@ export default async function (context) {
       'https://file.io',
       '/Users/tpettersen/tmp/sketch.png', {
         filename: 'sketch.png',
+        mimeType: 'image/png',
         progress: function (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) {
           trace(`wrote ${bytesWritten} bytes (${totalBytesWritten} of ${totalBytesExpectedToWrite}`)
         }
