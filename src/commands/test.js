@@ -8,17 +8,23 @@ export default async function (context) {
     var coscript = COScript.currentCOScript()
     coscript.setShouldKeepAround(true)
 
+    var obj = AtlassianSketchFramework.alloc().init()
+    var uppercase = obj.uppercaseString('hello world')
+
+    log(uppercase)
+    context.document.showMessage(uppercase)
+
     // var data = await upload('https://file.io', 'file:///Users/tpettersen/tmp/sketch.png', {filename: 'sketch.png'})
-    var data = await upload(
-      'https://file.io',
-      '/Users/tpettersen/tmp/sketch.png', {
-        filename: 'sketch.png',
-        mimeType: 'image/png',
-        progress: function (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) {
-          trace(`wrote ${bytesWritten} bytes (${totalBytesWritten} of ${totalBytesExpectedToWrite}`)
-        }
-      })
-    trace(await data.text())
+    // var data = await upload(
+    //   'https://file.io',
+    //   '/Users/tpettersen/tmp/sketch.png', {
+    //     filename: 'sketch.png',
+    //     mimeType: 'image/png',
+    //     progress: function (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) {
+    //       trace(`wrote ${bytesWritten} bytes (${totalBytesWritten} of ${totalBytesExpectedToWrite}`)
+    //     }
+    //   })
+    // trace(await data.text())
 
     // var file = await download('https://tpettersen.bitbucket.io/sketch.png', {
     //   filename: 'sketch.png'

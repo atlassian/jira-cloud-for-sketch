@@ -40,3 +40,5 @@ globals:
   NSURLDownload: false
   NSASCIIStringEncoding: false
   NSInputStream: false
+  Mocha: false
+  AtlassianSketchFramework: false
