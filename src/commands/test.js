@@ -9,7 +9,14 @@ export default async function (context) {
     coscript.setShouldKeepAround(true)
 
     // var data = await upload('https://file.io', 'file:///Users/tpettersen/tmp/sketch.png', {filename: 'sketch.png'})
-    var data = await upload('https://file.io', '/Users/tpettersen/tmp/sketch.png', {filename: 'sketch.png'})
+    var data = await upload(
+      'https://file.io',
+      '/Users/tpettersen/tmp/sketch.png', {
+        filename: 'sketch.png',
+        progress: function (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) {
+          trace(`wrote ${bytesWritten} bytes (${totalBytesWritten} of ${totalBytesExpectedToWrite}`)
+        }
+      })
     trace(await data.text())
 
     // var file = await download('https://tpettersen.bitbucket.io/sketch.png', {

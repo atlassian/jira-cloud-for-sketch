@@ -1,4 +1,5 @@
 import ObjCClass from 'cocoascript-class'
+import { noop } from 'lodash'
 import { trace } from './logger'
 
 var DelegateClass
@@ -30,15 +31,18 @@ export default async function upload (url, filePath, opts) {
     DelegateClass = ObjCClass({
       classname: 'UploadDelegate',
       data: null,
-      httpResponse: null,
       callbacks: null,
       'connectionDidFinishLoading:': function (connection) {
         return this.callbacks.resolve(dataHandler(this.data))
       },
       'connection:didReceiveResponse:': function (connection, httpResponse) {
-        this.httpResponse = httpResponse
         this.data = NSMutableData.alloc().init()
       },
+      'connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:':
+        function (connection /*, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite */) {
+          // trace(`wrote ${bytesWritten} bytes (${totalBytesWritten} of ${totalBytesExpectedToWrite}`)
+          // this.callbacks.progress(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)
+        },
       'connection:didFailWithError:': function (connection, error) {
         return this.callbacks.reject(error)
       },
@@ -49,10 +53,10 @@ export default async function upload (url, filePath, opts) {
   }
 
   var connectionDelegate = DelegateClass.new()
+  var progress = opts.progress || noop
   return new Promise(function (resolve, reject) {
     connectionDelegate.callbacks = NSDictionary.dictionaryWithDictionary({
-      resolve,
-      reject
+      resolve, reject, progress
     })
     NSURLConnection.alloc().initWithRequest_delegate(finalizedRequest, connectionDelegate)
   })
