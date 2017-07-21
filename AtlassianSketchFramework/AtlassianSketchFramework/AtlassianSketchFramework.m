@@ -12,14 +12,14 @@
 
 @interface AtlassianSketchFramework : NSObject
 
-- (NSString *)uppercaseString:(NSString *)string;
+- (NSString *)uppercase:(NSString *)string;
 
 @end
 
 
 @implementation AtlassianSketchFramework
 
-- (NSString *)uppercaseString:(NSString *)string {
+- (NSString *)uppercase:(NSString *)string {
     return [string uppercaseString];
 }
 

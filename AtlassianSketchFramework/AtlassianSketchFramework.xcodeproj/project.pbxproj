@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		23874B421F215E1E0089E9E4 /* AtlassianSketchFramework.js in Resources */ = {isa = PBXBuildFile; fileRef = 23874B411F215E1E0089E9E4 /* AtlassianSketchFramework.js */; };
 		23874B441F215E1E0089E9E4 /* AtlassianSketchFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 23874B431F215E1E0089E9E4 /* AtlassianSketchFramework.m */; };
 		23874B4B1F215E1E0089E9E4 /* AtlassianSketchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23874B3D1F215E1E0089E9E4 /* AtlassianSketchFramework.framework */; };
 		23874B501F215E1E0089E9E4 /* AtlassianSketchFrameworkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 23874B4F1F215E1E0089E9E4 /* AtlassianSketchFrameworkTests.m */; };
@@ -27,7 +26,6 @@
 /* Begin PBXFileReference section */
 		23874B3D1F215E1E0089E9E4 /* AtlassianSketchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AtlassianSketchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		23874B401F215E1E0089E9E4 /* AtlassianSketchFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AtlassianSketchFramework.h; sourceTree = "<group>"; };
-		23874B411F215E1E0089E9E4 /* AtlassianSketchFramework.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = AtlassianSketchFramework.js; sourceTree = "<group>"; };
 		23874B431F215E1E0089E9E4 /* AtlassianSketchFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AtlassianSketchFramework.m; sourceTree = "<group>"; };
 		23874B451F215E1E0089E9E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23874B4A1F215E1E0089E9E4 /* AtlassianSketchFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtlassianSketchFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,7 +74,6 @@
 			isa = PBXGroup;
 			children = (
 				23874B401F215E1E0089E9E4 /* AtlassianSketchFramework.h */,
-				23874B411F215E1E0089E9E4 /* AtlassianSketchFramework.js */,
 				23874B431F215E1E0089E9E4 /* AtlassianSketchFramework.m */,
 				23874B451F215E1E0089E9E4 /* Info.plist */,
 			);
@@ -185,7 +182,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23874B421F215E1E0089E9E4 /* AtlassianSketchFramework.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,7 +206,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Copy .js to .framework/.js\ncp ${SRCROOT}/${TARGET_NAME}/${TARGET_NAME}.js ${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME}/";
+			shellScript = "# Copy .js to .framework/.js\nRESOURCES_TARGET=${SRCROOT}/../jira.sketchplugin/Contents/Resources/${FULL_PRODUCT_NAME}\nrm -rf ${RESOURCES_TARGET}\ncp -r ${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME} ${RESOURCES_TARGET}";
 		};
 /* End PBXShellScriptBuildPhase section */
 

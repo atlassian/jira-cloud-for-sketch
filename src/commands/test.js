@@ -9,7 +9,7 @@ export default async function (context) {
     coscript.setShouldKeepAround(true)
 
     var obj = AtlassianSketchFramework.alloc().init()
-    var uppercase = obj.uppercaseString('hello world')
+    var uppercase = obj.uppercase('hello world')
 
     log(uppercase)
     context.document.showMessage(uppercase)
