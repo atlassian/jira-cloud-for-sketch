@@ -54,21 +54,20 @@ export default async function upload (url, filePath, opts) {
       classname: 'UploadDelegate',
       data: null,
       callbacks: null,
-      'connectionDidFinishLoading:': function (connection) {
-        return this.callbacks.resolve(dataHandler(this.data))
+      'bytesSent:totalBytesSent:totalBytesExpectedToSend:': function (bytesSent, totalBytesSent, totalBytesExpectedToSend) {
+        trace(`bytesSent ${bytesSent}, totalBytesSent ${totalBytesSent}, totalBytesExpectedToSend ${totalBytesExpectedToSend}`)
       },
-      'connection:didReceiveResponse:': function (connection, httpResponse) {
+      'receivedResponse:': function (httpResponse) {
         this.data = NSMutableData.alloc().init()
       },
-      'connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:':
-        function (connection /*, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite */) {
-          // including any of these arguments here causes Sketch to crash! :(
-        },
-      'connection:didFailWithError:': function (connection, error) {
-        return this.callbacks.reject(error)
-      },
-      'connection:didReceiveData:': function (connection, data) {
+      'receivedData:': function (data) {
         this.data.appendData(data)
+      },
+      'failed:': function (error) {
+        this.callbacks.reject(error)
+      },
+      'completed': function () {
+        this.callbacks.resolve(dataHandler(this.data))
       }
     })
   }
@@ -79,7 +78,8 @@ export default async function upload (url, filePath, opts) {
     connectionDelegate.callbacks = NSDictionary.dictionaryWithDictionary({
       resolve, reject, progress
     })
-    NSURLConnection.alloc().initWithRequest_delegate(finalizedRequest, connectionDelegate)
+    var delegateWrapper = AtlassianURLConnectionDelegate.alloc().initWithDelegate(connectionDelegate)
+    NSURLConnection.alloc().initWithRequest_delegate(finalizedRequest, delegateWrapper)
   })
 }
 

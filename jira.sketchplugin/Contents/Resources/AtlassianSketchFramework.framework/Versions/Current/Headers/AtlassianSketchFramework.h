@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <AtlassianSketchFramework/AtlassianURLConnectionDelegate.h>
 
 //! Project version number for AtlassianSketchFramework.
 FOUNDATION_EXPORT double AtlassianSketchFrameworkVersionNumber;

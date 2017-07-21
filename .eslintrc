@@ -42,3 +42,4 @@ globals:
   NSInputStream: false
   Mocha: false
   AtlassianSketchFramework: false
+  AtlassianURLConnectionDelegate: false
