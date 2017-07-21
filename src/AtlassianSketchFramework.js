@@ -15,5 +15,5 @@ if (mocha.valueForKey(frameworkName)) {
   trace(`✅ loadFramework: ${frameworkName} success!`)
   mocha.setValue_forKey_(true, frameworkName)
 } else {
-  trace('❌ loadFramework: ${frameworkName} failed!`)')
+  trace(`❌ loadFramework: ${frameworkName} failed!`)
 }
