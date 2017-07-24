@@ -43,3 +43,4 @@ globals:
   Mocha: false
   AtlassianSketchFramework: false
   AtlassianURLConnectionDelegate: false
+  AtlassianURLDownloadDelegate: false

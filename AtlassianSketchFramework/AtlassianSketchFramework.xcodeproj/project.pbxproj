@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		231F61CC1F21E387000BAB30 /* AtlassianURLConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 231F61CB1F21E387000BAB30 /* AtlassianURLConnectionDelegate.h */; };
 		231F61CE1F21E45D000BAB30 /* AtlassianURLConnectionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 231F61CD1F21E45D000BAB30 /* AtlassianURLConnectionDelegate.m */; };
-		23874B441F215E1E0089E9E4 /* AtlassianSketchFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 23874B431F215E1E0089E9E4 /* AtlassianSketchFramework.m */; };
+		2342B3621F26AE460068D10D /* AtlassianURLDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2342B3601F26AE460068D10D /* AtlassianURLDownloadDelegate.m */; };
+		2342B3671F26B51E0068D10D /* AtlassianBaseRequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2342B3651F26B51E0068D10D /* AtlassianBaseRequestDelegate.m */; };
 		23874B4B1F215E1E0089E9E4 /* AtlassianSketchFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23874B3D1F215E1E0089E9E4 /* AtlassianSketchFramework.framework */; };
 		23874B501F215E1E0089E9E4 /* AtlassianSketchFrameworkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 23874B4F1F215E1E0089E9E4 /* AtlassianSketchFrameworkTests.m */; };
 		23874B521F215E1E0089E9E4 /* AtlassianSketchFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 23874B401F215E1E0089E9E4 /* AtlassianSketchFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -26,11 +26,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		231F61CB1F21E387000BAB30 /* AtlassianURLConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlassianURLConnectionDelegate.h; sourceTree = "<group>"; };
 		231F61CD1F21E45D000BAB30 /* AtlassianURLConnectionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlassianURLConnectionDelegate.m; sourceTree = "<group>"; };
+		2342B3601F26AE460068D10D /* AtlassianURLDownloadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlassianURLDownloadDelegate.m; sourceTree = "<group>"; };
+		2342B3631F26B2960068D10D /* AtlassianRequestDelegates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AtlassianRequestDelegates.h; sourceTree = "<group>"; };
+		2342B3651F26B51E0068D10D /* AtlassianBaseRequestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlassianBaseRequestDelegate.m; sourceTree = "<group>"; };
 		23874B3D1F215E1E0089E9E4 /* AtlassianSketchFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AtlassianSketchFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		23874B401F215E1E0089E9E4 /* AtlassianSketchFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AtlassianSketchFramework.h; sourceTree = "<group>"; };
-		23874B431F215E1E0089E9E4 /* AtlassianSketchFramework.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AtlassianSketchFramework.m; sourceTree = "<group>"; };
 		23874B451F215E1E0089E9E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23874B4A1F215E1E0089E9E4 /* AtlassianSketchFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtlassianSketchFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23874B4F1F215E1E0089E9E4 /* AtlassianSketchFrameworkTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AtlassianSketchFrameworkTests.m; sourceTree = "<group>"; };
@@ -78,9 +79,10 @@
 			isa = PBXGroup;
 			children = (
 				23874B401F215E1E0089E9E4 /* AtlassianSketchFramework.h */,
-				231F61CB1F21E387000BAB30 /* AtlassianURLConnectionDelegate.h */,
+				2342B3631F26B2960068D10D /* AtlassianRequestDelegates.h */,
+				2342B3651F26B51E0068D10D /* AtlassianBaseRequestDelegate.m */,
 				231F61CD1F21E45D000BAB30 /* AtlassianURLConnectionDelegate.m */,
-				23874B431F215E1E0089E9E4 /* AtlassianSketchFramework.m */,
+				2342B3601F26AE460068D10D /* AtlassianURLDownloadDelegate.m */,
 				23874B451F215E1E0089E9E4 /* Info.plist */,
 			);
 			path = AtlassianSketchFramework;
@@ -102,7 +104,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				231F61CC1F21E387000BAB30 /* AtlassianURLConnectionDelegate.h in Headers */,
 				23874B521F215E1E0089E9E4 /* AtlassianSketchFramework.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,7 +224,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				231F61CE1F21E45D000BAB30 /* AtlassianURLConnectionDelegate.m in Sources */,
-				23874B441F215E1E0089E9E4 /* AtlassianSketchFramework.m in Sources */,
+				2342B3621F26AE460068D10D /* AtlassianURLDownloadDelegate.m in Sources */,
+				2342B3671F26B51E0068D10D /* AtlassianBaseRequestDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

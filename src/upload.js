@@ -1,5 +1,6 @@
 import { assign } from 'lodash'
 import { trace } from './logger'
+import { cocoaDelegatePollInterval } from './config'
 
 export default async function upload (url, opts) {
   if (!opts.filePath) {
@@ -80,7 +81,7 @@ export default async function upload (url, opts) {
           opts.progress(progress.completedUnitCount(), progress.totalUnitCount())
         }
       }
-    }, 200)
+    }, cocoaDelegatePollInterval)
   })
 }
 

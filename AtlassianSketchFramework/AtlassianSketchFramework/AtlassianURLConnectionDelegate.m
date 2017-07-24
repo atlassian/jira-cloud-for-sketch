@@ -6,27 +6,9 @@
 //  Copyright © 2017 Atlassian. All rights reserved.
 //
 
-#import "AtlassianURLConnectionDelegate.h"
+#import "AtlassianRequestDelegates.h"
 
-@interface AtlassianURLConnectionDelegate ()
-
-@property (readwrite, atomic, strong) NSProgress * progress;
-@property (readwrite, atomic, strong) NSError * error;
-@property (readwrite, atomic, strong) NSURLResponse * response;
-@property (readwrite, atomic, strong) NSMutableData * data;
-@property (readwrite, atomic) bool completed;
-@property (readwrite, atomic) bool failed;
-
-@end
-
-@implementation AtlassianURLConnectionDelegate
-
-- (instancetype)init
-{
-    self = [super init];
-    self.progress = [[NSProgress alloc] initWithParent:[NSProgress currentProgress] userInfo:nil];
-    return self;
-}
+@implementation AtlassianURLConnectionDelegate : AtlassianBaseRequestDelegate
 
 - (void)connection:(NSURLConnection __unused *)connection
    didSendBodyData:(NSInteger)bytesWritten
