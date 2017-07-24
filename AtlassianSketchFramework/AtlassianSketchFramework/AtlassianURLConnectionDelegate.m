@@ -10,21 +10,22 @@
 
 @interface AtlassianURLConnectionDelegate ()
 
-@property (readwrite, nonatomic, weak) id<AtlassianMochaFriendlyURLConnectionDelegate> delegate;
+@property (readwrite, atomic, strong) NSProgress * progress;
+@property (readwrite, atomic, strong) NSError * error;
+@property (readwrite, atomic, strong) NSURLResponse * response;
+@property (readwrite, atomic, strong) NSMutableData * data;
+@property (readwrite, atomic) bool completed;
+@property (readwrite, atomic) bool failed;
 
 @end
 
 @implementation AtlassianURLConnectionDelegate
 
-- (instancetype)initWithDelegate:(id<AtlassianMochaFriendlyURLConnectionDelegate>) delegate {
-    self = [super init];
-    self.delegate = delegate;
-    return self;
-}
-
-- (instancetype)init NS_UNAVAILABLE
+- (instancetype)init
 {
-    return nil;
+    self = [super init];
+    self.progress = [[NSProgress alloc] initWithParent:[NSProgress currentProgress] userInfo:nil];
+    return self;
 }
 
 - (void)connection:(NSURLConnection __unused *)connection
@@ -32,33 +33,34 @@
  totalBytesWritten:(NSInteger)totalBytesWritten
 totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 {
-    NSString *bytesSent = [NSString stringWithFormat: @"%ld", (long) bytesWritten];
-    NSString *totalBytesSent = [NSString stringWithFormat: @"%ld", (long) totalBytesWritten];
-    NSString *totalBytesExpectedToSend = [NSString stringWithFormat: @"%ld", (long) totalBytesExpectedToWrite];
-    [ self.delegate bytesSent:bytesSent totalBytesSent:totalBytesSent totalBytesExpectedToSend:totalBytesExpectedToSend ];
+    NSProgress *progress = self.progress;
+    progress.totalUnitCount = totalBytesExpectedToWrite;
+    progress.completedUnitCount = totalBytesWritten;
 }
 
 - (void)connection:(NSURLConnection __unused *)connection
 didReceiveResponse:(NSURLResponse *)response
 {
-    [ self.delegate receivedResponse:response ];
+    self.response = response;
+    self.data = [[ NSMutableData alloc ] init ];
 }
 
 - (void)connection:(NSURLConnection __unused *)connection
     didReceiveData:(NSData *)data
 {
-    [ self.delegate receivedData:data ];
+    [ self.data appendData:data ];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection __unused *)connection
 {
-    [ self.delegate completed ];
+    self.completed = YES;
 }
 
 - (void)connection:(NSURLConnection __unused *)connection
   didFailWithError:(NSError *)error
 {
-    [ self.delegate failed:error ];
+    self.error = error;
+    self.failed = YES;
 }
 
 @end

@@ -1,6 +1,6 @@
 import { executeSafelyAsync, normalizeFilepath } from '../../util'
 import { getDraggedFiles } from '../../pasteboard'
-import { trace } from '../../logger'
+import { isTraceEnabled, trace } from '../../logger'
 import { postMultiple, event } from '../../analytics'
 
 export default class Uploads {
@@ -36,9 +36,12 @@ export default class Uploads {
           while (this.pendingUploads.length > 0) {
             const upload = this.pendingUploads.shift()
             for (let i = 0; i < upload.files.length; i++) {
-              const filepath = normalizeFilepath(upload.files[i])
-              var resp = await this.jira.uploadAttachment(upload.issueKey, filepath)
-              trace(resp)
+              const filePath = normalizeFilepath(upload.files[i])
+              trace(`attaching ${filePath} to ${upload.issueKey}`)
+              var resp = await this.jira.uploadAttachment(upload.issueKey, filePath)
+              if (isTraceEnabled()) {
+                trace(await resp.text())
+              }
               this.webUI.dispatchWindowEvent('jira.upload.complete', {
                 issueKey: upload.issueKey,
                 count: 1

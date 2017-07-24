@@ -1,7 +1,6 @@
 import fetch from 'sketch-module-fetch-polyfill'
-import multipart from './multipart'
+import upload from './upload'
 import download from './download'
-import { extractFilenameFromPath } from './util'
 import { getJiraHost, getBearerToken } from './auth'
 import JQL_FILTERS from './jql-filters'
 
@@ -74,36 +73,37 @@ export default class JIRA {
   }
 
   async downloadAttachment (url, filename) {
-    const filepath = await download(url, {
+    return download(url, {
       filename,
       headers: {
         Authorization: await authHeader()
       }
     })
-    return filepath
   }
 
-  async uploadAttachment (issueKey, filepath, filename) {
-    filename = filename || extractFilenameFromPath(filepath)
-    var uploadUrl = `${this.apiRoot}/issue/${issueKey}/attachments`
-    const res = await multipart(
-      uploadUrl,
-      await authHeader(),
-      filepath,
-      filename
-    )
-    return res
+  async uploadAttachment (issueKey, filePath, progress) {
+    const uploadUrl = `${this.apiRoot}/issue/${issueKey}/attachments`
+    const opts = {
+      filePath: filePath,
+      headers: {
+        Authorization: await authHeader(),
+        'X-Atlassian-Token': 'no-check'
+      }
+    }
+    if (progress) {
+      opts.progress = progress
+    }
+    return upload(uploadUrl, opts)
   }
 
   async deleteAttachment (id) {
     var deleteUrl = `${this.apiRoot}/attachment/${id}`
-    const res = await fetch(deleteUrl, {
+    return fetch(deleteUrl, {
       method: 'DELETE',
       headers: {
         Authorization: await authHeader()
       }
     })
-    return res
   }
 
   async addComment (issueKey, comment) {

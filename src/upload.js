@@ -1,85 +1,86 @@
-import ObjCClass from 'cocoascript-class'
-import { noop } from 'lodash'
+import { assign } from 'lodash'
 import { trace } from './logger'
 
-var DelegateClass
-
-export default async function upload (url, filePath, opts) {
-  if (!opts.filename || !opts.mimeType) {
-    throw new Error('Must specify filename & mimeType to upload')
+export default async function upload (url, opts) {
+  if (!opts.filePath) {
+    throw new Error('opts.filePath is required')
   }
+  opts = assign({}, opts, {
+    method: 'POST',
+    parameterName: 'file'
+  })
+  const serializer = AFHTTPRequestSerializer.alloc().init()
+  const request = serializer.requestWithMethod_URLString_parameters_error(opts.method, url, null, null)
 
-  // var fileUrl = NSURL.fileURLWithPath(filePath)
-  var serializer = AFHTTPRequestSerializer.alloc().init()
-  var request = serializer.requestWithMethod_URLString_parameters_error('POST', url, null, null)
-
-  // next thing to try -- subclass NSInputStream and use
-    // appendPartWithInputStream:name:fileName:length:mimeType:
-  // to report on progress
-
+  // request headers
   Object.keys(opts.headers || {}).forEach(function (i) {
     request.setValue_forHTTPHeaderField(opts.headers[i], i)
   })
 
-  var fileError = MOPointer.alloc().init()
-  var fileAttributes = NSFileManager.defaultManager().attributesOfItemAtPath_error(filePath, fileError)
-  var inputLength = fileAttributes.fileSize()
-
-  var inputStream = NSInputStream.inputStreamWithFileAtPath(filePath)
-
-  // sniff mimetype from fileAttributes.fileType() ?
-
+  // request body
+  var fileUrl = NSURL.fileURLWithPath(opts.filePath)
   var formData = AFStreamingMultipartFormData.alloc().initWithURLRequest_stringEncoding(request, NSUTF8StringEncoding)
-
-  // var error = MOPointer.alloc().init()
-  // formData.appendPartWithFileURL_name_error(fileUrl, 'file', error)
-  // error = error.value()
-  // if (error) {
-  //   trace(error)
-  //   throw error
-  // }
-
-  formData.appendPartWithInputStream_name_fileName_length_mimeType(
-    inputStream,
-    'file',
-    opts.filename,
-    inputLength,
-    opts.mimeType
-  )
-
+  var error = MOPointer.alloc().init()
+  formData.appendPartWithFileURL_name_error(fileUrl, opts.parameterName, error)
+  error = error.value()
+  if (error) {
+    trace(error)
+    throw new Error(error.value())
+  }
   var finalizedRequest = formData.requestByFinalizingMultipartFormData()
 
-  if (!DelegateClass) {
-    DelegateClass = ObjCClass({
-      classname: 'UploadDelegate',
-      data: null,
-      callbacks: null,
-      'bytesSent:totalBytesSent:totalBytesExpectedToSend:': function (bytesSent, totalBytesSent, totalBytesExpectedToSend) {
-        trace(`bytesSent ${bytesSent}, totalBytesSent ${totalBytesSent}, totalBytesExpectedToSend ${totalBytesExpectedToSend}`)
-      },
-      'receivedResponse:': function (httpResponse) {
-        this.data = NSMutableData.alloc().init()
-      },
-      'receivedData:': function (data) {
-        this.data.appendData(data)
-      },
-      'failed:': function (error) {
-        this.callbacks.reject(error)
-      },
-      'completed': function () {
-        this.callbacks.resolve(dataHandler(this.data))
-      }
-    })
-  }
+  var delegate = AtlassianURLConnectionDelegate.alloc().init()
+  NSURLConnection.alloc().initWithRequest_delegate(finalizedRequest, delegate)
 
-  var connectionDelegate = DelegateClass.new()
-  var progress = opts.progress || noop
   return new Promise(function (resolve, reject) {
-    connectionDelegate.callbacks = NSDictionary.dictionaryWithDictionary({
-      resolve, reject, progress
-    })
-    var delegateWrapper = AtlassianURLConnectionDelegate.alloc().initWithDelegate(connectionDelegate)
-    NSURLConnection.alloc().initWithRequest_delegate(finalizedRequest, delegateWrapper)
+    /**
+     * Why are we _polling_ the delegate state to determine the progress of the
+     * request?! This is admittedly not great, but polling is actually Plan D,
+     * implemented only after plans A through C failed spectacularly:
+     *
+     * Plan A was to implement an NSURLConnectionDelegate delegate using
+     * `cocoascript-class` (similar to the approach taken by
+     * `sketch-module-fetch-polyfill`). However, Sketch would crash when the
+     * connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:
+     * selector was invoked, I suspect due to a problem with the way
+     * Objective-C's NSInteger is bridged.
+     *
+     * Plan B was to write a pure Objective-C delegate that wrapped a simpler
+     * Mocha-friendly delegate that passed NSString to a similar
+     * `connection:didSendBodyData...` selector, but the wrapped delegate would
+     * cause Sketch to crash intermittently with a segmentation fault, possibly
+     * due to an unresolved Mocha issue[0] (though the problem may lie
+     * elsewhere - without access to the Sketch/Foundation source it's hard to
+     * tell exactly what the problem was).
+     *
+     * Plan C was `AFStreamingMultipartFormData.appendPartWithInputStream...`
+     * with a subclassed NSInputStream to monitor how many bytes were written,
+     * but it turns out subclassing NSInputStream for use with an NSURLRequest
+     * is non-trivial[1].
+     *
+     * Which leaves us with Plan D: polling a pure Objective-C delegate. This
+     * is pretty far from ideal, but works reliably and, most importantly,
+     * doesn't crash Sketch!
+     *
+     * [0]: https://github.com/logancollins/Mocha/issues/26
+     * [1]: http://blog.bjhomer.com/2011/04/subclassing-nsinputstream.html
+     */
+    var id = setInterval(function () {
+      if (delegate.failed()) {
+        clearInterval(id)
+        trace(`error: ${delegate.error()}`)
+        reject(delegate.error())
+      } else if (delegate.completed()) {
+        clearInterval(id)
+        trace(`error: ${delegate.error()}`)
+        resolve(dataHandler(delegate.data()))
+      } else {
+        if (opts.progress) {
+          let progress = delegate.progress()
+          opts.progress(progress.completedUnitCount(), progress.totalUnitCount())
+        }
+      }
+    }, 200)
   })
 }
 

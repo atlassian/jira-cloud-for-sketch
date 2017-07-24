@@ -8,19 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol AtlassianMochaFriendlyURLConnectionDelegate <NSObject>
-
-- (void)bytesSent:(NSString *)arg1 totalBytesSent:(NSString *)arg2 totalBytesExpectedToSend:(NSString *)arg3;
-- (void)receivedResponse:(NSURLResponse *)arg1;
-- (void)receivedData:(NSData *)arg1;
-- (void)failed:(NSError *)arg1;
-- (void)completed;
-
-@end
-
 @interface AtlassianURLConnectionDelegate : NSObject <NSURLConnectionDelegate>
 
-@property (readonly, nonatomic, weak) id<AtlassianMochaFriendlyURLConnectionDelegate> delegate;
-- (instancetype)initWithDelegate:(id<AtlassianMochaFriendlyURLConnectionDelegate>) delegate NS_DESIGNATED_INITIALIZER;
+@property (readonly, atomic, strong) NSProgress * progress;
+@property (readonly, atomic, strong) NSError * error;
+@property (readonly, atomic, strong) NSURLResponse * response;
+@property (readonly, atomic, strong) NSMutableData * data;
+@property (readonly, atomic) bool completed;
+@property (readonly, atomic) bool failed;
 
 @end
