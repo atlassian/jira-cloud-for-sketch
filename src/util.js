@@ -97,3 +97,14 @@ export function userDownloadsDirectory () {
     return tempDir('downloads')
   }
 }
+
+export function withErrorPointer (fn) {
+  const errorPtr = MOPointer.alloc().init()
+  const result = fn(errorPtr)
+  const error = errorPtr.value()
+  if (error) {
+    trace(error)
+    throw new Error(error)
+  }
+  return result
+}

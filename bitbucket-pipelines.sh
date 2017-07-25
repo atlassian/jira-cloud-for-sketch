@@ -9,6 +9,11 @@ npm install -g skpm@0.9.16
 npm install
 npm test
 
+# Note: the AtlassianSketchFramework is written in Objective-C and can not be
+# built in Bitbucket Pipelines' Docker environment. Therefore if you make
+# changes to /AtlassianSketchFramework, make sure you rebuild the project locally
+# using XCode (or `./build.sh`) before committing!
+
 # build the plugin
 skpm build
 export PLUGIN_ZIP="jira.sketchplugin-${BITBUCKET_COMMIT}.zip"

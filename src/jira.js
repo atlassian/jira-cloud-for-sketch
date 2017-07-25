@@ -1,6 +1,5 @@
 import fetch from 'sketch-module-fetch-polyfill'
-import upload from './upload'
-import download from './download'
+import { download, upload } from './request'
 import { getJiraHost, getBearerToken } from './auth'
 import JQL_FILTERS from './jql-filters'
 
