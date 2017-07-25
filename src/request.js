@@ -110,8 +110,11 @@ async function pollDelegateUntilComplete (delegate, onProgress) {
         clearInterval(id)
         resolve(delegate)
       } else {
+        const progress = delegate.progress()
+        if (isTraceEnabled()) {
+          trace(`${progress.completedUnitCount()} / ${progress.totalUnitCount()} bytes`)
+        }
         if (onProgress) {
-          let progress = delegate.progress()
           onProgress(progress.completedUnitCount(), progress.totalUnitCount())
         }
       }
