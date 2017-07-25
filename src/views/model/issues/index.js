@@ -54,7 +54,6 @@ export default class ViewModel {
       this.filters.list,
       filter => filter.key === filterKey
     )
-    console.log(this)
     this.loadIssues()
   }
 
