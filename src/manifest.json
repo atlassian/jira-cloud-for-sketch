@@ -33,12 +33,6 @@
 			}
 		},
 		{
-			"name": "Export Selection",
-			"identifier": "export",
-			"script": "./commands/export.js",
-			"shortcut": "cmd alt ;"
-		},
-		{
 			"name": "Test Action",
 			"identifier": "test",
 			"script": "./commands/test.js",
@@ -50,8 +44,7 @@
 		"items": [
 			"connect",
 			"issues",
-			"feedback",
-			"test"
+			"feedback"
 		]
 	}
 }
