@@ -8,7 +8,7 @@ export default class Profile {
     this.jira = jira
   }
 
-  async onReady () {
+  async loadProfile () {
     executeSafelyAsync(this.context, async () => {
       const profile = await this.jira.getProfile()
       this.webUI.dispatchWindowEvent('jira.profile.loaded', { profile })

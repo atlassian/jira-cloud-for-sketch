@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 
+@observer
 export default class IssueList extends Component {
   render () {
     var list
@@ -32,7 +34,7 @@ export default class IssueList extends Component {
 }
 
 IssueList.propTypes = {
-  issues: PropTypes.array.isRequired,
+  issues: PropTypes.object.isRequired, // array-ish
   onSelectIssue: PropTypes.func.isRequired
 }
 
@@ -49,7 +51,7 @@ class Issue extends Component {
     return (
       <IssueDiv
         onClick={() => {
-          this.props.onSelectIssue(issue)
+          this.props.onSelectIssue(issue.key)
         }}
       >
         <IssueTypeField type={issue.fields.issuetype} />

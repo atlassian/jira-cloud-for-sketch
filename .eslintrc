@@ -5,6 +5,7 @@ extends:
   - plugin:import/warnings
   - plugin:import/errors
   - sketch
+parser: babel-eslint
 parserOptions:
   ecmaVersion: 2017
   sourceType: module

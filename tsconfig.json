@@ -1,0 +1,7 @@
+{
+  "include": [ "src/**/*"],
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "allowJs": true
+  }
+}

@@ -24,11 +24,13 @@ export default async function (context) {
       height: 382,
       width: 510,
       handlers: {
-        onReady () {
-          filters.onReady()
-          profile.onReady()
+        loadFilters () {
+          filters.loadFilters()
         },
-        filterSelected (filterKey) {
+        loadProfile () {
+          profile.loadProfile()
+        },
+        loadIssuesForFilter (filterKey) {
           filters.onFilterChanged(filterKey)
         },
         uploadDroppedFiles (issueKey) {

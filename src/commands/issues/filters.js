@@ -1,4 +1,4 @@
-import { keys } from 'lodash'
+import { forOwn, assign } from 'lodash'
 import { standardIssueFields } from '../../config'
 import { executeSafelyAsync } from '../../util'
 import { postSingle } from '../../analytics'
@@ -11,29 +11,21 @@ export default class Filters {
     this.currentFilter = null
   }
 
-  async onReady () {
+  async loadFilters () {
     executeSafelyAsync(this.context, () => {
-      var defaultFilter = keys(this.jira.jqlFilters)[0]
-      this.webUI.dispatchWindowEvent('jira.filters.updated', {
-        filters: this.jira.jqlFilters,
-        filterSelected: defaultFilter
+      const filters = []
+      forOwn(this.jira.jqlFilters, (filter, key) => {
+        filters.push(assign({key}, filter))
       })
-      this._onFilterChanged(defaultFilter)
-      postSingle('viewIssueListDefaultFilter' + defaultFilter)
+      this.webUI.dispatchWindowEvent('jira.filters.loaded', {
+        filters: filters
+      })
     })
   }
 
   async onFilterChanged (newFilter) {
-    postSingle('viewIssueListFilterChangeTo' + newFilter, { previous: this.currentFilter })
-    this._onFilterChanged(newFilter)
-  }
-
-  async _onFilterChanged (newFilter) {
     executeSafelyAsync(this.context, async () => {
       this.currentFilter = newFilter
-      this.webUI.dispatchWindowEvent('jira.issues.loading', {
-        filterKey: newFilter
-      })
       var issues = await this.jira.getFilteredIssues(newFilter, {
         fields: standardIssueFields
       })

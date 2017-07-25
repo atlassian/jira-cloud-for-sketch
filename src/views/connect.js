@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import pluginCall from 'sketch-module-web-view/client'

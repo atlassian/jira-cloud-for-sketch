@@ -1,22 +1,15 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { keys } from 'lodash'
+import { observer } from 'mobx-react'
 import DropdownMenu from '@atlaskit/dropdown-menu'
 import '@atlaskit/css-reset'
 
+@observer
 export default class IssueFilter extends Component {
-  constructor (props) {
-    super(props)
-    this.handleItemActivated = this.handleItemActivated.bind(this)
-    this.state = {
-      selectedFilter: this.props.filters[this.props.defaultSelected]
-    }
-  }
   render () {
-    var filterItems = keys(this.props.filters).map(filterKey => {
-      var filter = this.props.filters[filterKey]
+    var filterItems = this.props.filters.map(filter => {
       return {
-        filterKey: filterKey,
+        filterKey: filter.key,
         content: filter.displayName
       }
     })
@@ -26,22 +19,18 @@ export default class IssueFilter extends Component {
         triggerType='button'
         position='bottom right'
         shouldFlip={false}
-        onItemActivated={this.handleItemActivated}
+        onItemActivated={(event) => {
+          this.props.onFilterSelected(event.item.filterKey)
+        }}
       >
-        { this.state.selectedFilter.displayName }
+        { this.props.selected.displayName }
       </DropdownMenu>
     )
-  }
-  handleItemActivated (event) {
-    this.setState({
-      selectedFilter: this.props.filters[event.item.filterKey]
-    })
-    this.props.onFilterSelected(event.item.filterKey)
   }
 }
 
 IssueFilter.propTypes = {
   filters: PropTypes.object.isRequired,
-  defaultSelected: PropTypes.string.isRequired,
+  selected: PropTypes.object.isRequired,
   onFilterSelected: PropTypes.func.isRequired
 }

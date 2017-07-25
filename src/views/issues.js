@@ -1,106 +1,73 @@
+import 'babel-polyfill'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 import styled from 'styled-components'
-import pluginCall from 'sketch-module-web-view/client'
 import Spinner from '@atlaskit/spinner'
 import IssueFilter from './components/IssueFilter'
 import IssueList from './components/IssueList'
 import IssueView from './components/IssueView'
 import '@atlaskit/css-reset'
+import ViewModel from './model/issues'
 
+@observer
 class ViewIssuesPanel extends Component {
   constructor (props) {
     super(props)
-    this.handleSelectIssue = this.handleSelectIssue.bind(this)
-    this.handleCloseIssue = this.handleCloseIssue.bind(this)
     this.handleFilterSelected = this.handleFilterSelected.bind(this)
-    this.state = {
-      issuesLoading: true,
-      issues: [],
-      currentFilter: null
-    }
+    this.handleIssueSelected = this.handleIssueSelected.bind(this)
+    this.handleIssueDeselected = this.handleIssueDeselected.bind(this)
   }
   render () {
+    const {issues, filters, profile} = this.props.viewmodel
     return (
       <PanelWrapper>
         <HeaderDiv>
           <h4>JIRA issues</h4>
-          {this.state.filters &&
+          {!filters.loading &&
             <IssueFilter
-              filters={this.state.filters}
-              defaultSelected={this.state.defaultFilter}
+              filters={filters.list}
+              selected={filters.selected}
               onFilterSelected={this.handleFilterSelected}
             />
           }
         </HeaderDiv>
-        {this.state.issuesLoading ? (
+        {issues.loading ? (
           <SpinnerWrapper>
-            <Spinner
-              size='large'
-              isCompleting={this.state.spinnerCompleting}
-              onComplete={() => this.setState({spinnerCompleting: false})}
-            />
+            <Spinner size='large' />
           </SpinnerWrapper>
         ) : (
           <IssueList
-            issues={this.state.issues}
-            onSelectIssue={this.handleSelectIssue}
+            issues={issues.list}
+            onSelectIssue={this.handleIssueSelected}
           />
         )}
-        {this.state.currentIssue &&
+        {issues.selected &&
           <ModalPanel>
             <IssueView
-              issue={this.state.currentIssue}
-              profile={this.state.profile}
-              onClose={this.handleCloseIssue}
-              filter={this.state.currentFilter}
+              issue={issues.selected}
+              profile={profile}
+              onClose={this.handleIssueDeselected}
+              filter={filters.selected}
             />
           </ModalPanel>}
       </PanelWrapper>
     )
   }
-  componentDidMount () {
-    window.addEventListener('jira.filters.updated', event => {
-      this.setState({
-        filters: event.detail.filters,
-        defaultFilter: event.detail.filterSelected
-      })
-    })
-    window.addEventListener('jira.issues.loading', event => {
-      this.setState({
-        issuesLoading: true,
-        issues: []
-      })
-    })
-    window.addEventListener('jira.issues.loaded', event => {
-      this.setState({
-        issuesLoading: false,
-        issues: event.detail.issues,
-        currentFilter: event.detail.filter
-      })
-    })
-    window.addEventListener('jira.profile.loaded', event => {
-      this.setState({
-        profile: event.detail.profile
-      })
-    })
-    pluginCall('onReady')
-  }
   handleFilterSelected (filterKey) {
-    pluginCall('filterSelected', filterKey)
+    this.props.viewmodel.selectFilter(filterKey)
   }
-  handleSelectIssue (issue) {
-    this.setState({
-      currentIssue: issue
-    })
-    pluginCall('analytics', 'viewIssue')
+  handleIssueSelected (issueKey) {
+    this.props.viewmodel.selectIssue(issueKey)
   }
-  handleCloseIssue () {
-    this.setState({
-      currentIssue: null
-    })
-    pluginCall('analytics', 'backToViewIssueList')
+  handleIssueDeselected (issueKey) {
+    this.props.viewmodel.deselectIssue(issueKey)
   }
+}
+
+ViewIssuesPanel.propTypes = {
+  viewmodel: PropTypes.object.isRequired
 }
 
 const PanelWrapper = styled.div`
@@ -131,4 +98,4 @@ const ModalPanel = styled.div`
   background-color: white;
 `
 
-ReactDOM.render(<ViewIssuesPanel />, document.getElementById('container'))
+ReactDOM.render(<ViewIssuesPanel viewmodel={new ViewModel()} />, document.getElementById('container'))
