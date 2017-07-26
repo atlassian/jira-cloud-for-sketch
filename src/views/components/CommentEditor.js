@@ -1,25 +1,20 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import pluginCall from 'sketch-module-web-view/client'
+import { observer } from 'mobx-react'
 import FieldBase from '@atlaskit/field-base'
 import TextArea from 'react-textarea-autosize'
 
+@observer
 export default class CommentEditor extends Component {
   constructor (props) {
     super(props)
     this.handleChange = this.handleChange.bind(this)
     this.handleKeyDown = this.handleKeyDown.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleTextAreaHeightChange = this.handleTextAreaHeightChange.bind(this)
-    this.onCommentAdded = this.onCommentAdded.bind(this)
-    this.state = {
-      value: '',
-      posting: false
-    }
   }
   render () {
-    var style = {
+    const issue = this.props.issue
+    const style = {
       border: 'none',
       font: 'inherit',
       background: 'inherit',
@@ -32,9 +27,9 @@ export default class CommentEditor extends Component {
         <TextArea
           useCacheForDOMMeasurements
           style={style}
-          disabled={this.state.posting}
+          disabled={issue.postingComment}
           placeholder='Add a comment...'
-          value={this.state.value}
+          value={issue.commentText}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
           onHeightChange={this.handleTextAreaHeightChange}
@@ -42,31 +37,16 @@ export default class CommentEditor extends Component {
       </FieldBase>
     )
   }
-  componentDidMount () {
-    window.addEventListener('jira.comment.added', this.onCommentAdded)
-  }
-  componentWillUnmount () {
-    window.removeEventListener('jira.comment.added', this.onCommentAdded)
-  }
   handleChange (event) {
-    this.setState({value: event.target.value})
+    this.props.issue.commentText = event.target.value
   }
   handleKeyDown (event) {
+    // enter = submit, shift+enter = insert line break
     if (event.keyCode == 13) {
       if (!event.shiftKey) {
         event.preventDefault()
-        this.handleSubmit()
+        this.props.issue.postComment()
       }
-    }
-  }
-  handleSubmit () {
-    if (this.state.value && this.state.value.trim().length > 0) {
-      this.props.onSubmitStart()
-      pluginCall('addComment', this.props.issueKey, this.state.value)
-      this.setState({
-        value: '',
-        posting: true
-      })
     }
   }
   handleTextAreaHeightChange (height, instance) {
@@ -76,18 +56,8 @@ export default class CommentEditor extends Component {
     }
     this.prevRowCount = instance.rowCount
   }
-  onCommentAdded (event) {
-    if (event.detail.issueKey == this.props.issueKey) {
-      this.setState({
-        posting: false
-      })
-      this.props.onSubmitDone(event.detail.href)
-    }
-  }
 }
 
 CommentEditor.propTypes = {
-  issueKey: PropTypes.string.isRequired,
-  onSubmitStart: PropTypes.func.isRequired,
-  onSubmitDone: PropTypes.func.isRequired
+  issue: PropTypes.object.isRequired
 }

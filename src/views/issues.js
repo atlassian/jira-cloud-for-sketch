@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import Spinner from '@atlaskit/spinner'
 import IssueFilter from './components/IssueFilter'
 import IssueList from './components/IssueList'
+import Breadcrumbs from './components/Breadcrumbs'
 import IssueView from './components/IssueView'
 import '@atlaskit/css-reset'
 import ViewModel from './model/issues'
@@ -45,12 +46,8 @@ class ViewIssuesPanel extends Component {
         )}
         {issues.selected &&
           <ModalPanel>
-            <IssueView
-              issue={issues.selected}
-              profile={profile}
-              onClose={this.handleIssueDeselected}
-              filter={filters.selected}
-            />
+            <Breadcrumbs viewmodel={this.props.viewmodel} />
+            <IssueView issue={issues.selected} profile={profile} />
           </ModalPanel>}
       </PanelWrapper>
     )

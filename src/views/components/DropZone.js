@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 import styled from 'styled-components'
-import pluginCall from 'sketch-module-web-view/client'
 import '@atlaskit/css-reset'
 
+@observer
 export default class DropZone extends Component {
   constructor (props) {
     super(props)
-    this.onUploadQueued = this.onUploadQueued.bind(this)
-    this.onUploadComplete = this.onUploadComplete.bind(this)
     this.dragEnter = this.dragEnter.bind(this)
     this.dragLeave = this.dragLeave.bind(this)
     this.dragStart = this.dragStart.bind(this)
@@ -20,36 +19,7 @@ export default class DropZone extends Component {
       count of dragEnter vs dragLeave and remove the drag hover effect when the
       counter falls to zero.
       */
-      dragHover: 0,
-      uploading: 0
-    }
-  }
-  componentDidMount () {
-    window.addEventListener('jira.upload.queued', this.onUploadQueued)
-    window.addEventListener('jira.upload.complete', this.onUploadComplete)
-  }
-  componentWillUnmount () {
-    window.removeEventListener('jira.upload.queued', this.onUploadQueued)
-    window.removeEventListener('jira.upload.complete', this.onUploadComplete)
-  }
-  onUploadQueued (event) {
-    if (event.detail.issueKey == this.props.issueKey) {
-      this.setState(function (prevState) {
-        return {
-          uploading: prevState.uploading + event.detail.count
-        }
-      })
-      this.props.onUploadStarted(event.detail.count)
-    }
-  }
-  onUploadComplete (event) {
-    if (event.detail.issueKey == this.props.issueKey) {
-      this.setState(function (prevState) {
-        return {
-          uploading: prevState.uploading - event.detail.count
-        }
-      })
-      this.props.onUploadComplete(event.detail.count)
+      dragHover: 0
     }
   }
   dragEnter (event) {
@@ -67,13 +37,13 @@ export default class DropZone extends Component {
     // event.dataTransfer.effectAllowed = "copy"
   }
   drop (event) {
+    event.preventDefault()
     this.setState({ dragHover: false })
     /*
     Dragged files are looked up from the system pasteboard so we can determine
-    their location on disk. We only pass back the issue they were dropped onto.
+    their location on disk. No need to pass them here.
     */
-    pluginCall('uploadDroppedFiles', this.props.issueKey)
-    event.preventDefault()
+    this.props.issue.uploadDroppedFiles()
   }
   render (props) {
     var style = {}
@@ -81,10 +51,6 @@ export default class DropZone extends Component {
       style.borderWidth = '3px'
       style.padding = '2px'
       style.borderColor = '#ffab00'
-    }
-    var text = 'Drag your artboards and layers here'
-    if (this.state.uploading > 0) {
-      text = 'Uploading...'
     }
     return (
       <DropZoneDiv
@@ -96,16 +62,14 @@ export default class DropZone extends Component {
         onDropCapture={this.drop}
       >
         <DocumentsImg src='documents.svg' alt='Documents' />
-        <TextDiv>{text}</TextDiv>
+        <TextDiv>Drag your artboards and layers here</TextDiv>
       </DropZoneDiv>
     )
   }
 }
 
 DropZone.propTypes = {
-  issueKey: PropTypes.string.isRequired,
-  onUploadStarted: PropTypes.func.isRequired,
-  onUploadComplete: PropTypes.func.isRequired
+  issue: PropTypes.object.isRequired
 }
 
 const DropZoneDiv = styled.div`

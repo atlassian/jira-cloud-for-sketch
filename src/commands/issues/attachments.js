@@ -14,8 +14,9 @@ export default class Attachments {
   async reloadAttachments (issueKey) {
     executeSafelyAsync(this.context, async () => {
       const issue = await this.jira.getIssue(issueKey, {fields: ['attachment']})
-      const attachments = sortByDate(issue.fields.attachment)
-      this.webUI.dispatchWindowEvent('jira.attachment.reloaded', {
+      // sort here, so that the attachment thumbnails load in the correct order
+      const attachments = sortBy(issue.attachments, 'created').reverse()
+      this.webUI.dispatchWindowEvent('jira.attachments.loaded', {
         issueKey,
         attachments
       })
@@ -23,7 +24,7 @@ export default class Attachments {
       await map(
         attachments.filter(attachment => attachment.thumbnail && attachment.mimeType),
         async (attachment) => {
-          this.webUI.dispatchWindowEvent('jira.attachment.thumbnail', {
+          this.webUI.dispatchWindowEvent('jira.thumbnail.loaded', {
             issueKey,
             id: attachment.id,
             dataUri: await this.jira.getImageAsDataUri(
@@ -69,5 +70,5 @@ async function postAnalytics (attachments) {
 }
 
 function sortByDate (attachments) {
-  return sortBy(attachments, 'created').reverse()
+  return
 }

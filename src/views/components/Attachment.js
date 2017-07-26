@@ -1,20 +1,18 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 import styled from 'styled-components'
-import pluginCall from 'sketch-module-web-view/client'
 import { CardView } from '@atlaskit/media-card'
 import moment from 'moment'
 
+@observer
 export default class Attachment extends Component {
   constructor (props) {
     super(props)
-    this.onAttachmentClick = this.onAttachmentClick.bind(this)
-    this.onDeleteStarted = this.onDeleteStarted.bind(this)
     this.dragEnter = this.dragEnter.bind(this)
     this.dragLeave = this.dragLeave.bind(this)
     this.drop = this.drop.bind(this)
     this.state = {
-      deleting: false,
       dragHover: 0
     }
   }
@@ -31,30 +29,10 @@ export default class Attachment extends Component {
       >
         <AttachmentCard
           attachment={attachment}
-          onClick={this.onAttachmentClick}
           dragHover={this.state.dragHover > 0}
-          issueKey={this.props.issueKey}
-          onDeleteStarted={this.props.onDeleteStarted}
         />
       </AttachmentWrapper>
     )
-  }
-  onAttachmentClick (event) {
-    event.preventDefault()
-    if (!this.state.deleting) {
-      pluginCall(
-        'openAttachment',
-        this.props.issueKey,
-        this.props.attachment.content,
-        this.props.attachment.filename
-      )
-    }
-  }
-  onDeleteStarted () {
-    this.setState({
-      deleting: true
-    })
-    this.props.onDeleteStarted()
   }
   dragEnter (event) {
     this.setState(function (prevState) {
@@ -69,21 +47,12 @@ export default class Attachment extends Component {
   drop (event) {
     this.setState({ dragHover: false })
     event.preventDefault()
-    if (!this.state.deleting) {
-      pluginCall(
-        'replaceAttachment',
-        this.props.issueKey,
-        this.props.attachment.id
-      )
-      this.onDeleteStarted() // hack - TODO refactor spinner logic
-    }
+    this.props.attachment.replace()
   }
 }
 
 Attachment.propTypes = {
-  issueKey: PropTypes.string.isRequired,
-  attachment: PropTypes.object.isRequired,
-  onDeleteStarted: PropTypes.func.isRequired
+  attachment: PropTypes.object.isRequired
 }
 
 /*
@@ -104,14 +73,12 @@ const AttachmentWrapper = styled.div`
   }
 `
 
+@observer
 class AttachmentCard extends Component {
   constructor (props) {
     super(props)
-    this.onThumbnailLoaded = this.onThumbnailLoaded.bind(this)
-    this.state = {
-      thumbnail: null,
-      status: this.props.attachment.thumbnail ? 'loading' : 'complete'
-    }
+    this.handleClick = this.handleClick.bind(this)
+    this.handleDeleteAction = this.handleDeleteAction.bind(this)
   }
   render () {
     var style = {}
@@ -131,25 +98,15 @@ class AttachmentCard extends Component {
     var actions = [{
       label: 'Delete',
       type: 'delete',
-      handler: (item, event) => {
-        this.props.onDeleteStarted()
-        pluginCall(
-          'deleteAttachment',
-          this.props.issueKey,
-          this.props.attachment.id
-        )
-        this.setState({
-          status: 'processing'
-        })
-      }
+      handler: this.handleDeleteAction
     }]
     return (
-      <CardWrapper style={style} onClick={this.props.onClick}>
+      <CardWrapper style={style} onClick={this.handleClick}>
         <CardView
-          status={this.state.status}
+          status={attachment.cardStatus}
           appearance='image'
           metadata={imageMetadata}
-          dataURI={this.state.thumbnail}
+          dataURI={attachment.thumbnailDataUri}
           dimensions={{width: 141}}
           resizeMode='full-fit'
           actions={actions}
@@ -157,31 +114,18 @@ class AttachmentCard extends Component {
       </CardWrapper>
     )
   }
-  componentDidMount () {
-    window.addEventListener('jira.attachment.thumbnail', this.onThumbnailLoaded)
+  handleClick (event) {
+    event.preventDefault()
+    this.props.attachment.open()
   }
-  componentWillUnmount () {
-    window.removeEventListener(
-      'jira.attachment.thumbnail',
-      this.onThumbnailLoaded
-    )
-  }
-  onThumbnailLoaded (event) {
-    if (event.detail.id == this.props.attachment.id) {
-      this.setState({
-        thumbnail: event.detail.dataUri,
-        status: 'complete'
-      })
-    }
+  handleDeleteAction (event) {
+    this.props.attachment.delete()
   }
 }
 
 AttachmentCard.propTypes = {
-  issueKey: PropTypes.string.isRequired,
   attachment: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-  dragHover: PropTypes.bool.isRequired,
-  onDeleteStarted: PropTypes.func.isRequired
+  dragHover: PropTypes.bool.isRequired
 }
 
 const CardWrapper = styled.div`

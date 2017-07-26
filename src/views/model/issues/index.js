@@ -30,6 +30,16 @@ export default class ViewModel {
     this.unbindWindowEvents()
   }
 
+  findIssueByKey (issueKey) {
+    return find(this.issues.list, issue => { return issue.key == issueKey })
+  }
+
+  findAttachmentById (issueKey, attachmentId) {
+    return find(this.findIssueByKey(issueKey).attachments, attachment => {
+      return attachment.id == attachmentId
+    })
+  }
+
   loadFilters () {
     this.filters.loading = true
     this.filters.list.clear()
@@ -75,12 +85,40 @@ export default class ViewModel {
       this.issues.list,
       issue => issue.key === issueKey
     )
+    pluginCall('reloadAttachments', issueKey)
     analytics('viewIssue')
   }
 
-  deselectIssue (issueKey) {
+  deselectIssue () {
     this.issues.selected = null
     analytics('backToViewIssueList')
+  }
+
+  onAttachmentsLoaded (issueKey, newAttachments) {
+    const issue = this.findIssueByKey(issueKey)
+    if (issue) {
+      // re-use existing thumbnails if present
+      newAttachments.forEach(newAttachment => {
+        const matchingAttachment = find(issue.attachments, attachment => {
+          return attachment.id == newAttachment.id
+        })
+        if (matchingAttachment && matchingAttachment.thumbnailDataUri) {
+          newAttachment.thumbnailDataUri = matchingAttachment.thumbnailDataUri
+        }
+      })
+      issue.attachments.replace(newAttachments)
+    }
+  }
+
+  onThumbnailLoaded (issueKey, attachmentId, dataUri) {
+    const attachment = this.findAttachmentById(issueKey, attachmentId)
+    if (attachment) {
+      attachment.thumbnailDataUri = dataUri
+    }
+  }
+
+  onCommentAdded (issueKey, href) {
+    this.findIssueByKey(issueKey).onCommentAdded(href)
   }
 
   loadProfile () {

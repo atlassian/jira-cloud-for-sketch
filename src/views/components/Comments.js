@@ -1,19 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 import styled from 'styled-components'
-import pluginCall from 'sketch-module-web-view/client'
 import Spinner from '@atlaskit/spinner'
 import Avatar from '@atlaskit/avatar'
 import CheckIcon from '@atlaskit/icon/glyph/check'
 import CommentEditor from './CommentEditor'
 
+@observer
 export default class Comments extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      posting: false
-    }
-  }
   render () {
     var avatar
     if (this.props.profile) {
@@ -31,28 +26,16 @@ export default class Comments extends Component {
           <AvatarWrapper>
             {avatar}
           </AvatarWrapper>
-          <CommentEditor
-            issueKey={this.props.issueKey}
-            onSubmitStart={() => { this.setState({posting: true}) }}
-            onSubmitDone={(commentHref) => {
-              this.setState({
-                posting: false,
-                commentHref
-              })
-            }}
-          />
+          <CommentEditor issue={this.props.issue} />
         </CommentInput>
-        <CommentStatus
-          posting={this.state.posting}
-          commentHref={this.state.commentHref}
-        />
+        <CommentStatus issue={this.props.issue} />
       </CommentsArea>
     )
   }
 }
 
 Comments.propTypes = {
-  issueKey: PropTypes.string.isRequired,
+  issue: PropTypes.object.isRequired,
   profile: PropTypes.object
 }
 
@@ -68,16 +51,22 @@ const AvatarWrapper = styled.div`
   margin-right: 8px;
 `
 
+@observer
 class CommentStatus extends Component {
+  constructor (props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+  }
   render () {
-    var status = null
-    if (this.props.posting) {
+    const issue = this.props.issue
+    let status = null
+    if (issue.postingComment) {
       status = (
         <SpinnerWrapper>
           <Spinner size='small' />
         </SpinnerWrapper>
       )
-    } else if (this.props.commentHref) {
+    } else if (issue.postedCommentHref) {
       status = (
         <SuccessWrapper>
           <CheckIcon
@@ -86,13 +75,9 @@ class CommentStatus extends Component {
             primaryColor='#36B37E'
           />
           <CommentLinkWrapper>
-            Comment posted (<a
-              href={this.props.commentHref}
-              onClick={(event) => {
-                pluginCall('openInBrowser', this.props.commentHref)
-                event.preventDefault()
-              }}
-            >View in JIRA</a>)
+            Comment posted (<a href={issue.postedCommentHref} onClick={this.handleClick}>
+              View in JIRA
+            </a>)
           </CommentLinkWrapper>
         </SuccessWrapper>
       )
@@ -101,11 +86,14 @@ class CommentStatus extends Component {
       <StatusWrapper>{status}</StatusWrapper>
     )
   }
+  handleClick (event) {
+    event.preventDefault()
+    this.props.issue.openPostedCommentInBrowser()
+  }
 }
 
 CommentStatus.propTypes = {
-  posting: PropTypes.bool.isRequired,
-  commentHref: PropTypes.string
+  issue: PropTypes.object.isRequired
 }
 
 const StatusWrapper = styled.div`

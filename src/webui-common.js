@@ -1,6 +1,7 @@
 import WebUI from 'sketch-module-web-view'
 import { assign } from 'lodash'
 import { executeSafely, randomHex, openInBrowser } from './util'
+import { trace, isTraceEnabled } from './logger'
 import analytics from './analytics'
 
 /**
@@ -59,6 +60,7 @@ export default function (context, options) {
 
   webUI.dispatchWindowEvent = function (eventName, eventDetail) {
     var eventJson = JSON.stringify({ detail: eventDetail })
+    isTraceEnabled() && trace(`window event: ${eventName} ${eventJson}`)
     webUI.eval(
       `window.dispatchEvent(new CustomEvent('${eventName}', ${eventJson}))`
     )

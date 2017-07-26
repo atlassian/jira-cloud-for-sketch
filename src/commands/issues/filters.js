@@ -1,5 +1,4 @@
 import { forOwn, assign } from 'lodash'
-import { standardIssueFields } from '../../config'
 import { executeSafelyAsync } from '../../util'
 import { postSingle } from '../../analytics'
 
@@ -26,9 +25,7 @@ export default class Filters {
   async onFilterChanged (newFilter) {
     executeSafelyAsync(this.context, async () => {
       this.currentFilter = newFilter
-      var issues = await this.jira.getFilteredIssues(newFilter, {
-        fields: standardIssueFields
-      })
+      var issues = await this.jira.getFilteredIssues(newFilter)
       // if another filter has been selected in the meantime, ignore the result
       if (newFilter == this.currentFilter) {
         this.webUI.dispatchWindowEvent('jira.issues.loaded', {

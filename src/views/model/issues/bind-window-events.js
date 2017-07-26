@@ -1,18 +1,38 @@
 import { forOwn } from 'lodash'
 import Filter from './Filter'
 import Issue from './Issue'
+import Attachment from './Attachment'
 import Profile from './Profile'
 
-export default function (panel) {
+export default function (viewModel) {
   const events = {
     'jira.filters.loaded': event => {
-      panel.onFiltersLoaded(event.detail.filters.map(filter => new Filter(filter)))
+      viewModel.onFiltersLoaded(event.detail.filters.map(filter => new Filter(filter)))
     },
     'jira.issues.loaded': event => {
-      panel.onIssuesLoaded(event.detail.issues.map(issue => new Issue(issue)))
+      viewModel.onIssuesLoaded(event.detail.issues.map(issue => {
+        const attachments = issue.attachments.map(attachment => new Attachment(issue.key, attachment))
+        delete issue.attachments
+        return new Issue(issue, attachments)
+      }))
+    },
+    'jira.attachments.loaded': event => {
+      const { issueKey, attachments } = event.detail
+      viewModel.onAttachmentsLoaded(
+        issueKey,
+        attachments.map(attachment => new Attachment(issueKey, attachment))
+      )
+    },
+    'jira.thumbnail.loaded': event => {
+      const { issueKey, id, dataUri } = event.detail
+      viewModel.onThumbnailLoaded(issueKey, id, dataUri)
     },
     'jira.profile.loaded': event => {
-      panel.onProfileLoaded(new Profile(event.detail.profile))
+      viewModel.onProfileLoaded(new Profile(event.detail.profile))
+    },
+    'jira.comment.added': event => {
+      const { issueKey, href } = event.detail
+      viewModel.onCommentAdded(issueKey, href)
     }
   }
   forOwn(events, (func, key) => window.addEventListener(key, func))

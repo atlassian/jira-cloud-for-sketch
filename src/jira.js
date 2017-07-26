@@ -1,7 +1,10 @@
 import fetch from 'sketch-module-fetch-polyfill'
+import { assign } from 'lodash'
 import { download, upload } from './request'
 import { getJiraHost, getBearerToken } from './auth'
 import JQL_FILTERS from './jql-filters'
+import { issueFromRest } from './entity-mappers'
+import { standardIssueFields } from './config'
 
 export default class JIRA {
   constructor () {
@@ -11,24 +14,21 @@ export default class JIRA {
   }
 
   /**
-   * Retrieves issues using JIRA's search API. Note that this API does not
-   * populate the 'attachment' field for returned issues.
+   * Retrieves issues using JIRA's search API.
    */
   async getFilteredIssues (filterKey, opts) {
     var filter = this.jqlFilters[filterKey]
     if (!filter) {
       throw new Error(`No filter defined for ${filterKey}`)
     }
+    opts = assign({}, { fields: standardIssueFields }, opts)
     var jql = encodeURIComponent(filter.jql)
-    var searchUrl = `${this.apiRoot}/search?jql=${jql}`
+    var searchUrl = `${this.apiRoot}/search?jql=${jql}&fields=${opts.fields.join(',')}`
     if (opts.startAt) {
       searchUrl += `&startAt=${opts.startAt}`
     }
     if (opts.maxResults) {
       searchUrl += `&maxResults=${opts.maxResults}`
-    }
-    if (opts.fields) {
-      searchUrl += `&fields=${opts.fields.join(',')}`
     }
     const res = await fetch(searchUrl, {
       headers: {
@@ -37,7 +37,7 @@ export default class JIRA {
       }
     })
     var json = await res.json()
-    return json.issues
+    return json.issues.map(issueFromRest)
   }
 
   /**
@@ -45,17 +45,15 @@ export default class JIRA {
    * 'attachment' field.
    */
   async getIssue (issueKey, opts) {
-    var issueUrl = `${this.apiRoot}/issue/${issueKey}`
-    if (opts.fields) {
-      issueUrl += `?fields=${opts.fields.join(',')}`
-    }
+    opts = assign({}, { fields: standardIssueFields }, opts)
+    var issueUrl = `${this.apiRoot}/issue/${issueKey}?fields=${opts.fields.join(',')}`
     const res = await fetch(issueUrl, {
       headers: {
         Accept: 'application/json',
         Authorization: await authHeader()
       }
     })
-    return res.json()
+    return issueFromRest(await res.json())
   }
 
   async getImageAsDataUri (url, mimeType) {

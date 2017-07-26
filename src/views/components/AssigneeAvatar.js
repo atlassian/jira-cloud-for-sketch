@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 import Avatar from '@atlaskit/avatar'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 
+@observer
 export default class AssigneeAvatar extends Component {
   render () {
     var assignee = this.props.assignee

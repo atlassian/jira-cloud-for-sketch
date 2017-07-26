@@ -45,6 +45,7 @@ const ScrollDiv = styled.div`
   overflow-y: scroll;
 `
 
+@observer
 class Issue extends Component {
   render () {
     var issue = this.props.issue
@@ -54,9 +55,9 @@ class Issue extends Component {
           this.props.onSelectIssue(issue.key)
         }}
       >
-        <IssueTypeField type={issue.fields.issuetype} />
+        <IssueTypeField type={issue.type} />
         <IssueKeyField issueKey={issue.key} />
-        <IssueSummaryField summary={issue.fields.summary} />
+        <IssueSummaryField summary={issue.summary} />
       </IssueDiv>
     )
   }
@@ -123,6 +124,7 @@ const TypeImage = styled.img`
   height: 16px;
 `
 
+@observer
 class IssueKeyField extends Component {
   render () {
     var issueKey = this.props.issueKey
