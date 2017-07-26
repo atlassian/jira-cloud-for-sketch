@@ -1,7 +1,6 @@
 import { executeSafelyAsync, openInDefaultApp } from '../../util'
 import { thumbnailDownloadConcurrency } from '../../config'
 import analytics, { postMultiple, event } from '../../analytics'
-import { sortBy } from 'lodash'
 import { map } from 'bluebird'
 
 export default class Attachments {
@@ -14,28 +13,31 @@ export default class Attachments {
   async reloadAttachments (issueKey) {
     executeSafelyAsync(this.context, async () => {
       const issue = await this.jira.getIssue(issueKey, {fields: ['attachment']})
-      // sort here, so that the attachment thumbnails load in the correct order
-      const attachments = sortBy(issue.attachments, 'created').reverse()
+      const attachments = issue.attachments
       this.webUI.dispatchWindowEvent('jira.attachments.loaded', {
         issueKey,
         attachments
       })
       postAnalytics(attachments)
       await map(
-        attachments.filter(attachment => attachment.thumbnail && attachment.mimeType),
-        async (attachment) => {
-          this.webUI.dispatchWindowEvent('jira.thumbnail.loaded', {
-            issueKey,
-            id: attachment.id,
-            dataUri: await this.jira.getImageAsDataUri(
-              attachment.thumbnail,
-              attachment.mimeType
-            )
-          })
-        },
+        attachments,
+        async (attachment) => { return this.loadThumbnail(issueKey, attachment) },
         { concurrency: thumbnailDownloadConcurrency }
       )
     })
+  }
+
+  async loadThumbnail (issueKey, attachment) {
+    if (attachment.thumbnail && attachment.mimeType) {
+      this.webUI.dispatchWindowEvent('jira.thumbnail.loaded', {
+        issueKey,
+        id: attachment.id,
+        dataUri: await this.jira.getImageAsDataUri(
+          attachment.thumbnail,
+          attachment.mimeType
+        )
+      })
+    }
   }
 
   async deleteAttachment (issueKey, id) {
@@ -67,8 +69,4 @@ async function postAnalytics (attachments) {
   })
   analyticsEvents.push(event('viewIssueAttachmentsLoaded', {count: attachments.length}))
   postMultiple(analyticsEvents)
-}
-
-function sortByDate (attachments) {
-  return
 }

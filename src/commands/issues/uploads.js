@@ -12,10 +12,11 @@ import { postMultiple, event } from '../../analytics'
 import { attachmentFromRest } from '../../entity-mappers'
 
 export default class Uploads {
-  constructor (context, webUI, jira) {
+  constructor (context, webUI, jira, attachments) {
     this.context = context
     this.webUI = webUI
     this.jira = jira
+    this.attachments = attachments
     this.pendingUploads = []
     this.uploading = false
   }
@@ -41,7 +42,9 @@ export default class Uploads {
           while (this.pendingUploads.length > 0) {
             const upload = this.pendingUploads.shift()
             const issueKey = upload.issueKey
-            for (let i = 0; i < upload.attachments.length; i++) {
+            // process the array backwards, so the pending/uploading attachments
+            // are always displayed first in the UI
+            for (let i = upload.attachments.length - 1; i >= 0; i--) {
               const attachment = upload.attachments[i]
               trace(`attaching ${attachment.path} to ${issueKey}`)
               const resp = await this.jira.uploadAttachment(
@@ -59,11 +62,13 @@ export default class Uploads {
               if (isTraceEnabled()) {
                 trace(JSON.stringify(json))
               }
+              const uploadedAttachment = attachmentFromRest(json[0])
               this.webUI.dispatchWindowEvent('jira.upload.complete', {
                 issueKey,
-                attachment: attachmentFromRest(json[0]),
+                attachment: uploadedAttachment,
                 oldId: attachment.id
               })
+              this.attachments.loadThumbnail(issueKey, uploadedAttachment)
             }
           }
         }

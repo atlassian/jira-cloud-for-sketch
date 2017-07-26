@@ -117,7 +117,12 @@ export default class ViewModel {
           newAttachment.thumbnailDataUri = matchingAttachment.thumbnailDataUri
         }
       })
-      issue.attachments.replace(newAttachments)
+      issue.attachments.replace(
+        // retain attachments that are currently uploading
+        issue.attachments.filter(attachment => {
+          return attachment.uploading
+        }).concat(newAttachments)
+      )
     })
   }
 

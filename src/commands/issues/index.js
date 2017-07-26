@@ -61,8 +61,8 @@ export default async function (context) {
 
     var jira = new JIRA()
     var filters = new Filters(context, webUI, jira)
-    var uploads = new Uploads(context, webUI, jira)
     var attachments = new Attachments(context, webUI, jira)
+    var uploads = new Uploads(context, webUI, jira, attachments)
     var comments = new Comments(context, webUI, jira)
     var profile = new Profile(context, webUI, jira)
 

@@ -1,4 +1,4 @@
-import { assign, pick } from 'lodash'
+import { assign, pick, sortBy } from 'lodash'
 
 const typeProperties = [
   'name',
@@ -16,13 +16,15 @@ const attachmentProperties = [
 
 export function issueFromRest (issue) {
   const { issuetype, attachment, summary } = issue.fields
+  // we always display attachments by created date
+  const attachments = attachment ? sortBy(attachment, 'created').reverse() : []
   return assign(
     pick(issue, 'key', 'self'),
     {
       key: issue.key,
-      summary: summary,
+      summary,
       type: issuetype ? pick(issuetype, typeProperties) : null,
-      attachments: (attachment || []).map(attachmentFromRest)
+      attachments
     }
   )
 }
