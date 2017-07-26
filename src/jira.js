@@ -69,13 +69,14 @@ export default class JIRA {
     return dataUri
   }
 
-  async downloadAttachment (url, filename) {
-    return download(url, {
+  async downloadAttachment (url, filename, progress) {
+    const opts = {
       filename,
       headers: {
         Authorization: await authHeader()
       }
-    })
+    }
+    return download(url, opts, progress)
   }
 
   async uploadAttachment (issueKey, filePath, progress) {
@@ -87,10 +88,7 @@ export default class JIRA {
         'X-Atlassian-Token': 'no-check'
       }
     }
-    if (progress) {
-      opts.progress = progress
-    }
-    return upload(uploadUrl, opts)
+    return upload(uploadUrl, opts, progress)
   }
 
   async deleteAttachment (id) {

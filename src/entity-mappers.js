@@ -22,9 +22,11 @@ export function issueFromRest (issue) {
       key: issue.key,
       summary: summary,
       type: issuetype ? pick(issuetype, typeProperties) : null,
-      attachments: (attachment || []).map(attachment => {
-        return pick(attachment, attachmentProperties)
-      })
+      attachments: (attachment || []).map(attachmentFromRest)
     }
   )
+}
+
+export function attachmentFromRest (attachment) {
+  return pick(attachment, attachmentProperties)
 }

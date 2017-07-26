@@ -87,7 +87,7 @@ export function randomInt (max) {
 }
 
 export function userDownloadsDirectory () {
-  var dirs = NSFileManager.defaultManager().URLsForDirectory_inDomains_(
+  var dirs = fileManager().URLsForDirectory_inDomains_(
     NSDownloadsDirectory,
     NSUserDomainMask
   )
@@ -96,6 +96,16 @@ export function userDownloadsDirectory () {
   } else {
     return tempDir('downloads')
   }
+}
+
+export function fileAttributes (path) {
+  return withErrorPointer(errorPtr => {
+    return fileManager().attributesOfItemAtPath_error(path, errorPtr)
+  })
+}
+
+function fileManager () {
+  return NSFileManager.defaultManager()
 }
 
 export function withErrorPointer (fn) {

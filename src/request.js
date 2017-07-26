@@ -115,7 +115,10 @@ async function pollDelegateUntilComplete (delegate, onProgress) {
           trace(`${progress.completedUnitCount()} / ${progress.totalUnitCount()} bytes`)
         }
         if (onProgress) {
-          onProgress(progress.completedUnitCount(), progress.totalUnitCount())
+          onProgress(
+            parseInt(progress.completedUnitCount()),
+            parseInt(progress.totalUnitCount())
+          )
         }
       }
     }, cocoaDelegatePollInterval)

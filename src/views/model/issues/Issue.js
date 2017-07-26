@@ -1,5 +1,5 @@
 import { observable, computed } from 'mobx'
-import { assign } from 'lodash'
+import { assign, findIndex } from 'lodash'
 import pluginCall from 'sketch-module-web-view/client'
 
 export default class Issue {
@@ -15,6 +15,20 @@ export default class Issue {
 
   uploadDroppedFiles () {
     pluginCall('uploadDroppedFiles', this.key)
+  }
+
+  onUploadsQueued (attachments) {
+    attachments.forEach(attachment => { attachment.uploading = true })
+    this.attachments.unshift(...attachments)
+  }
+
+  onUploadComplete (attachment, oldId) {
+    const idx = findIndex(this.attachments, attachment => {
+      return attachment.id === oldId
+    })
+    if (idx > -1) {
+      this.attachments.splice(idx, 1, attachment)
+    }
   }
 
   @computed get browseUrl () {

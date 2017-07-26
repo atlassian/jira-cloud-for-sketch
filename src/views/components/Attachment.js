@@ -18,10 +18,8 @@ export default class Attachment extends Component {
   }
   render () {
     var attachment = this.props.attachment
-    var style = {}
     return (
       <AttachmentWrapper
-        style={style}
         onDragEnter={this.dragEnter}
         onDragLeave={this.dragLeave}
         onDragOver={(event) => { event.preventDefault() }}
@@ -81,11 +79,6 @@ class AttachmentCard extends Component {
     this.handleDeleteAction = this.handleDeleteAction.bind(this)
   }
   render () {
-    var style = {}
-    if (this.props.dragHover) {
-      style.padding = '0'
-      style.border = '2px dashed #FF5630'
-    }
     var attachment = this.props.attachment
     var imageMetadata = {
       id: attachment.id,
@@ -95,15 +88,26 @@ class AttachmentCard extends Component {
       size: attachment.size,
       creationDate: moment(attachment.created).valueOf()
     }
-    var actions = [{
-      label: 'Delete',
-      type: 'delete',
-      handler: this.handleDeleteAction
-    }]
+    var style = {}
+    var actions = []
+    if (!attachment.uploading) {
+      // only fully uploaded attachments can be replaced ...
+      if (this.props.dragHover) {
+        style.padding = '0'
+        style.border = '2px dashed #FF5630'
+      }
+      // ... or deleted
+      actions.push({
+        label: 'Delete',
+        type: 'delete',
+        handler: this.handleDeleteAction
+      })
+    }
     return (
       <CardWrapper style={style} onClick={this.handleClick}>
         <CardView
           status={attachment.cardStatus}
+          progress={attachment.progress}
           appearance='image'
           metadata={imageMetadata}
           dataURI={attachment.thumbnailDataUri}

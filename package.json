@@ -81,6 +81,7 @@
     "cocoascript-class": "^0.1.2",
     "filesize": "^3.5.10",
     "lodash": "^4.17.4",
+    "mime-types": "^2.1.16",
     "mobx": "^3.2.1",
     "mobx-react": "^4.2.2",
     "moment": "^2.18.1",

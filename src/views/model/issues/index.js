@@ -34,10 +34,23 @@ export default class ViewModel {
     return find(this.issues.list, issue => { return issue.key == issueKey })
   }
 
+  withIssue (issueKey, fn) {
+    const issue = this.findIssueByKey(issueKey)
+    issue && fn(issue)
+  }
+
   findAttachmentById (issueKey, attachmentId) {
-    return find(this.findIssueByKey(issueKey).attachments, attachment => {
-      return attachment.id == attachmentId
-    })
+    const issue = this.findIssueByKey(issueKey)
+    if (issue) {
+      return find(issue.attachments, attachment => {
+        return attachment.id == attachmentId
+      })
+    }
+  }
+
+  withAttachment (issueKey, attachmentId, fn) {
+    const attachment = this.findAttachmentById(issueKey, attachmentId)
+    attachment && fn(attachment)
   }
 
   loadFilters () {
@@ -81,12 +94,11 @@ export default class ViewModel {
   }
 
   selectIssue (issueKey) {
-    this.issues.selected = find(
-      this.issues.list,
-      issue => issue.key === issueKey
-    )
-    pluginCall('reloadAttachments', issueKey)
-    analytics('viewIssue')
+    this.withIssue(issueKey, issue => {
+      this.issues.selected = issue
+      pluginCall('reloadAttachments', issueKey)
+      analytics('viewIssue')
+    })
   }
 
   deselectIssue () {
@@ -95,8 +107,7 @@ export default class ViewModel {
   }
 
   onAttachmentsLoaded (issueKey, newAttachments) {
-    const issue = this.findIssueByKey(issueKey)
-    if (issue) {
+    this.withIssue(issueKey, issue => {
       // re-use existing thumbnails if present
       newAttachments.forEach(newAttachment => {
         const matchingAttachment = find(issue.attachments, attachment => {
@@ -107,18 +118,37 @@ export default class ViewModel {
         }
       })
       issue.attachments.replace(newAttachments)
-    }
+    })
   }
 
   onThumbnailLoaded (issueKey, attachmentId, dataUri) {
-    const attachment = this.findAttachmentById(issueKey, attachmentId)
-    if (attachment) {
+    this.withAttachment(issueKey, attachmentId, attachment => {
       attachment.thumbnailDataUri = dataUri
-    }
+    })
+  }
+
+  onUploadsQueued (issueKey, attachments) {
+    this.withIssue(issueKey, issue => {
+      issue.onUploadsQueued(attachments)
+    })
+  }
+
+  onUploadProgress (issueKey, attachmentId, progress) {
+    this.withAttachment(issueKey, attachmentId, attachment => {
+      attachment.progress = progress
+    })
+  }
+
+  onUploadComplete (issueKey, attachment, oldId) {
+    this.withIssue(issueKey, issue => {
+      issue.onUploadComplete(attachment, oldId)
+    })
   }
 
   onCommentAdded (issueKey, href) {
-    this.findIssueByKey(issueKey).onCommentAdded(href)
+    this.withIssue(issueKey, issue => {
+      issue.onCommentAdded(href)
+    })
   }
 
   loadProfile () {
