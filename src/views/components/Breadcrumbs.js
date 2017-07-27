@@ -13,11 +13,11 @@ export default class Breadcrumbs extends Component {
   render () {
     const filter = this.props.viewmodel.filters.selected
     const issue = this.props.viewmodel.issues.selected
+    // create a single text node to work around https://github.com/facebook/react/issues/10116
+    const backText = `< ${filter.displayName}`
     return (
       <BreadcrumbsWrapper>
-        <ClickableSpan onClick={this.handleClickBack}>
-          &lt; {filter.displayName}
-        </ClickableSpan>
+        <BackLink onClick={this.handleClickBack}>{backText}</BackLink>
         <Separator>/</Separator>
         <IssueKey issue={issue} />
       </BreadcrumbsWrapper>
@@ -37,7 +37,7 @@ const BreadcrumbsWrapper = styled.div`
   align-items: center;
 `
 
-const ClickableSpan = styled.span`
+const BackLink = styled.div`
   cursor: pointer;
   font-size: 12px
   font-weight: 600
