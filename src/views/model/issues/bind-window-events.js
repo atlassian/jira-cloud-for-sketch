@@ -53,6 +53,10 @@ export default function (viewModel) {
     'jira.download.complete': event => {
       const { issueKey, attachmentId } = event.detail
       viewModel.onDownloadComplete(issueKey, attachmentId)
+    },
+    'jira.delete.complete': event => {
+      const { issueKey, attachmentId } = event.detail
+      viewModel.onDeleteComplete(issueKey, attachmentId)
     }
   }
   forOwn(events, (func, key) => window.addEventListener(key, func))

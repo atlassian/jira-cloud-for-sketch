@@ -1,7 +1,7 @@
 import { observable } from 'mobx'
 import bindWindowEvents from './bind-window-events'
 import pluginCall from 'sketch-module-web-view/client'
-import { find } from 'lodash'
+import { find, findIndex } from 'lodash'
 
 export default class ViewModel {
   @observable filters = {
@@ -156,9 +156,19 @@ export default class ViewModel {
     })
   }
 
-  onDownloadComplete (issueKey, attachmentId, progress) {
+  onDownloadComplete (issueKey, attachmentId) {
     this.withAttachment(issueKey, attachmentId, attachment => {
       attachment.downloading = false
+    })
+  }
+
+  onDeleteComplete (issueKey, attachmentId) {
+    this.withIssue(issueKey, issue => {
+      issue.attachments.splice(
+        findIndex(issue.attachments, attachment => {
+          return attachment.id === attachmentId
+        }), 1
+      )
     })
   }
 

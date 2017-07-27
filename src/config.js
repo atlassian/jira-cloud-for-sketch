@@ -39,6 +39,7 @@ export const bearerTokenExpirySafetyMargin = 60 // seconds
 export const bearerTokenRefreshInterval = 1000 * 60 * 10 // milliseconds
 
 export const thumbnailDownloadConcurrency = 4
+export const attachmentUploadConcurrency = 4
 
 export const feedbackUrl = 'https://goo.gl/forms/OrIB4RoEePhL3lkv2'
 

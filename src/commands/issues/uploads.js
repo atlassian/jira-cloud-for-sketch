@@ -1,5 +1,6 @@
 import moment from 'moment'
 import mime from 'mime-types'
+import { map } from 'bluebird'
 import {
   executeSafelyAsync,
   randomHex,
@@ -7,7 +8,7 @@ import {
 } from '../../util'
 import { getDraggedFiles } from '../../pasteboard'
 import { isTraceEnabled, trace } from '../../logger'
-import { jiraDateMomentFormat } from '../../config'
+import { jiraDateMomentFormat, attachmentUploadConcurrency } from '../../config'
 import { postMultiple, event } from '../../analytics'
 import { attachmentFromRest } from '../../entity-mappers'
 
@@ -42,34 +43,37 @@ export default class Uploads {
           while (this.pendingUploads.length > 0) {
             const upload = this.pendingUploads.shift()
             const issueKey = upload.issueKey
-            // process the array backwards, so the pending/uploading attachments
-            // are always displayed first in the UI
-            for (let i = upload.attachments.length - 1; i >= 0; i--) {
-              const attachment = upload.attachments[i]
-              trace(`attaching ${attachment.path} to ${issueKey}`)
-              const resp = await this.jira.uploadAttachment(
-                issueKey,
-                attachment.path,
-                (completed, total) => {
-                  this.webUI.dispatchWindowEvent('jira.upload.progress', {
-                    issueKey,
-                    attachmentId: attachment.id,
-                    progress: completed / total
-                  })
+            await map(
+              // process the array backwards, so pending uploads are always
+              // displayed first in the UI
+              upload.attachments.reverse(),
+              async (attachment) => {
+                trace(`attaching ${attachment.path} to ${issueKey}`)
+                const resp = await this.jira.uploadAttachment(
+                  issueKey,
+                  attachment.path,
+                  (completed, total) => {
+                    this.webUI.dispatchWindowEvent('jira.upload.progress', {
+                      issueKey,
+                      attachmentId: attachment.id,
+                      progress: completed / total
+                    })
+                  }
+                )
+                const json = await resp.json()
+                if (isTraceEnabled()) {
+                  trace(JSON.stringify(json))
                 }
-              )
-              const json = await resp.json()
-              if (isTraceEnabled()) {
-                trace(JSON.stringify(json))
-              }
-              const uploadedAttachment = attachmentFromRest(json[0])
-              this.webUI.dispatchWindowEvent('jira.upload.complete', {
-                issueKey,
-                attachment: uploadedAttachment,
-                oldId: attachment.id
-              })
-              this.attachments.loadThumbnail(issueKey, uploadedAttachment)
-            }
+                const uploadedAttachment = attachmentFromRest(json[0])
+                this.webUI.dispatchWindowEvent('jira.upload.complete', {
+                  issueKey,
+                  attachment: uploadedAttachment,
+                  oldId: attachment.id
+                })
+                this.attachments.loadThumbnail(issueKey, uploadedAttachment)
+              },
+              { concurrency: attachmentUploadConcurrency }
+            )
           }
         }
       } finally {
