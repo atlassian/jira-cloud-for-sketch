@@ -42,7 +42,7 @@ const ScrollDiv = styled.div`
   margin-top: 10px;
   padding-right: 10px;
   height: 283px;
-  overflow-y: scroll;
+  overflow-y: auto;
 `
 
 @observer
