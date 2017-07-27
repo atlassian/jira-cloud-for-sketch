@@ -22,13 +22,17 @@ export default class Uploads {
     this.uploading = false
   }
 
-  async onFilesDropped (issueKey) {
+  async onFilesDropped (issueKey, replacedAttachmentId) {
     return executeSafelyAsync(this.context, async () => {
       const attachments = getDraggedFiles().map(fileUrlToUploadInfo)
       const upload = { issueKey, attachments }
       this.pendingUploads.push(upload)
       this.webUI.dispatchWindowEvent(
-        'jira.upload.queued', { issueKey, attachments }
+        'jira.upload.queued', {
+          issueKey,
+          attachments,
+          replacedAttachmentId
+        }
       )
       postAnalytics(upload, this.uploading)
       return this.processUploads()

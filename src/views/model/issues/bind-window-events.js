@@ -35,8 +35,12 @@ export default function (viewModel) {
       viewModel.onCommentAdded(issueKey, href)
     },
     'jira.upload.queued': event => {
-      const { issueKey, attachments } = event.detail
-      viewModel.onUploadsQueued(issueKey, attachments.map(attachment => new Attachment(issueKey, attachment)))
+      const { issueKey, attachments, replacedAttachmentId } = event.detail
+      viewModel.onUploadsQueued(
+        issueKey,
+        attachments.map(attachment => new Attachment(issueKey, attachment)),
+        replacedAttachmentId
+      )
     },
     'jira.upload.progress': event => {
       const { issueKey, attachmentId, progress } = event.detail

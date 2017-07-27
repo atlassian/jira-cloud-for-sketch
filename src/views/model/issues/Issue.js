@@ -17,15 +17,25 @@ export default class Issue {
     pluginCall('uploadDroppedFiles', this.key)
   }
 
-  onUploadsQueued (attachments) {
+  indexOfAttachment (attachmentId) {
+    return findIndex(this.attachments, attachment => {
+      return attachment.id === attachmentId
+    })
+  }
+
+  onUploadsQueued (attachments, replacedAttachmentId) {
     attachments.forEach(attachment => { attachment.uploading = true })
-    this.attachments.unshift(...attachments)
+    let idx
+    if (replacedAttachmentId &&
+       (idx = this.indexOfAttachment(replacedAttachmentId)) > -1) {
+      this.attachments.splice(idx, 1, ...attachments)
+    } else {
+      this.attachments.unshift(...attachments)
+    }
   }
 
   onUploadComplete (attachment, oldId) {
-    const idx = findIndex(this.attachments, attachment => {
-      return attachment.id === oldId
-    })
+    const idx = this.indexOfAttachment(oldId)
     if (idx > -1) {
       this.attachments.splice(idx, 1, attachment)
     }

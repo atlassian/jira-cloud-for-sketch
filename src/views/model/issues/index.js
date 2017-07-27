@@ -132,9 +132,9 @@ export default class ViewModel {
     })
   }
 
-  onUploadsQueued (issueKey, attachments) {
+  onUploadsQueued (issueKey, attachments, replacedAttachmentId) {
     this.withIssue(issueKey, issue => {
-      issue.onUploadsQueued(attachments)
+      issue.onUploadsQueued(attachments, replacedAttachmentId)
     })
   }
 

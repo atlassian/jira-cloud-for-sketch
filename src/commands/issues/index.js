@@ -47,11 +47,9 @@ export default async function (context) {
           analytics.viewIssueAttachmentDelete()
         },
         replaceAttachment (issueKey, id) {
-          executeSafelyAsync(context, async function () {
-            await uploads.onFilesDropped(issueKey)
-            attachments.deleteAttachment(issueKey, id)
-            analytics.viewIssueAttachmentReplace()
-          })
+          uploads.onFilesDropped(issueKey, id)
+          attachments.deleteAttachment(issueKey, id, true)
+          analytics.viewIssueAttachmentReplace()
         },
         addComment (issueKey, comment) {
           comments.addComment(issueKey, comment)

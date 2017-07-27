@@ -40,13 +40,15 @@ export default class Attachments {
     }
   }
 
-  async deleteAttachment (issueKey, attachmentId) {
+  async deleteAttachment (issueKey, attachmentId, isReplace) {
     executeSafelyAsync(this.context, async () => {
       await this.jira.deleteAttachment(attachmentId)
-      this.webUI.dispatchWindowEvent('jira.delete.complete', {
-        issueKey,
-        attachmentId
-      })
+      if (!isReplace) {
+        this.webUI.dispatchWindowEvent('jira.delete.complete', {
+          issueKey,
+          attachmentId
+        })
+      }
     })
   }
 

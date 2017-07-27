@@ -47,7 +47,7 @@ export default class Attachment {
   replace () {
     if (this.readyForAction) {
       this.deleting = true
-      // the file isn't passed through, it's looked up from the drag pasteboard
+      // files are looked up via the system drag pasteboard
       pluginCall('replaceAttachment', this.issueKey, this.id)
     }
   }
