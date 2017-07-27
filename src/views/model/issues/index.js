@@ -150,6 +150,18 @@ export default class ViewModel {
     })
   }
 
+  onDownloadProgress (issueKey, attachmentId, progress) {
+    this.withAttachment(issueKey, attachmentId, attachment => {
+      attachment.progress = progress
+    })
+  }
+
+  onDownloadComplete (issueKey, attachmentId, progress) {
+    this.withAttachment(issueKey, attachmentId, attachment => {
+      attachment.downloading = false
+    })
+  }
+
   onCommentAdded (issueKey, href) {
     this.withIssue(issueKey, issue => {
       issue.onCommentAdded(href)

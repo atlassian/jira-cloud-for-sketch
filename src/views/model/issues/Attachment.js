@@ -17,29 +17,35 @@ export default class Attachment {
   @computed get cardStatus () {
     if (this.deleting) {
       return 'processing'
-    } else if (this.uploading) {
+    } else if (this.uploading || this.downloading) {
+      // there's no 'downloading' status, so use uploading to show progress
       return 'uploading'
     } else {
       return 'complete'
     }
   }
 
+  @computed get readyForAction () {
+    return !(this.deleting || this.uploading || this.downloading)
+  }
+
   open () {
-    if (!this.deleting && !this.uploading) {
-      // TODO downloading progress
-      pluginCall('openAttachment', this.issueKey, this.content, this.filename)
+    if (this.readyForAction) {
+      this.downloading = true
+      this.progress = 0
+      pluginCall('openAttachment', this.issueKey, this.id, this.content, this.filename)
     }
   }
 
   delete () {
-    if (!this.deleting && !this.uploading) {
+    if (this.readyForAction) {
       this.deleting = true
       pluginCall('deleteAttachment', this.issueKey, this.id)
     }
   }
 
   replace () {
-    if (!this.deleting && !this.uploading) {
+    if (this.readyForAction) {
       this.deleting = true
       // the file isn't passed through, it's looked up from the drag pasteboard
       pluginCall('replaceAttachment', this.issueKey, this.id)

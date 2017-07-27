@@ -88,15 +88,17 @@ class AttachmentCard extends Component {
       size: attachment.size,
       creationDate: moment(attachment.created).valueOf()
     }
+    // this is bit of a hack until CardView supports a downloading status
+    if (attachment.downloading) {
+      imageMetadata.name = 'Downloading...'
+    }
     var style = {}
     var actions = []
-    if (!attachment.uploading) {
-      // only fully uploaded attachments can be replaced ...
+    if (attachment.readyForAction) {
       if (this.props.dragHover) {
         style.padding = '0'
         style.border = '2px dashed #FF5630'
       }
-      // ... or deleted
       actions.push({
         label: 'Delete',
         type: 'delete',

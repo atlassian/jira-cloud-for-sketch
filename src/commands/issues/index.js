@@ -39,8 +39,8 @@ export default async function (context) {
         reloadAttachments (issueKey) {
           attachments.reloadAttachments(issueKey)
         },
-        openAttachment (issueKey, url, filename) {
-          attachments.openAttachment(issueKey, url, filename)
+        openAttachment (issueKey, attachmentId, url, filename) {
+          attachments.openAttachment(issueKey, attachmentId, url, filename)
         },
         deleteAttachment (issueKey, id) {
           attachments.deleteAttachment(issueKey, id)

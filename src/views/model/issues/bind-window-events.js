@@ -45,6 +45,14 @@ export default function (viewModel) {
     'jira.upload.complete': event => {
       const { issueKey, oldId, attachment } = event.detail
       viewModel.onUploadComplete(issueKey, new Attachment(issueKey, attachment), oldId)
+    },
+    'jira.download.progress': event => {
+      const { issueKey, attachmentId, progress } = event.detail
+      viewModel.onDownloadProgress(issueKey, attachmentId, progress)
+    },
+    'jira.download.complete': event => {
+      const { issueKey, attachmentId } = event.detail
+      viewModel.onDownloadComplete(issueKey, attachmentId)
     }
   }
   forOwn(events, (func, key) => window.addEventListener(key, func))
