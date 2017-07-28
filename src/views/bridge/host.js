@@ -6,6 +6,7 @@ export default function createBridgedWebUI (context, htmlName, options) {
   let webUI
   options.handlers[SketchBridgeFunctionName] = async (id, handlerFunctionName) => {
     const args = [].slice.call(arguments).slice(2)
+    trace(`${id} ${handlerFunctionName} ${JSON.stringify(args)}`)
     let result = null
     let error = null
     try {

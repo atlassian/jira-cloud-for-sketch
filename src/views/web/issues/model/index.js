@@ -5,10 +5,11 @@ import { find, findIndex } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import Filter from './Filter'
 
+const _loadFilters = bridgedFunctionCall('loadFilters')
+
 const bridge = {
   loadFilters: async () => {
-    return (await (bridgedFunctionCall('loadFilters')()))
-      .map(filter => new Filter(filter))
+    return (await _loadFilters()).map(filter => new Filter(filter))
   }
 }
 
@@ -64,12 +65,7 @@ export default class ViewModel {
 
   async loadFilters () {
     this.filters.loading = true
-    this.filters.list.clear()
-    this.filters.list.replace(await bridge.loadFilters())
-    this.filters.loading = false
-  }
-
-  onFiltersLoaded (filters) {
+    const filters = await bridge.loadFilters()
     this.filters.list.replace(filters)
     if (!this.filters.selected && filters.length) {
       this.selectFilter(filters[0].key)
