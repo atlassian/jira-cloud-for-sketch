@@ -41,8 +41,7 @@ export default class JIRA {
   }
 
   /**
-   * Retrieve a JIRA issue using the issue API. This API does populate the
-   * 'attachment' field.
+   * Retrieve a JIRA issue using the issue API.
    */
   async getIssue (issueKey, opts) {
     opts = assign({}, { fields: standardIssueFields }, opts)
