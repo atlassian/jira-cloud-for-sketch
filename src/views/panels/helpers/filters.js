@@ -11,15 +11,11 @@ export default class Filters {
   }
 
   async loadFilters () {
-    executeSafelyAsync(this.context, () => {
-      const filters = []
-      forOwn(this.jira.jqlFilters, (filter, key) => {
-        filters.push(assign({key}, filter))
-      })
-      this.webUI.dispatchWindowEvent('jira.filters.loaded', {
-        filters: filters
-      })
+    const filters = []
+    forOwn(this.jira.jqlFilters, (filter, key) => {
+      filters.push(assign({key}, filter))
     })
+    return filters
   }
 
   async onFilterChanged (newFilter) {

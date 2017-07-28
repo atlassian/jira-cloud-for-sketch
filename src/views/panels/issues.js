@@ -1,4 +1,4 @@
-import createWebUI from '../../webui-common'
+import createWebUI from './webui-common'
 import Filters from './helpers/filters'
 import Uploads from './helpers/uploads'
 import Attachments from './helpers/attachments'
@@ -14,8 +14,8 @@ export default function (context) {
     height: 382,
     width: 510,
     handlers: {
-      loadFilters () {
-        filters.loadFilters()
+      async loadFilters () {
+        return filters.loadFilters()
       },
       loadProfile () {
         profile.loadProfile()

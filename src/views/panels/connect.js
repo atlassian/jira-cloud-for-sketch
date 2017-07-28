@@ -1,4 +1,4 @@
-import createWebUI from '../../webui-common'
+import createWebUI from './webui-common'
 import { executeSafely, executeSafelyAsync } from '../../util'
 import { authorizeSketchForJira } from '../../auth'
 import analytics from '../../analytics'

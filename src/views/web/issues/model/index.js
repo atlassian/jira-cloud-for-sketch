@@ -2,6 +2,15 @@ import { observable } from 'mobx'
 import bindWindowEvents from './bind-window-events'
 import pluginCall from 'sketch-module-web-view/client'
 import { find, findIndex } from 'lodash'
+import bridgedFunctionCall from '../../../bridge/client'
+import Filter from './Filter'
+
+const bridge = {
+  loadFilters: async () => {
+    return (await (bridgedFunctionCall('loadFilters')()))
+      .map(filter => new Filter(filter))
+  }
+}
 
 export default class ViewModel {
   @observable filters = {
@@ -53,10 +62,11 @@ export default class ViewModel {
     attachment && fn(attachment)
   }
 
-  loadFilters () {
+  async loadFilters () {
     this.filters.loading = true
     this.filters.list.clear()
-    pluginCall('loadFilters')
+    this.filters.list.replace(await bridge.loadFilters())
+    this.filters.loading = false
   }
 
   onFiltersLoaded (filters) {
