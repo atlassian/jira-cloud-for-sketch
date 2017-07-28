@@ -19,11 +19,12 @@ class ViewIssuesPanel extends Component {
     this.handleFilterSelected = this.handleFilterSelected.bind(this)
     this.handleIssueSelected = this.handleIssueSelected.bind(this)
     this.handleIssueDeselected = this.handleIssueDeselected.bind(this)
+    this.preventDefault = this.preventDefault.bind(this)
   }
   render () {
     const {issues, filters, profile} = this.props.viewmodel
     return (
-      <PanelWrapper>
+      <PanelWrapper onDrop={this.preventDefault} onDragOver={this.preventDefault}>
         <HeaderDiv>
           <h4>JIRA issues</h4>
           {!filters.loading &&
@@ -60,6 +61,9 @@ class ViewIssuesPanel extends Component {
   }
   handleIssueDeselected (issueKey) {
     this.props.viewmodel.deselectIssue(issueKey)
+  }
+  preventDefault (event) {
+    event.preventDefault()
   }
 }
 
