@@ -47,6 +47,9 @@ export default class JIRA {
   async getIssue (issueKey, opts) {
     opts = assign({}, { fields: standardIssueFields }, opts)
     var issueUrl = `${this.apiRoot}/issue/${issueKey}?fields=${opts.fields.join(',')}`
+    if (opts.updateHistory) {
+      issueUrl += '&updateHistory=true'
+    }
     const res = await fetch(issueUrl, {
       headers: {
         Accept: 'application/json',

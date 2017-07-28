@@ -36,8 +36,8 @@ export default async function (context) {
         uploadDroppedFiles (issueKey) {
           uploads.onFilesDropped(issueKey)
         },
-        reloadAttachments (issueKey) {
-          attachments.reloadAttachments(issueKey)
+        touchIssueAndReloadAttachments (issueKey) {
+          attachments.touchIssueAndReloadAttachments(issueKey)
         },
         openAttachment (issueKey, attachmentId, url, filename) {
           attachments.openAttachment(issueKey, attachmentId, url, filename)

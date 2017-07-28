@@ -96,7 +96,7 @@ export default class ViewModel {
   selectIssue (issueKey) {
     this.withIssue(issueKey, issue => {
       this.issues.selected = issue
-      pluginCall('reloadAttachments', issueKey)
+      pluginCall('touchIssueAndReloadAttachments', issueKey)
       analytics('viewIssue')
     })
   }
