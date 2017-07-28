@@ -1,4 +1,4 @@
-import '../defaultImports'
+import '../default-imports'
 import { feedbackUrl } from '../config'
 import { executeSafely, openInBrowser } from '../util'
 import analytics from '../analytics'

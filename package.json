@@ -5,8 +5,8 @@
   "main": "jira.sketchplugin",
   "manifest": "src/manifest.json",
   "resources": [
-    "src/views/issues.js",
-    "src/views/connect.js"
+    "src/views/web/connect",
+    "src/views/web/issues"
   ],
   "scripts": {
     "test": "ava",

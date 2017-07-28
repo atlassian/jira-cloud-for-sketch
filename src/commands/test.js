@@ -1,4 +1,4 @@
-import '../defaultImports'
+import '../default-imports'
 import { executeSafelyAsync } from '../util'
 import { trace } from '../logger'
 

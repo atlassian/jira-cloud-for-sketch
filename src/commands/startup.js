@@ -1,4 +1,4 @@
-import '../defaultImports'
+import '../default-imports'
 import { trace, error } from '../logger'
 import { isAuthorized, getBearerToken } from '../auth'
 import { bearerTokenRefreshInterval } from '../config'
