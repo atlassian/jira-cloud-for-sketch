@@ -1,22 +1,28 @@
 import pluginCall from 'sketch-module-web-view/client'
 import uuid from 'uuid/v4'
-import { SketchBridgeFunctionResultEvent, SketchBridgeFunctionName } from './common'
+import {
+  SketchBridgeFunctionResultEvent,
+  SketchBridgeFunctionCallbackEvent,
+  SketchBridgeFunctionName,
+  SketchBridgeFunctionCallback
+} from './common'
 
-const bridgeFunctionPromises = window.__bridgeFunctionPromises = window.__bridgeFunctionPromises || {}
+const invocations = window.__bridgeFunctionInvocations = window.__bridgeFunctionInvocations || {}
+
 if (window.__bridgeFunctionResultEventListener === undefined) {
   window.__bridgeFunctionResultEventListener = function (event) {
-    const { id, error, result } = event.detail
-    var promise = bridgeFunctionPromises[id]
-    if (!promise) {
-      // console.error(`No __bridgeFunctionPromises found for id '${id}'`)
+    const { invocationId, error, result } = event.detail
+    var invocation = invocations[invocationId]
+    if (!invocation) {
+      console.error(`No __bridgeFunctionInvocation found for id '${invocationId}'`)
       return
     }
     if (error) {
       // console.log(`rejecting __bridgeFunctionPromise ${id}`)
-      promise.reject(error)
+      invocation.reject(error)
     } else {
       // console.log(`resolving __bridgeFunctionPromise ${id}`)
-      promise.resolve(result)
+      invocation.resolve(result)
     }
   }
   window.addEventListener(
@@ -25,13 +31,46 @@ if (window.__bridgeFunctionResultEventListener === undefined) {
   )
 }
 
+if (window.__bridgeFunctionCallbackEventListener === undefined) {
+  window.__bridgeFunctionCallbackEventListener = function (event) {
+    const { invocationId, callbackIndex, args } = event.detail
+    var invocation = invocations[invocationId]
+    if (!invocation) {
+      console.error(`No __bridgeFunctionInvocation found for id '${invocationId}'`)
+      return
+    }
+    const invocationCallback = invocation.callbacks[callbackIndex]
+    if (!invocationCallback) {
+      console.error(
+        `No callback found for invocation id '${invocationId}' ` +
+        `and callback index '${callbackIndex}'`
+      )
+      return
+    }
+    invocationCallback(...args)
+  }
+  window.addEventListener(
+    SketchBridgeFunctionCallbackEvent,
+    window.__bridgeFunctionCallbackEventListener
+  )
+}
+
 export default function bridgedFunctionCall (functionName) {
-  const promiseId = uuid()
   // console.log(`creating bridge function ${functionName} with id ${promiseId}`)
   return function () {
+    const callbacks = []
+    const args = [].slice.call(arguments).map((arg, index) => {
+      if (typeof arg === 'function') {
+        callbacks[index] = arg
+        return SketchBridgeFunctionCallback
+      } else {
+        return arg
+      }
+    })
+    const invocationId = uuid()
     return new Promise(function (resolve, reject) {
-      bridgeFunctionPromises[promiseId] = {resolve, reject}
-      pluginCall(SketchBridgeFunctionName, promiseId, functionName, ...arguments)
+      invocations[invocationId] = {resolve, reject, callbacks}
+      pluginCall(SketchBridgeFunctionName, invocationId, functionName, ...args)
     })
   }
 }

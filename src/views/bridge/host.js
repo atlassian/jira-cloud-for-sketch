@@ -1,12 +1,31 @@
 import WebUI from 'sketch-module-web-view'
-import { SketchBridgeFunctionResultEvent, SketchBridgeFunctionName } from './common'
+import {
+  SketchBridgeFunctionResultEvent,
+  SketchBridgeFunctionCallbackEvent,
+  SketchBridgeFunctionName,
+  SketchBridgeFunctionCallback
+} from './common'
 import { isTraceEnabled, trace } from '../../logger'
 
 export default function createBridgedWebUI (context, htmlName, options) {
   let webUI
-  options.handlers[SketchBridgeFunctionName] = async (id, handlerFunctionName) => {
-    const args = [].slice.call(arguments).slice(2)
-    trace(`${id} ${handlerFunctionName} ${JSON.stringify(args)}`)
+  options.handlers[SketchBridgeFunctionName] = async function (invocationId, handlerFunctionName) {
+    isTraceEnabled && trace(`${JSON.stringify(arguments)}`)
+
+    const args = [].slice.call(arguments).slice(2).map((arg, callbackIndex) => {
+      if (arg == SketchBridgeFunctionCallback) {
+        return function () {
+          webUI.dispatchWindowEvent(SketchBridgeFunctionCallbackEvent, {
+            invocationId,
+            callbackIndex,
+            args: [].slice.call(arguments)
+          })
+        }
+      } else {
+        return arg
+      }
+    })
+
     let result = null
     let error = null
     try {
@@ -14,8 +33,10 @@ export default function createBridgedWebUI (context, htmlName, options) {
     } catch (e) {
       error = e
     }
-    webUI.dispatchWindowEvent(SketchBridgeFunctionResultEvent, {id, result, error})
+    // TODO do we need to do anything special to serialize the error?
+    webUI.dispatchWindowEvent(SketchBridgeFunctionResultEvent, {invocationId, result, error})
   }
+
   webUI = new WebUI(context, options.page, options)
   webUI.dispatchWindowEvent = function (eventName, eventDetail) {
     var eventJson = JSON.stringify({ detail: eventDetail })

@@ -1,6 +1,9 @@
 import { observable, computed } from 'mobx'
 import { assign } from 'lodash'
 import pluginCall from 'sketch-module-web-view/client'
+import bridgedFunctionCall from '../../../bridge/client'
+
+const _openAttachment = bridgedFunctionCall('openAttachment')
 
 export default class Attachment {
   @observable uploading = false
@@ -29,11 +32,14 @@ export default class Attachment {
     return !(this.deleting || this.uploading || this.downloading)
   }
 
-  open () {
+  async open () {
     if (this.readyForAction) {
       this.downloading = true
       this.progress = 0
-      pluginCall('openAttachment', this.issueKey, this.id, this.content, this.filename)
+      await _openAttachment(this.content, this.filename, progress => {
+        this.progress = progress
+      })
+      this.downloading = false
     }
   }
 

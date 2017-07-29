@@ -4,12 +4,22 @@ import pluginCall from 'sketch-module-web-view/client'
 import { find, findIndex } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import Filter from './Filter'
+import Issue from './Issue'
+import Attachment from './Attachment'
 
 const _loadFilters = bridgedFunctionCall('loadFilters')
+const _loadIssuesForFilter = bridgedFunctionCall('loadIssuesForFilter')
 
 const bridge = {
   loadFilters: async () => {
     return (await _loadFilters()).map(filter => new Filter(filter))
+  },
+  loadIssuesForFilter: async (filterKey) => {
+    return (await _loadIssuesForFilter(filterKey)).map(issue => {
+      const attachments = issue.attachments.map(attachment => new Attachment(issue.key, attachment))
+      delete issue.attachments
+      return new Issue(issue, attachments)
+    })
   }
 }
 
@@ -86,11 +96,16 @@ export default class ViewModel {
     this.loadIssues()
   }
 
-  loadIssues () {
+  async loadIssues () {
     if (this.filters.selected) {
       this.issues.loading = true
       this.issues.list.clear()
-      pluginCall('loadIssuesForFilter', this.filters.selected.key)
+      const selectedKey = this.filters.selected.key
+      const issues = await bridge.loadIssuesForFilter(selectedKey)
+      if (this.filters.selected.key === selectedKey) {
+        this.issues.list.replace(issues)
+        this.issues.loading = false
+      }
     }
   }
 
@@ -153,18 +168,6 @@ export default class ViewModel {
   onUploadComplete (issueKey, attachment, oldId) {
     this.withIssue(issueKey, issue => {
       issue.onUploadComplete(attachment, oldId)
-    })
-  }
-
-  onDownloadProgress (issueKey, attachmentId, progress) {
-    this.withAttachment(issueKey, attachmentId, attachment => {
-      attachment.progress = progress
-    })
-  }
-
-  onDownloadComplete (issueKey, attachmentId) {
-    this.withAttachment(issueKey, attachmentId, attachment => {
-      attachment.downloading = false
     })
   }
 

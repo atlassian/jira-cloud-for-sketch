@@ -55,19 +55,12 @@ export default class Attachments {
     })
   }
 
-  async openAttachment (issueKey, attachmentId, url, filename) {
-    executeSafelyAsync(this.context, async () => {
-      const filepath = await this.jira.downloadAttachment(url, filename, (completed, total) => {
-        this.webUI.dispatchWindowEvent('jira.download.progress', {
-          issueKey,
-          attachmentId,
-          progress: completed / total
-        })
-      })
-      this.webUI.dispatchWindowEvent('jira.download.complete', { issueKey, attachmentId })
-      openInDefaultApp(filepath)
-      analytics.viewIssueAttachmentOpen()
+  async openAttachment (url, filename, progress) {
+    const filepath = await this.jira.downloadAttachment(url, filename, (completed, total) => {
+      progress(completed / total)
     })
+    openInDefaultApp(filepath)
+    analytics.viewIssueAttachmentOpen()
   }
 }
 

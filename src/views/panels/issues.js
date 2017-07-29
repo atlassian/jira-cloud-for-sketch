@@ -18,31 +18,31 @@ export default function (context) {
         return filters.loadFilters()
       },
       loadProfile () {
-        profile.loadProfile()
+        return profile.loadProfile()
       },
       loadIssuesForFilter (filterKey) {
-        filters.onFilterChanged(filterKey)
+        return filters.onFilterChanged(filterKey)
       },
       uploadDroppedFiles (issueKey) {
-        uploads.onFilesDropped(issueKey)
+        return uploads.onFilesDropped(issueKey)
       },
       touchIssueAndReloadAttachments (issueKey) {
-        attachments.touchIssueAndReloadAttachments(issueKey)
+        return attachments.touchIssueAndReloadAttachments(issueKey)
       },
-      openAttachment (issueKey, attachmentId, url, filename) {
-        attachments.openAttachment(issueKey, attachmentId, url, filename)
+      openAttachment (url, filename, progress) {
+        return attachments.openAttachment(url, filename, progress)
       },
       deleteAttachment (issueKey, id) {
-        attachments.deleteAttachment(issueKey, id)
         analytics.viewIssueAttachmentDelete()
+        return attachments.deleteAttachment(issueKey, id)
       },
       replaceAttachment (issueKey, id) {
+        analytics.viewIssueAttachmentReplace()
         uploads.onFilesDropped(issueKey, id)
         attachments.deleteAttachment(issueKey, id, true)
-        analytics.viewIssueAttachmentReplace()
       },
       addComment (issueKey, comment) {
-        comments.addComment(issueKey, comment)
+        return comments.addComment(issueKey, comment)
       }
     }
   })
