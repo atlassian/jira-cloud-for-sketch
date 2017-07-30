@@ -11,23 +11,18 @@ export default class Attachments {
   }
 
   async touchIssueAndReloadAttachments (issueKey) {
-    executeSafelyAsync(this.context, async () => {
-      const issue = await this.jira.getIssue(issueKey, {
-        fields: ['attachment'],
-        updateHistory: true
-      })
-      const attachments = issue.attachments
-      this.webUI.dispatchWindowEvent('jira.attachments.loaded', {
-        issueKey,
-        attachments
-      })
-      postAnalytics(attachments)
-      await map(
-        attachments,
-        async (attachment) => { return this.loadThumbnail(issueKey, attachment) },
-        { concurrency: thumbnailDownloadConcurrency }
-      )
+    const issue = await this.jira.getIssue(issueKey, { updateHistory: true })
+    issue.attachments.forEach(attachment => {
+      attachment.issueKey = issueKey
     })
+    postAnalytics(issue.attachments)
+    // TODO migrate thumbnail loading away from events
+    map(
+      issue.attachments,
+      async (attachment) => { return this.loadThumbnail(issueKey, attachment) },
+      { concurrency: thumbnailDownloadConcurrency }
+    )
+    return issue
   }
 
   async loadThumbnail (issueKey, attachment) {

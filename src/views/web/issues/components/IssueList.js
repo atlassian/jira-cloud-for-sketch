@@ -52,7 +52,7 @@ class Issue extends Component {
     return (
       <IssueDiv
         onClick={() => {
-          this.props.onSelectIssue(issue.key)
+          this.props.onSelectIssue(issue)
         }}
       >
         <IssueTypeField type={issue.type} />

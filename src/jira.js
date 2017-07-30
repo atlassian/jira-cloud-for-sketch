@@ -5,6 +5,7 @@ import { getJiraHost, getBearerToken } from './auth'
 import JQL_FILTERS from './jql-filters'
 import { issueFromRest } from './entity-mappers'
 import { standardIssueFields } from './config'
+import { trace } from './logger'
 
 export default class JIRA {
   constructor () {
@@ -55,7 +56,9 @@ export default class JIRA {
         Authorization: await authHeader()
       }
     })
-    return issueFromRest(await res.json())
+    const json = await res.json()
+    trace(json)
+    return issueFromRest(json)
   }
 
   async getImageAsDataUri (url, mimeType) {

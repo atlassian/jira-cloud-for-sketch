@@ -55,7 +55,7 @@ if (window.__bridgeFunctionCallbackEventListener === undefined) {
   )
 }
 
-export default function bridgedFunctionCall (functionName) {
+export default function bridgedFunctionCall (functionName, resultMapper) {
   // console.log(`creating bridge function ${functionName} with id ${promiseId}`)
   return function () {
     const callbacks = []
@@ -72,5 +72,6 @@ export default function bridgedFunctionCall (functionName) {
       invocations[invocationId] = {resolve, reject, callbacks}
       pluginCall(SketchBridgeFunctionName, invocationId, functionName, ...args)
     })
+    .then(resultMapper || (x => x))
   }
 }

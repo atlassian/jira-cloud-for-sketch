@@ -56,8 +56,8 @@ class ViewIssuesPanel extends Component {
   handleFilterSelected (filterKey) {
     this.props.viewmodel.selectFilter(filterKey)
   }
-  handleIssueSelected (issueKey) {
-    this.props.viewmodel.selectIssue(issueKey)
+  handleIssueSelected (issue) {
+    this.props.viewmodel.selectIssue(issue)
   }
   handleIssueDeselected (issueKey) {
     this.props.viewmodel.deselectIssue(issueKey)

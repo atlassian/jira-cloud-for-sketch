@@ -4,13 +4,6 @@ import Profile from './Profile'
 
 export default function (viewModel) {
   const events = {
-    'jira.attachments.loaded': event => {
-      const { issueKey, attachments } = event.detail
-      viewModel.onAttachmentsLoaded(
-        issueKey,
-        attachments.map(attachment => new Attachment(issueKey, attachment))
-      )
-    },
     'jira.thumbnail.loaded': event => {
       const { issueKey, id, dataUri } = event.detail
       viewModel.onThumbnailLoaded(issueKey, id, dataUri)

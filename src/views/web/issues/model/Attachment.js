@@ -12,8 +12,7 @@ export default class Attachment {
   @observable progress = 0
   @observable thumbnailDataUri = null
 
-  constructor (issueKey, attachment) {
-    this.issueKey = issueKey
+  constructor (attachment) {
     assign(this, attachment)
   }
 

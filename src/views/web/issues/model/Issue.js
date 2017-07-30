@@ -1,6 +1,13 @@
 import { observable, computed } from 'mobx'
-import { assign, findIndex } from 'lodash'
+import { assign, find, findIndex } from 'lodash'
 import pluginCall from 'sketch-module-web-view/client'
+import bridgedFunctionCall from '../../../bridge/client'
+import { IssueMapper } from './mapper'
+import { analytics } from './util'
+
+const _touchIssueAndReloadAttachments = bridgedFunctionCall(
+  'touchIssueAndReloadAttachments', IssueMapper
+)
 
 export default class Issue {
   @observable attachments = []
@@ -11,6 +18,30 @@ export default class Issue {
   constructor (issue, attachments) {
     assign(this, issue)
     this.attachments.replace(attachments)
+  }
+
+  async onSelected () {
+    const issue = await _touchIssueAndReloadAttachments(this.key)
+    console.log(issue)
+    // convert from @observable array to real array TODO this could be nicer!
+    const newAttachments = [].slice.call(issue.attachments)
+    // re-use existing thumbnails if present
+    newAttachments.forEach(newAttachment => {
+      const matchingAttachment = find(this.attachments, attachment => {
+        return attachment.id == newAttachment.id
+      })
+      if (matchingAttachment && matchingAttachment.thumbnailDataUri) {
+        newAttachment.thumbnailDataUri = matchingAttachment.thumbnailDataUri
+      }
+    })
+    console.log(newAttachments)
+    // retain attachments that are currently uploading
+    this.attachments.replace(
+      this.attachments.filter(attachment => {
+        return attachment.uploading
+      }).concat(newAttachments)
+    )
+    analytics('viewIssue')
   }
 
   uploadDroppedFiles () {

@@ -3,25 +3,11 @@ import bindWindowEvents from './bind-window-events'
 import pluginCall from 'sketch-module-web-view/client'
 import { find, findIndex } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
-import Filter from './Filter'
-import Issue from './Issue'
-import Attachment from './Attachment'
+import { analytics } from './util'
+import { FiltersMapper, IssuesMapper } from './mapper'
 
-const _loadFilters = bridgedFunctionCall('loadFilters')
-const _loadIssuesForFilter = bridgedFunctionCall('loadIssuesForFilter')
-
-const bridge = {
-  loadFilters: async () => {
-    return (await _loadFilters()).map(filter => new Filter(filter))
-  },
-  loadIssuesForFilter: async (filterKey) => {
-    return (await _loadIssuesForFilter(filterKey)).map(issue => {
-      const attachments = issue.attachments.map(attachment => new Attachment(issue.key, attachment))
-      delete issue.attachments
-      return new Issue(issue, attachments)
-    })
-  }
-}
+const _loadFilters = bridgedFunctionCall('loadFilters', FiltersMapper)
+const _loadIssuesForFilter = bridgedFunctionCall('loadIssuesForFilter', IssuesMapper)
 
 export default class ViewModel {
   @observable filters = {
@@ -50,10 +36,18 @@ export default class ViewModel {
     this.unbindWindowEvents()
   }
 
+  /**
+   * @param {string} issueKey
+   * @return {Issue}
+   */
   findIssueByKey (issueKey) {
     return find(this.issues.list, issue => { return issue.key == issueKey })
   }
 
+  /**
+   * @param {string} issueKey
+   * @param {function} fn
+   */
   withIssue (issueKey, fn) {
     const issue = this.findIssueByKey(issueKey)
     issue && fn(issue)
@@ -75,7 +69,7 @@ export default class ViewModel {
 
   async loadFilters () {
     this.filters.loading = true
-    const filters = await bridge.loadFilters()
+    const filters = await _loadFilters()
     this.filters.list.replace(filters)
     if (!this.filters.selected && filters.length) {
       this.selectFilter(filters[0].key)
@@ -101,7 +95,7 @@ export default class ViewModel {
       this.issues.loading = true
       this.issues.list.clear()
       const selectedKey = this.filters.selected.key
-      const issues = await bridge.loadIssuesForFilter(selectedKey)
+      const issues = await _loadIssuesForFilter(selectedKey)
       if (this.filters.selected.key === selectedKey) {
         this.issues.list.replace(issues)
         this.issues.loading = false
@@ -114,37 +108,14 @@ export default class ViewModel {
     this.issues.list.replace(issues)
   }
 
-  selectIssue (issueKey) {
-    this.withIssue(issueKey, issue => {
-      this.issues.selected = issue
-      pluginCall('touchIssueAndReloadAttachments', issueKey)
-      analytics('viewIssue')
-    })
+  selectIssue (issue) {
+    this.issues.selected = issue
+    issue.onSelected()
   }
 
   deselectIssue () {
     this.issues.selected = null
     analytics('backToViewIssueList')
-  }
-
-  onAttachmentsLoaded (issueKey, newAttachments) {
-    this.withIssue(issueKey, issue => {
-      // re-use existing thumbnails if present
-      newAttachments.forEach(newAttachment => {
-        const matchingAttachment = find(issue.attachments, attachment => {
-          return attachment.id == newAttachment.id
-        })
-        if (matchingAttachment && matchingAttachment.thumbnailDataUri) {
-          newAttachment.thumbnailDataUri = matchingAttachment.thumbnailDataUri
-        }
-      })
-      issue.attachments.replace(
-        // retain attachments that are currently uploading
-        issue.attachments.filter(attachment => {
-          return attachment.uploading
-        }).concat(newAttachments)
-      )
-    })
   }
 
   onThumbnailLoaded (issueKey, attachmentId, dataUri) {
@@ -194,8 +165,4 @@ export default class ViewModel {
   onProfileLoaded (profile) {
     this.profile = profile
   }
-}
-
-async function analytics (event, properties) {
-  pluginCall('analytics', event, properties)
 }
