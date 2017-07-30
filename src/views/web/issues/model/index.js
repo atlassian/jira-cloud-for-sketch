@@ -118,12 +118,6 @@ export default class ViewModel {
     analytics('backToViewIssueList')
   }
 
-  onThumbnailLoaded (issueKey, attachmentId, dataUri) {
-    this.withAttachment(issueKey, attachmentId, attachment => {
-      attachment.thumbnailDataUri = dataUri
-    })
-  }
-
   onUploadsQueued (issueKey, attachments, replacedAttachmentId) {
     this.withIssue(issueKey, issue => {
       issue.onUploadsQueued(attachments, replacedAttachmentId)

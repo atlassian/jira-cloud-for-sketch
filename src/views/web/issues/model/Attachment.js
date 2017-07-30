@@ -2,6 +2,7 @@ import { observable, computed } from 'mobx'
 import { assign } from 'lodash'
 import pluginCall from 'sketch-module-web-view/client'
 import bridgedFunctionCall from '../../../bridge/client'
+import getThumbnail from './thumbnails'
 
 const _openAttachment = bridgedFunctionCall('openAttachment')
 
@@ -14,6 +15,11 @@ export default class Attachment {
 
   constructor (attachment) {
     assign(this, attachment)
+    this.loadThumbnail()
+  }
+
+  async loadThumbnail () {
+    this.thumbnailDataUri = await getThumbnail(this)
   }
 
   @computed get cardStatus () {

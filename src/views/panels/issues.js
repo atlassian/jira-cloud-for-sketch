@@ -29,6 +29,9 @@ export default function (context) {
       touchIssueAndReloadAttachments (issueKey) {
         return attachments.touchIssueAndReloadAttachments(issueKey)
       },
+      getThumbnail (url, mimeType) {
+        return attachments.getThumbnail(url, mimeType)
+      },
       openAttachment (url, filename, progress) {
         return attachments.openAttachment(url, filename, progress)
       },

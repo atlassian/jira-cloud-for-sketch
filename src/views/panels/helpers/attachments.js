@@ -1,7 +1,5 @@
 import { executeSafelyAsync, openInDefaultApp } from '../../../util'
-import { thumbnailDownloadConcurrency } from '../../../config'
 import analytics, { postMultiple, event } from '../../../analytics'
-import { map } from 'bluebird'
 
 export default class Attachments {
   constructor (context, webUI, jira) {
@@ -16,26 +14,12 @@ export default class Attachments {
       attachment.issueKey = issueKey
     })
     postAnalytics(issue.attachments)
-    // TODO migrate thumbnail loading away from events
-    map(
-      issue.attachments,
-      async (attachment) => { return this.loadThumbnail(issueKey, attachment) },
-      { concurrency: thumbnailDownloadConcurrency }
-    )
     return issue
   }
 
-  async loadThumbnail (issueKey, attachment) {
-    if (attachment.thumbnail && attachment.mimeType) {
-      this.webUI.dispatchWindowEvent('jira.thumbnail.loaded', {
-        issueKey,
-        id: attachment.id,
-        dataUri: await this.jira.getImageAsDataUri(
-          attachment.thumbnail,
-          attachment.mimeType
-        )
-      })
-    }
+  // TODO queue requests
+  async getThumbnail (url, mimeType) {
+    return this.jira.getImageAsDataUri(url, mimeType)
   }
 
   async deleteAttachment (issueKey, attachmentId, isReplace) {

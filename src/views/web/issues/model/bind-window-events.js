@@ -4,10 +4,6 @@ import Profile from './Profile'
 
 export default function (viewModel) {
   const events = {
-    'jira.thumbnail.loaded': event => {
-      const { issueKey, id, dataUri } = event.detail
-      viewModel.onThumbnailLoaded(issueKey, id, dataUri)
-    },
     'jira.profile.loaded': event => {
       viewModel.onProfileLoaded(new Profile(event.detail.profile))
     },
