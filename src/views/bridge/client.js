@@ -24,6 +24,7 @@ if (window.__bridgeFunctionResultEventListener === undefined) {
       // console.log(`resolving __bridgeFunctionPromise ${id}`)
       invocation.resolve(result)
     }
+    delete invocations[invocationId]
   }
   window.addEventListener(
     SketchBridgeFunctionResultEvent,
