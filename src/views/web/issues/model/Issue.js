@@ -1,13 +1,14 @@
 import { observable, computed } from 'mobx'
-import { assign, find, findIndex } from 'lodash'
+import { assign, findIndex } from 'lodash'
 import pluginCall from 'sketch-module-web-view/client'
 import bridgedFunctionCall from '../../../bridge/client'
-import { IssueMapper } from './mapper'
+import { IssueMapper, AttachmentsMapper } from './mapper'
 import { analytics } from './util'
 
 const _touchIssueAndReloadAttachments = bridgedFunctionCall(
   'touchIssueAndReloadAttachments', IssueMapper
 )
+const _getDroppedFiles = bridgedFunctionCall('getDroppedFiles', AttachmentsMapper)
 
 export default class Issue {
   @observable attachments = []
@@ -33,32 +34,18 @@ export default class Issue {
     analytics('viewIssue')
   }
 
-  uploadDroppedFiles () {
-    pluginCall('uploadDroppedFiles', this.key)
+  async uploadDroppedFiles () {
+    const droppedFiles = await _getDroppedFiles()
+    droppedFiles.forEach(file => {
+      this.attachments.unshift(file)
+      file.upload()
+    })
   }
 
   indexOfAttachment (attachmentId) {
     return findIndex(this.attachments, attachment => {
       return attachment.id === attachmentId
     })
-  }
-
-  onUploadsQueued (attachments, replacedAttachmentId) {
-    attachments.forEach(attachment => { attachment.uploading = true })
-    let idx
-    if (replacedAttachmentId &&
-       (idx = this.indexOfAttachment(replacedAttachmentId)) > -1) {
-      this.attachments.splice(idx, 1, ...attachments)
-    } else {
-      this.attachments.unshift(...attachments)
-    }
-  }
-
-  onUploadComplete (attachment, oldId) {
-    const idx = this.indexOfAttachment(oldId)
-    if (idx > -1) {
-      this.attachments.splice(idx, 1, attachment)
-    }
   }
 
   @computed get browseUrl () {
@@ -68,13 +55,13 @@ export default class Issue {
 
   openInBrowser () {
     pluginCall('openInBrowser', this.browseUrl)
-    pluginCall('analytics', 'viewIssueOpenInBrowser')
+    analytics('viewIssueOpenInBrowser')
   }
 
   openPostedCommentInBrowser () {
     if (this.postedCommentHref) {
       pluginCall('openInBrowser', this.postedCommentHref)
-      pluginCall('analytics', 'viewIssueOpenCommentInBrowser')
+      analytics('viewIssueOpenCommentInBrowser')
     }
   }
 

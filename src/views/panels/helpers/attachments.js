@@ -10,9 +10,6 @@ export default class Attachments {
 
   async touchIssueAndReloadAttachments (issueKey) {
     const issue = await this.jira.getIssue(issueKey, { updateHistory: true })
-    issue.attachments.forEach(attachment => {
-      attachment.issueKey = issueKey
-    })
     postAnalytics(issue.attachments)
     return issue
   }

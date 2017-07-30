@@ -4,6 +4,7 @@ import pluginCall from 'sketch-module-web-view/client'
 import bridgedFunctionCall from '../../../bridge/client'
 import getThumbnail from './thumbnails'
 
+const _uploadAttachment = bridgedFunctionCall('uploadAttachment')
 const _openAttachment = bridgedFunctionCall('openAttachment')
 
 export default class Attachment {
@@ -13,13 +14,23 @@ export default class Attachment {
   @observable progress = 0
   @observable thumbnailDataUri = null
 
-  constructor (attachment) {
+  constructor (attachment, doUpload) {
     assign(this, attachment)
     this.loadThumbnail()
   }
 
   async loadThumbnail () {
     this.thumbnailDataUri = await getThumbnail(this)
+  }
+
+  async upload () {
+    this.uploading = true
+    const uploaded = await _uploadAttachment(this.key, this, progress => {
+      this.progress = progress
+    })
+    assign(this, uploaded)
+    this.uploading = false
+    this.loadThumbnail()
   }
 
   @computed get cardStatus () {
@@ -51,7 +62,7 @@ export default class Attachment {
   delete () {
     if (this.readyForAction) {
       this.deleting = true
-      pluginCall('deleteAttachment', this.issueKey, this.id)
+      pluginCall('deleteAttachment', this.id)
     }
   }
 
@@ -59,7 +70,7 @@ export default class Attachment {
     if (this.readyForAction) {
       this.deleting = true
       // files are looked up via the system drag pasteboard
-      pluginCall('replaceAttachment', this.issueKey, this.id)
+      pluginCall('replaceAttachment', this.id)
     }
   }
 }

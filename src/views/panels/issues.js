@@ -23,8 +23,11 @@ export default function (context) {
       loadIssuesForFilter (filterKey) {
         return filters.onFilterChanged(filterKey)
       },
-      uploadDroppedFiles (issueKey) {
-        return uploads.onFilesDropped(issueKey)
+      getDroppedFiles () {
+        return uploads.getDroppedFiles()
+      },
+      uploadAttachment (issueKey, attachment, progress) {
+        return uploads.uploadAttachment(issueKey, attachment, progress)
       },
       touchIssueAndReloadAttachments (issueKey) {
         return attachments.touchIssueAndReloadAttachments(issueKey)

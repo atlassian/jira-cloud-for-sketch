@@ -95,11 +95,6 @@ export default class ViewModel {
     }
   }
 
-  onIssuesLoaded (issues) {
-    this.issues.loading = false
-    this.issues.list.replace(issues)
-  }
-
   selectIssue (issue) {
     this.issues.selected = issue
     issue.onSelected()
@@ -108,24 +103,6 @@ export default class ViewModel {
   deselectIssue () {
     this.issues.selected = null
     analytics('backToViewIssueList')
-  }
-
-  onUploadsQueued (issueKey, attachments, replacedAttachmentId) {
-    this.withIssue(issueKey, issue => {
-      issue.onUploadsQueued(attachments, replacedAttachmentId)
-    })
-  }
-
-  onUploadProgress (issueKey, attachmentId, progress) {
-    this.withAttachment(issueKey, attachmentId, attachment => {
-      attachment.progress = progress
-    })
-  }
-
-  onUploadComplete (issueKey, attachment, oldId) {
-    this.withIssue(issueKey, issue => {
-      issue.onUploadComplete(attachment, oldId)
-    })
   }
 
   onDeleteComplete (issueKey, attachmentId) {
