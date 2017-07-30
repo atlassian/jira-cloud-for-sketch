@@ -17,6 +17,7 @@ export default class Attachments extends Component {
             <Attachment
               key={attachment.id}
               attachment={attachment}
+              issue={issue}
             />
         ))}
       </AttachmentsArea>

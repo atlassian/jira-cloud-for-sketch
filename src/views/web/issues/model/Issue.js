@@ -1,5 +1,5 @@
 import { observable, computed } from 'mobx'
-import { assign, findIndex } from 'lodash'
+import { assign } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import { IssueMapper, AttachmentsMapper } from './mapper'
 import { analytics } from './util'
@@ -35,17 +35,16 @@ export default class Issue {
     analytics('viewIssue')
   }
 
-  async uploadDroppedFiles () {
+  async uploadDroppedFiles (replacedAttachment) {
     const droppedFiles = await _getDroppedFiles()
+    let insertAt = 0
+    if (replacedAttachment) {
+      insertAt = Math.max(0, this.attachments.indexOf(replacedAttachment))
+      replacedAttachment.delete()
+    }
     droppedFiles.forEach(file => {
-      this.attachments.unshift(file)
       file.upload(this.key)
-    })
-  }
-
-  indexOfAttachment (attachmentId) {
-    return findIndex(this.attachments, attachment => {
-      return attachment.id === attachmentId
+      this.attachments.splice(insertAt, 0, file)
     })
   }
 

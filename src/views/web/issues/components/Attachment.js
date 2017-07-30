@@ -43,14 +43,15 @@ export default class Attachment extends Component {
     })
   }
   drop (event) {
-    this.setState({ dragHover: false })
     event.preventDefault()
-    this.props.attachment.replace()
+    this.setState({ dragHover: false })
+    this.props.issue.uploadDroppedFiles(this.props.attachment)
   }
 }
 
 Attachment.propTypes = {
-  attachment: PropTypes.object.isRequired
+  attachment: PropTypes.object.isRequired,
+  issue: PropTypes.object.isRequired
 }
 
 /*
