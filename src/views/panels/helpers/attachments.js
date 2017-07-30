@@ -1,4 +1,4 @@
-import { executeSafelyAsync, openInDefaultApp } from '../../../util'
+import { openInDefaultApp } from '../../../util'
 import analytics, { postMultiple, event } from '../../../analytics'
 
 export default class Attachments {
@@ -19,16 +19,8 @@ export default class Attachments {
     return this.jira.getImageAsDataUri(url, mimeType)
   }
 
-  async deleteAttachment (issueKey, attachmentId, isReplace) {
-    executeSafelyAsync(this.context, async () => {
-      await this.jira.deleteAttachment(attachmentId)
-      if (!isReplace) {
-        this.webUI.dispatchWindowEvent('jira.delete.complete', {
-          issueKey,
-          attachmentId
-        })
-      }
-    })
+  async deleteAttachment (attachmentId) {
+    await this.jira.deleteAttachment(attachmentId)
   }
 
   async openAttachment (url, filename, progress) {

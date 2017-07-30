@@ -13,10 +13,11 @@ export default class Attachments extends Component {
       <AttachmentsArea>
         <DropZone issue={issue} />
         {issue.attachments.map(attachment => (
-          <Attachment
-            key={attachment.id}
-            attachment={attachment}
-          />
+          attachment.visible &&
+            <Attachment
+              key={attachment.id}
+              attachment={attachment}
+            />
         ))}
       </AttachmentsArea>
     )

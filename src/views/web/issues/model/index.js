@@ -45,20 +45,6 @@ export default class ViewModel {
     issue && fn(issue)
   }
 
-  findAttachmentById (issueKey, attachmentId) {
-    const issue = this.findIssueByKey(issueKey)
-    if (issue) {
-      return find(issue.attachments, attachment => {
-        return attachment.id == attachmentId
-      })
-    }
-  }
-
-  withAttachment (issueKey, attachmentId, fn) {
-    const attachment = this.findAttachmentById(issueKey, attachmentId)
-    attachment && fn(attachment)
-  }
-
   async loadFilters () {
     this.filters.loading = true
     const filters = await _loadFilters()
@@ -103,16 +89,6 @@ export default class ViewModel {
   deselectIssue () {
     this.issues.selected = null
     analytics('backToViewIssueList')
-  }
-
-  onDeleteComplete (issueKey, attachmentId) {
-    this.withIssue(issueKey, issue => {
-      issue.attachments.splice(
-        findIndex(issue.attachments, attachment => {
-          return attachment.id === attachmentId
-        }), 1
-      )
-    })
   }
 
   onCommentAdded (issueKey, href) {

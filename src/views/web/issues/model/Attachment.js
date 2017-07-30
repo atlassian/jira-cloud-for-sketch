@@ -6,6 +6,7 @@ import getThumbnail from './thumbnails'
 
 const _uploadAttachment = bridgedFunctionCall('uploadAttachment')
 const _openAttachment = bridgedFunctionCall('openAttachment')
+const _deleteAttachment = bridgedFunctionCall('deleteAttachment')
 
 export default class Attachment {
   @observable uploading = false
@@ -59,11 +60,20 @@ export default class Attachment {
     }
   }
 
-  delete () {
+  async delete () {
     if (this.readyForAction) {
-      this.deleting = true
-      pluginCall('deleteAttachment', this.id)
+      try {
+        this.deleting = true
+        await _deleteAttachment(this.id)
+      } catch (e) {
+        this.deleting = false
+        throw e
+      }
     }
+  }
+
+  @computed get visible () {
+    return !this.deleting
   }
 
   replace () {
