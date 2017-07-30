@@ -1,6 +1,5 @@
 import { observable, computed } from 'mobx'
 import { assign, findIndex } from 'lodash'
-import pluginCall from 'sketch-module-web-view/client'
 import bridgedFunctionCall from '../../../bridge/client'
 import { IssueMapper, AttachmentsMapper } from './mapper'
 import { analytics } from './util'
@@ -9,6 +8,8 @@ const _touchIssueAndReloadAttachments = bridgedFunctionCall(
   'touchIssueAndReloadAttachments', IssueMapper
 )
 const _getDroppedFiles = bridgedFunctionCall('getDroppedFiles', AttachmentsMapper)
+const _openInBrowser = bridgedFunctionCall('openInBrowser')
+const _addComment = bridgedFunctionCall('addComment')
 
 export default class Issue {
   @observable attachments = []
@@ -38,7 +39,7 @@ export default class Issue {
     const droppedFiles = await _getDroppedFiles()
     droppedFiles.forEach(file => {
       this.attachments.unshift(file)
-      file.upload()
+      file.upload(this.key)
     })
   }
 
@@ -54,28 +55,23 @@ export default class Issue {
   }
 
   openInBrowser () {
-    pluginCall('openInBrowser', this.browseUrl)
+    _openInBrowser(this.browseUrl)
     analytics('viewIssueOpenInBrowser')
   }
 
   openPostedCommentInBrowser () {
     if (this.postedCommentHref) {
-      pluginCall('openInBrowser', this.postedCommentHref)
+      _openInBrowser(this.postedCommentHref)
       analytics('viewIssueOpenCommentInBrowser')
     }
   }
 
-  postComment () {
+  async postComment () {
     if (!this.postingComment && this.commentText.trim()) {
       this.postingComment = true
-      this.postedCommentHref = null
-      pluginCall('addComment', this.key, this.commentText)
+      this.postedCommentHref = await _addComment(this.key, this.commentText)
+      this.commentText = ''
+      this.postingComment = false
     }
-  }
-
-  onCommentAdded (href) {
-    this.commentText = ''
-    this.postingComment = false
-    this.postedCommentHref = href
   }
 }

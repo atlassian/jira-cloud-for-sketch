@@ -24,9 +24,9 @@ export default class Attachment {
     this.thumbnailDataUri = await getThumbnail(this)
   }
 
-  async upload () {
+  async upload (issueKey) {
     this.uploading = true
-    const uploaded = await _uploadAttachment(this.key, this, progress => {
+    const uploaded = await _uploadAttachment(issueKey, this, progress => {
       this.progress = progress
     })
     assign(this, uploaded)

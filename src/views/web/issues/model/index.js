@@ -1,6 +1,5 @@
 import { observable } from 'mobx'
-import bindWindowEvents from './bind-window-events'
-import { find, findIndex } from 'lodash'
+import { find } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import { analytics } from './util'
 import { FiltersMapper, IssuesMapper, ProfileMapper } from './mapper'
@@ -23,26 +22,8 @@ export default class ViewModel {
   @observable profile = null
 
   constructor () {
-    bindWindowEvents(this)
     this.loadFilters()
     this.loadProfile()
-  }
-
-  /**
-   * @param {string} issueKey
-   * @return {Issue}
-   */
-  findIssueByKey (issueKey) {
-    return find(this.issues.list, issue => { return issue.key == issueKey })
-  }
-
-  /**
-   * @param {string} issueKey
-   * @param {function} fn
-   */
-  withIssue (issueKey, fn) {
-    const issue = this.findIssueByKey(issueKey)
-    issue && fn(issue)
   }
 
   async loadFilters () {
@@ -89,12 +70,6 @@ export default class ViewModel {
   deselectIssue () {
     this.issues.selected = null
     analytics('backToViewIssueList')
-  }
-
-  onCommentAdded (issueKey, href) {
-    this.withIssue(issueKey, issue => {
-      issue.onCommentAdded(href)
-    })
   }
 
   async loadProfile () {
