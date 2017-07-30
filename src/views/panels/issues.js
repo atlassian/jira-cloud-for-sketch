@@ -39,13 +39,7 @@ export default function (context) {
         return attachments.openAttachment(url, filename, progress)
       },
       deleteAttachment (id) {
-        analytics.viewIssueAttachmentDelete()
         return attachments.deleteAttachment(id)
-      },
-      replaceAttachment (issueKey, id) {
-        analytics.viewIssueAttachmentReplace()
-        uploads.onFilesDropped(issueKey, id)
-        attachments.deleteAttachment(issueKey, id, true)
       },
       addComment (issueKey, comment) {
         return comments.addComment(issueKey, comment)

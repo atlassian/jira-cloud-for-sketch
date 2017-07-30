@@ -45,7 +45,9 @@ export default class Attachment extends Component {
   drop (event) {
     event.preventDefault()
     this.setState({ dragHover: false })
-    this.props.issue.uploadDroppedFiles(this.props.attachment)
+    if (this.props.attachment.readyForAction) {
+      this.props.issue.uploadDroppedFiles(this.props.attachment)
+    }
   }
 }
 

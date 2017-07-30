@@ -41,6 +41,7 @@ export default class Issue {
     if (replacedAttachment) {
       insertAt = Math.max(0, this.attachments.indexOf(replacedAttachment))
       replacedAttachment.delete()
+      analytics('viewIssueAttachmentReplace')
     }
     droppedFiles.forEach(file => {
       file.upload(this.key)

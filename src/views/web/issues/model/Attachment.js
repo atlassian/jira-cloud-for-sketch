@@ -1,8 +1,8 @@
 import { observable, computed } from 'mobx'
 import { assign } from 'lodash'
-import pluginCall from 'sketch-module-web-view/client'
 import bridgedFunctionCall from '../../../bridge/client'
 import getThumbnail from './thumbnails'
+import { analytics } from './util'
 
 const _uploadAttachment = bridgedFunctionCall('uploadAttachment')
 const _openAttachment = bridgedFunctionCall('openAttachment')
@@ -65,6 +65,7 @@ export default class Attachment {
       try {
         this.deleting = true
         await _deleteAttachment(this.id)
+        analytics('viewIssueAttachmentDelete')
       } catch (e) {
         this.deleting = false
         throw e
@@ -74,13 +75,5 @@ export default class Attachment {
 
   @computed get visible () {
     return !this.deleting
-  }
-
-  replace () {
-    if (this.readyForAction) {
-      this.deleting = true
-      // files are looked up via the system drag pasteboard
-      pluginCall('replaceAttachment', this.id)
-    }
   }
 }
