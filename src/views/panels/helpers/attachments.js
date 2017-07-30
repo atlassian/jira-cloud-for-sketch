@@ -1,11 +1,14 @@
 import { openInDefaultApp } from '../../../util'
 import analytics, { postMultiple, event } from '../../../analytics'
+import { thumbnailDownloadConcurrency } from '../../../config'
+import Queue from 'promise-queue'
 
 export default class Attachments {
   constructor (context, webUI, jira) {
     this.context = context
     this.webUI = webUI
     this.jira = jira
+    this.thumbnailQueue = new Queue(thumbnailDownloadConcurrency, Infinity)
   }
 
   async touchIssueAndReloadAttachments (issueKey) {
@@ -14,9 +17,10 @@ export default class Attachments {
     return issue
   }
 
-  // TODO queue requests
   async getThumbnail (url, mimeType) {
-    return this.jira.getImageAsDataUri(url, mimeType)
+    return this.thumbnailQueue.add(async () => {
+      return this.jira.getImageAsDataUri(url, mimeType)
+    })
   }
 
   async deleteAttachment (attachmentId) {
