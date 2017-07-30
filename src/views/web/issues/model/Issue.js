@@ -22,7 +22,6 @@ export default class Issue {
 
   async onSelected () {
     const issue = await _touchIssueAndReloadAttachments(this.key)
-    console.log(issue)
     // convert from @observable array to real array TODO this could be nicer!
     const newAttachments = [].slice.call(issue.attachments)
     // re-use existing thumbnails if present
@@ -34,7 +33,6 @@ export default class Issue {
         newAttachment.thumbnailDataUri = matchingAttachment.thumbnailDataUri
       }
     })
-    console.log(newAttachments)
     // retain attachments that are currently uploading
     this.attachments.replace(
       this.attachments.filter(attachment => {
