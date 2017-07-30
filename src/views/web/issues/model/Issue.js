@@ -24,15 +24,6 @@ export default class Issue {
     const issue = await _touchIssueAndReloadAttachments(this.key)
     // convert from @observable array to real array TODO this could be nicer!
     const newAttachments = [].slice.call(issue.attachments)
-    // re-use existing thumbnails if present
-    newAttachments.forEach(newAttachment => {
-      const matchingAttachment = find(this.attachments, attachment => {
-        return attachment.id == newAttachment.id
-      })
-      if (matchingAttachment && matchingAttachment.thumbnailDataUri) {
-        newAttachment.thumbnailDataUri = matchingAttachment.thumbnailDataUri
-      }
-    })
     // retain attachments that are currently uploading
     this.attachments.replace(
       this.attachments.filter(attachment => {

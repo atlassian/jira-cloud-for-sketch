@@ -1,6 +1,3 @@
-import { executeSafelyAsync } from '../../../util'
-import analytics from '../../../analytics'
-
 export default class Profile {
   constructor (context, webUI, jira) {
     this.context = context
@@ -9,10 +6,6 @@ export default class Profile {
   }
 
   async loadProfile () {
-    executeSafelyAsync(this.context, async () => {
-      const profile = await this.jira.getProfile()
-      this.webUI.dispatchWindowEvent('jira.profile.loaded', { profile })
-      analytics.viewIssueProfileLoaded()
-    })
+    return this.jira.getProfile()
   }
 }

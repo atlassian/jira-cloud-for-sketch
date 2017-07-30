@@ -1,13 +1,13 @@
 import { observable } from 'mobx'
 import bindWindowEvents from './bind-window-events'
-import pluginCall from 'sketch-module-web-view/client'
 import { find, findIndex } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import { analytics } from './util'
-import { FiltersMapper, IssuesMapper } from './mapper'
+import { FiltersMapper, IssuesMapper, ProfileMapper } from './mapper'
 
 const _loadFilters = bridgedFunctionCall('loadFilters', FiltersMapper)
 const _loadIssuesForFilter = bridgedFunctionCall('loadIssuesForFilter', IssuesMapper)
+const _loadProfile = bridgedFunctionCall('loadProfile', ProfileMapper)
 
 export default class ViewModel {
   @observable filters = {
@@ -23,17 +23,9 @@ export default class ViewModel {
   @observable profile = null
 
   constructor () {
-    this.unbindWindowEvents = bindWindowEvents(this)
-    this.init()
-  }
-
-  init () {
+    bindWindowEvents(this)
     this.loadFilters()
     this.loadProfile()
-  }
-
-  dispose () {
-    this.unbindWindowEvents()
   }
 
   /**
@@ -152,11 +144,8 @@ export default class ViewModel {
     })
   }
 
-  loadProfile () {
-    pluginCall('loadProfile')
-  }
-
-  onProfileLoaded (profile) {
-    this.profile = profile
+  async loadProfile () {
+    this.profile = await _loadProfile()
+    analytics('viewIssueProfileLoaded')
   }
 }

@@ -1,12 +1,8 @@
 import { forOwn } from 'lodash'
 import Attachment from './Attachment'
-import Profile from './Profile'
 
 export default function (viewModel) {
   const events = {
-    'jira.profile.loaded': event => {
-      viewModel.onProfileLoaded(new Profile(event.detail.profile))
-    },
     'jira.comment.added': event => {
       const { issueKey, href } = event.detail
       viewModel.onCommentAdded(issueKey, href)

@@ -74,7 +74,6 @@ export default class Uploads {
                   attachment: uploadedAttachment,
                   oldId: attachment.id
                 })
-                this.attachments.loadThumbnail(issueKey, uploadedAttachment)
               },
               { concurrency: attachmentUploadConcurrency }
             )
