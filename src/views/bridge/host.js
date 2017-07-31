@@ -31,9 +31,21 @@ export default function createBridgedWebUI (context, htmlName, options) {
     try {
       result = await options.handlers[handlerFunctionName](...args)
     } catch (e) {
-      error = e
+      if (e.class && e.class().isSubclassOfClass(NSError)) {
+        error = {
+          error: String.valueOf(e),
+          name: e.class() + '',
+          message: e.localizedDescription() + ''
+        }
+      } else {
+        error = {
+          error: e,
+          name: e.name,
+          message: e.message
+        }
+      }
+      trace(error)
     }
-    // TODO do we need to do anything special to serialize the error?
     webUI.dispatchWindowEvent(SketchBridgeFunctionResultEvent, {invocationId, result, error})
   }
 
