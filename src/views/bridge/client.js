@@ -18,13 +18,19 @@ if (window.__bridgeFunctionResultEventListener === undefined) {
       console.error(`No __bridgeFunctionInvocation found for id '${invocationId}'`)
       return
     }
-    delete invocations[invocationId]
     if (error) {
-      invokeGlobalErrorHandlers(error)
-      invocation.reject(error)
+      // check if one of the global error handlers can handle it
+      if (invokeGlobalErrorHandlers(error, invocation.retry)) {
+        // ... if so, don't delete the invocation handler to allow for retry
+        return
+      } else {
+        // ... if not, reject the promise
+        invocation.reject(error)
+      }
     } else {
       invocation.resolve(result)
     }
+    delete invocations[invocationId]
   }
   window.addEventListener(
     SketchBridgeFunctionResultEvent,
@@ -70,21 +76,28 @@ export default function bridgedFunctionCall (functionName, resultMapper) {
     })
     const invocationId = uuid()
     return new Promise(function (resolve, reject) {
-      invocations[invocationId] = {resolve, reject, callbacks}
-      pluginCall(SketchBridgeFunctionName, invocationId, functionName, ...args)
+      const retry = () => {
+        pluginCall(SketchBridgeFunctionName, invocationId, functionName, ...args)
+      }
+      invocations[invocationId] = {resolve, reject, callbacks, retry}
+      retry()
     })
     .then(resultMapper || (x => x))
   }
 }
 
-function invokeGlobalErrorHandlers (error) {
-  globalErrorHandlers.forEach(handler => {
+function invokeGlobalErrorHandlers (error, retry) {
+  for (var i = 0; i < globalErrorHandlers.length; i++) {
+    const handler = globalErrorHandlers[i]
     try {
-      handler(error)
+      if (handler(error, retry)) {
+        return true
+      }
     } catch (e) {
       console.error(`error invoking global error handler: ${e}`)
     }
-  })
+  }
+  return false
 }
 
 export function addGlobalErrorHandler (handler) {

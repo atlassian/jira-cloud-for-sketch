@@ -21,6 +21,7 @@ export default class ViewModel {
   }
   @observable profile = null
   @observable error = null
+  @observable retry = null
 
   constructor () {
     this.loadFilters()
@@ -80,8 +81,14 @@ export default class ViewModel {
   }
 
   registerGlobalErrorHandler () {
-    addGlobalErrorHandler(error => {
+    addGlobalErrorHandler((error, retry) => {
       this.error = error
+      this.retry = () => {
+        this.error = this.retry = null
+        retry()
+      }
+      // indicate that this error handler will facilitate retries
+      return true
     })
   }
 }

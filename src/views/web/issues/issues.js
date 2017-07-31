@@ -21,6 +21,7 @@ class ViewIssuesPanel extends Component {
     this.handleFilterSelected = this.handleFilterSelected.bind(this)
     this.handleIssueSelected = this.handleIssueSelected.bind(this)
     this.handleIssueDeselected = this.handleIssueDeselected.bind(this)
+    this.handleErrorRetry = this.handleErrorRetry.bind(this)
     this.preventDefault = this.preventDefault.bind(this)
   }
   render () {
@@ -57,6 +58,9 @@ class ViewIssuesPanel extends Component {
         <BannerWrapper>
           <Banner icon={<ErrorIcon label='Error' />} isOpen={error} appearance='error'>
             {error && error.message}
+            {this.props.viewmodel.retry && (
+              <ClickableSpan onClick={this.handleErrorRetry}>Retry</ClickableSpan>
+            )}
           </Banner>
         </BannerWrapper>
       </div>
@@ -71,6 +75,9 @@ class ViewIssuesPanel extends Component {
   handleIssueDeselected (issueKey) {
     this.props.viewmodel.deselectIssue(issueKey)
   }
+  handleErrorRetry () {
+    this.props.viewmodel.retry()
+  }
   preventDefault (event) {
     event.preventDefault()
   }
@@ -79,14 +86,6 @@ class ViewIssuesPanel extends Component {
 ViewIssuesPanel.propTypes = {
   viewmodel: PropTypes.object.isRequired
 }
-
-const BannerWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 510px;
-  z-index: 10;
-`
 
 const PanelWrapper = styled.div`
   padding: 10px 12px 20px 20px;
@@ -114,6 +113,20 @@ const ModalPanel = styled.div`
   height: 320px;
   padding: 10px 20px 20px 20px;
   background-color: white;
+`
+
+const BannerWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 510px;
+  z-index: 10;
+`
+
+const ClickableSpan = styled.span`
+  margin-left: 5px;
+  text-decoration: underline;
+  cursor: pointer;
 `
 
 ReactDOM.render(<ViewIssuesPanel viewmodel={new ViewModel()} />, document.getElementById('container'))

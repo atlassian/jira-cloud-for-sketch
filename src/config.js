@@ -46,3 +46,5 @@ export const feedbackUrl = 'https://goo.gl/forms/OrIB4RoEePhL3lkv2'
 export const cocoaDelegatePollInterval = 200
 
 export const jiraDateMomentFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZZ'
+
+export const errorRetryTimeout = 5000 // milliseconds
