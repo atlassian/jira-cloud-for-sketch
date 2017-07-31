@@ -86,6 +86,9 @@ export default function bridgedFunctionCall (functionName, resultMapper) {
   }
 }
 
+// for interactive testing
+window.__invokeBridgedFunction = window.__invokeBridgedFunction || bridgedFunctionCall
+
 function invokeGlobalErrorHandlers (error, retry) {
   for (var i = 0; i < globalErrorHandlers.length; i++) {
     const handler = globalErrorHandlers[i]

@@ -11,8 +11,8 @@ const JIRA = require(OFFLINE_DEV ? '../../mock-jira' : '../../jira')
 export default function (context) {
   const webUI = createWebUI(context, {
     name: 'issues',
-    height: 382,
     width: 510,
+    height: 382,
     handlers: {
       async loadFilters () {
         return filters.loadFilters()

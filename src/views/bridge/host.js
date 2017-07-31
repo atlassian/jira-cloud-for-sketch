@@ -39,7 +39,7 @@ export default function createBridgedWebUI (context, htmlName, options) {
         }
       } else {
         error = {
-          error: e,
+          error: String.valueOf(e),
           name: e.name,
           message: e.message
         }

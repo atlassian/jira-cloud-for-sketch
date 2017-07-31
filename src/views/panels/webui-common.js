@@ -46,12 +46,23 @@ export default function (context, options) {
         executeSafely(context, function () {
           openInBrowser(url)
         })
+      },
+      resizePanel (width, height, animate) {
+        // resize NSPanel
+        const panelFrame = webUI.panel.frame()
+        const newPanelY = panelFrame.origin.y + panelFrame.size.height - height
+        webUI.panel.setFrame_display_animate(NSMakeRect(panelFrame.origin.x, newPanelY, width, height), true, animate)
+
+        // resize WebView
+        const webViewFrame = webUI.webView.frame()
+        const newWebViewY = webViewFrame.origin.y + webViewFrame.size.height - height
+        webUI.webView.setFrame(NSMakeRect(webViewFrame.origin.x, newWebViewY, width, height))
       }
     },
     options.handlers
   )
 
-  var webUI = createBridgedWebUI(context, options.page, options)
+  const webUI = createBridgedWebUI(context, options.page, options)
 
   // default panel behaviour
   // webUI.panel.hidesOnDeactivate = false

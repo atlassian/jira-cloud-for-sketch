@@ -6,8 +6,8 @@ import analytics from '../../analytics'
 export default function (context) {
   const webUI = createWebUI(context, {
     name: 'connect',
-    height: 320,
     width: 340,
+    height: 320,
     handlers: {
       connectToJira (jiraUrl) {
         executeSafelyAsync(context, async function () {
