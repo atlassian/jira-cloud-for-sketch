@@ -53,9 +53,9 @@ export default function (context, options) {
         const webViewFrame = webUI.webView.frame()
         webUI.webView.setFrame(NSMakeRect(
           webViewFrame.origin.x,
-          options.hideTitleBar ? -24 : 0,
+          options.hideTitleBar ? -22 : 0,
           width,
-          height - (options.hideTitleBar ? 0 : 24)
+          height - (options.hideTitleBar ? 0 : 22)
         ))
 
         // resize NSPanel
@@ -68,6 +68,9 @@ export default function (context, options) {
   )
 
   const webUI = createBridgedWebUI(context, options.page, options)
+
+  // ASP-12: workaround incorrect sizing in sketch-module-web-view
+  options.handlers.resizePanel(options.width, options.height)
 
   // default panel behaviour
   // webUI.panel.hidesOnDeactivate = false
