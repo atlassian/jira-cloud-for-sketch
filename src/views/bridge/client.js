@@ -8,6 +8,7 @@ import {
 } from './common'
 
 const invocations = window.__bridgeFunctionInvocations = window.__bridgeFunctionInvocations || {}
+const globalErrorHandlers = []
 
 if (window.__bridgeFunctionResultEventListener === undefined) {
   window.__bridgeFunctionResultEventListener = function (event) {
@@ -17,14 +18,13 @@ if (window.__bridgeFunctionResultEventListener === undefined) {
       console.error(`No __bridgeFunctionInvocation found for id '${invocationId}'`)
       return
     }
+    delete invocations[invocationId]
     if (error) {
-      // console.log(`rejecting __bridgeFunctionPromise ${id}`)
+      invokeGlobalErrorHandlers(error)
       invocation.reject(error)
     } else {
-      // console.log(`resolving __bridgeFunctionPromise ${id}`)
       invocation.resolve(result)
     }
-    delete invocations[invocationId]
   }
   window.addEventListener(
     SketchBridgeFunctionResultEvent,
@@ -75,4 +75,23 @@ export default function bridgedFunctionCall (functionName, resultMapper) {
     })
     .then(resultMapper || (x => x))
   }
+}
+
+function invokeGlobalErrorHandlers (error) {
+  globalErrorHandlers.forEach(handler => {
+    try {
+      handler(error)
+    } catch (e) {
+      console.error(`error invoking global error handler: ${e}`)
+    }
+  })
+}
+
+export function addGlobalErrorHandler (handler) {
+  globalErrorHandlers.push(handler)
+}
+
+export function removeGlobalErrorHandler (handler) {
+  const index = globalErrorHandlers.indexOf(handler)
+  globalErrorHandlers.splice(index, 1)
 }

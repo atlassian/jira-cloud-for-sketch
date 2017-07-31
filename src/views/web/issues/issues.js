@@ -5,6 +5,8 @@ import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
 import Spinner from '@atlaskit/spinner'
+import ErrorIcon from '@atlaskit/icon/glyph/error'
+import Banner from '@atlaskit/banner'
 import IssueFilter from './components/IssueFilter'
 import IssueList from './components/IssueList'
 import Breadcrumbs from './components/Breadcrumbs'
@@ -22,35 +24,42 @@ class ViewIssuesPanel extends Component {
     this.preventDefault = this.preventDefault.bind(this)
   }
   render () {
-    const {issues, filters, profile} = this.props.viewmodel
+    const {issues, filters, profile, error} = this.props.viewmodel
     return (
-      <PanelWrapper onDrop={this.preventDefault} onDragOver={this.preventDefault}>
-        <HeaderDiv>
-          <h4>JIRA issues</h4>
-          {!filters.loading &&
-            <IssueFilter
-              filters={filters.list}
-              selected={filters.selected}
-              onFilterSelected={this.handleFilterSelected}
+      <div>
+        <PanelWrapper onDrop={this.preventDefault} onDragOver={this.preventDefault}>
+          <HeaderDiv>
+            <h4>JIRA issues</h4>
+            {!filters.loading &&
+              <IssueFilter
+                filters={filters.list}
+                selected={filters.selected}
+                onFilterSelected={this.handleFilterSelected}
+              />
+            }
+          </HeaderDiv>
+          {issues.loading ? (
+            <SpinnerWrapper>
+              <Spinner size='large' />
+            </SpinnerWrapper>
+          ) : (
+            <IssueList
+              issues={issues.list}
+              onSelectIssue={this.handleIssueSelected}
             />
-          }
-        </HeaderDiv>
-        {issues.loading ? (
-          <SpinnerWrapper>
-            <Spinner size='large' />
-          </SpinnerWrapper>
-        ) : (
-          <IssueList
-            issues={issues.list}
-            onSelectIssue={this.handleIssueSelected}
-          />
-        )}
-        {issues.selected &&
-          <ModalPanel>
-            <Breadcrumbs viewmodel={this.props.viewmodel} />
-            <IssueView issue={issues.selected} profile={profile} />
-          </ModalPanel>}
-      </PanelWrapper>
+          )}
+          {issues.selected &&
+            <ModalPanel>
+              <Breadcrumbs viewmodel={this.props.viewmodel} />
+              <IssueView issue={issues.selected} profile={profile} />
+            </ModalPanel>}
+        </PanelWrapper>
+        <BannerWrapper>
+          <Banner icon={<ErrorIcon label='Error' />} isOpen={error} appearance='error'>
+            {error && error.message}
+          </Banner>
+        </BannerWrapper>
+      </div>
     )
   }
   handleFilterSelected (filterKey) {
@@ -70,6 +79,14 @@ class ViewIssuesPanel extends Component {
 ViewIssuesPanel.propTypes = {
   viewmodel: PropTypes.object.isRequired
 }
+
+const BannerWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 510px;
+  z-index: 10;
+`
 
 const PanelWrapper = styled.div`
   padding: 10px 12px 20px 20px;

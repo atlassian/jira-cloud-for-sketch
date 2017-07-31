@@ -1,6 +1,6 @@
 import { observable } from 'mobx'
 import { find } from 'lodash'
-import bridgedFunctionCall from '../../../bridge/client'
+import bridgedFunctionCall, { addGlobalErrorHandler } from '../../../bridge/client'
 import { analytics } from './util'
 import { FiltersMapper, IssuesMapper, ProfileMapper } from './mapper'
 
@@ -20,10 +20,12 @@ export default class ViewModel {
     loading: false
   }
   @observable profile = null
+  @observable error = null
 
   constructor () {
     this.loadFilters()
     this.loadProfile()
+    this.registerGlobalErrorHandler()
   }
 
   async loadFilters () {
@@ -75,5 +77,11 @@ export default class ViewModel {
   async loadProfile () {
     this.profile = await _loadProfile()
     analytics('viewIssueProfileLoaded')
+  }
+
+  registerGlobalErrorHandler () {
+    addGlobalErrorHandler(error => {
+      this.error = error
+    })
   }
 }
