@@ -57,7 +57,7 @@ class ViewIssuesPanel extends Component {
         </PanelWrapper>
         <BannerWrapper>
           <Banner icon={<ErrorIcon label='Error' />} isOpen={error && true} appearance='error'>
-            {error && error.message}
+            {error && (error.message || error.name)}
             {this.props.viewmodel.retry && (
               <ClickableSpan onClick={this.handleErrorRetry}>Retry</ClickableSpan>
             )}

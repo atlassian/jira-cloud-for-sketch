@@ -1,5 +1,6 @@
 import { assign } from 'lodash'
 import { executeSafely, randomHex, openInBrowser } from '../../util'
+import { trace } from '../../logger'
 import createBridgedWebUI from '../bridge/host'
 import analytics from '../../analytics'
 
@@ -48,15 +49,19 @@ export default function (context, options) {
         })
       },
       resizePanel (width, height, animate) {
+        // resize WebView
+        const webViewFrame = webUI.webView.frame()
+        webUI.webView.setFrame(NSMakeRect(
+          webViewFrame.origin.x,
+          options.hideTitleBar ? -24 : 0,
+          width,
+          height - (options.hideTitleBar ? 0 : 24)
+        ))
+
         // resize NSPanel
         const panelFrame = webUI.panel.frame()
         const newPanelY = panelFrame.origin.y + panelFrame.size.height - height
         webUI.panel.setFrame_display_animate(NSMakeRect(panelFrame.origin.x, newPanelY, width, height), true, animate)
-
-        // resize WebView
-        const webViewFrame = webUI.webView.frame()
-        const newWebViewY = webViewFrame.origin.y + webViewFrame.size.height - height
-        webUI.webView.setFrame(NSMakeRect(webViewFrame.origin.x, newWebViewY, width, height))
       }
     },
     options.handlers

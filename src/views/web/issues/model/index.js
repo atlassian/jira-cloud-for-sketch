@@ -7,6 +7,7 @@ import { FiltersMapper, IssuesMapper, ProfileMapper } from './mapper'
 const _loadFilters = bridgedFunctionCall('loadFilters', FiltersMapper)
 const _loadIssuesForFilter = bridgedFunctionCall('loadIssuesForFilter', IssuesMapper)
 const _loadProfile = bridgedFunctionCall('loadProfile', ProfileMapper)
+const _resizePanel = bridgedFunctionCall('resizePanel')
 
 export default class ViewModel {
   @observable filters = {
@@ -68,11 +69,13 @@ export default class ViewModel {
   selectIssue (issue) {
     this.issues.selected = issue
     issue.onSelected()
+    _resizePanel(510, 400, false)
   }
 
   deselectIssue () {
     this.issues.selected = null
     analytics('backToViewIssueList')
+    _resizePanel(510, 382, false)
   }
 
   async loadProfile () {
