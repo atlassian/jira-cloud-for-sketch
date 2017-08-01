@@ -41,8 +41,8 @@ export const bearerTokenRefreshInterval = 1000 * 60 * 10 // milliseconds
 export const thumbnailDownloadConcurrency = 4
 export const attachmentUploadConcurrency = 4
 
-export const thumbnailRetryMax = 5
-export const thumbnailRetryDelay = 2000 // milliseconds
+export const thumbnailRetryMax = 10
+export const thumbnailRetryDelay = 1500 // milliseconds
 
 export const feedbackUrl = 'https://goo.gl/forms/OrIB4RoEePhL3lkv2'
 
