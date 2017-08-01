@@ -15,7 +15,7 @@ export const tempDirName = pluginName
 export const pluginVersion = '0.0.6'
 
 export const jiraSketchIntegrationBaseUrl =
-  'https://jira-sketch-integration.ap-southeast-2.dev.public.atl-paas.net'
+  'https://sketch.prod.atl-paas.net'
 
 export const jiraSketchIntegrationAuthRedirectUrl =
   jiraSketchIntegrationBaseUrl + '/auth/jira'
