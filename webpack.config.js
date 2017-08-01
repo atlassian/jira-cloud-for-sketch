@@ -6,6 +6,10 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
+        test: /\.txt$/,
+        use: ['raw-loader']
+      },
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {

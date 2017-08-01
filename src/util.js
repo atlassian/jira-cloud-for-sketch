@@ -118,3 +118,9 @@ export function withErrorPointer (fn) {
   }
   return result
 }
+
+export function sleep (delay) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, delay)
+  })
+}
