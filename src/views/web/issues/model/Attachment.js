@@ -2,7 +2,7 @@ import { observable, computed } from 'mobx'
 import { assign } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import getThumbnail from './thumbnails'
-import { analytics } from './util'
+import { analytics } from '../../util'
 
 const _uploadAttachment = bridgedFunctionCall('uploadAttachment')
 const _openAttachment = bridgedFunctionCall('openAttachment')

@@ -1,7 +1,7 @@
 import { observable } from 'mobx'
 import { find } from 'lodash'
 import bridgedFunctionCall, { addGlobalErrorHandler } from '../../../bridge/client'
-import { analytics } from './util'
+import { analytics } from '../../util'
 import { FiltersMapper, IssuesMapper, ProfileMapper } from './mapper'
 
 const _loadFilters = bridgedFunctionCall('loadFilters', FiltersMapper)

@@ -8,5 +8,6 @@
   "attachmentUploadConcurrency": 4,
   "thumbnailRetryMax": 10,
   "thumbnailRetryDelay": 1500,
+  "authorizationPollInterval": 3000,
   "cocoaDelegatePollInterval": 200
 }

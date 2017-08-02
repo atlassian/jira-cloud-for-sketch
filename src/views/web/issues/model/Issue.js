@@ -2,7 +2,7 @@ import { observable, computed } from 'mobx'
 import { assign } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import { IssueMapper, AttachmentsMapper } from './mapper'
-import { analytics } from './util'
+import { analytics } from '../../util'
 
 const _touchIssueAndReloadAttachments = bridgedFunctionCall(
   'touchIssueAndReloadAttachments', IssueMapper

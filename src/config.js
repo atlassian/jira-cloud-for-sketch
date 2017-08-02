@@ -11,6 +11,7 @@ const defaults = {
   attachmentUploadConcurrency: 4,
   thumbnailRetryMax: 10,
   thumbnailRetryDelay: 1500, // milliseconds
+  authorizationPollInterval: 3000, // milliseconds
   cocoaDelegatePollInterval: 200 // milliseconds
 }
 
@@ -63,6 +64,8 @@ export const attachmentUploadConcurrency = config.attachmentUploadConcurrency
 
 export const thumbnailRetryMax = config.thumbnailRetryMax
 export const thumbnailRetryDelay = config.thumbnailRetryDelay
+
+export const authorizationPollInterval = config.authorizationPollInterval
 
 export const feedbackUrl = 'https://goo.gl/forms/OrIB4RoEePhL3lkv2'
 

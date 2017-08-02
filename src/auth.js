@@ -3,7 +3,8 @@ import { openInBrowser } from './util'
 import {
   jiraSketchIntegrationBaseUrl,
   jiraSketchIntegrationApi,
-  jiraSketchIntegrationAuthRedirectUrl
+  jiraSketchIntegrationAuthRedirectUrl,
+  authorizationPollInterval
 } from './config'
 import { isSet, setString, getString, unset, keys } from './prefs'
 import queryString from 'query-string'
@@ -55,11 +56,32 @@ export async function authorizeSketchForJira (context, jiraUrl) {
     clientId: clientDetails.clientId,
     jiraHost: jiraHost
   }
-  openInBrowser(
-    `${jiraSketchIntegrationAuthRedirectUrl}?${queryString.stringify(params)}`
-  )
   // store the JIRA host (TODO multi-instance support)
   setString(keys.jiraHost, jiraHost)
+  return `${jiraSketchIntegrationAuthRedirectUrl}?${queryString.stringify(params)}`
+}
+
+export async function awaitAuthorization () {
+  return new Promise((resolve, reject) => {
+    const poller = setInterval(async () => {
+      if (await testAuthorization()) {
+        clearInterval(poller)
+        resolve()
+      } else {
+        trace(`Not yet authorized, retrying in ${authorizationPollInterval}`)
+      }
+    }, authorizationPollInterval)
+  })
+}
+
+export async function testAuthorization () {
+  try {
+    await _getBearerToken()
+    return true
+  } catch (e) {
+    trace(`Test authorization failed: ${JSON.stringify(e)}`)
+    return false
+  }
 }
 
 export function isAuthorized () {
