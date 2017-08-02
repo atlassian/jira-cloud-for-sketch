@@ -12,6 +12,7 @@ parserOptions:
   ecmaFeatures:
     jsx: true
 globals:
+  PLUGIN_VERSION: false
   COScript: false
   coscript: false
   NSClosableWindowMask: false
