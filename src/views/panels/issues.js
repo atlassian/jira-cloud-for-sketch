@@ -5,8 +5,7 @@ import Attachments from './helpers/attachments'
 import Comments from './helpers/comments'
 import Profile from './helpers/profile'
 import analytics from '../../analytics'
-import { OFFLINE_DEV } from '../../config'
-const JIRA = require(OFFLINE_DEV ? '../../mock-jira' : '../../jira')
+import JIRA from '../../jira'
 
 export default function (context) {
   const webUI = createWebUI(context, {

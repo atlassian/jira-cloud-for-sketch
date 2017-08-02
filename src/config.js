@@ -1,5 +1,3 @@
-export const OFFLINE_DEV = false
-
 export const logLevels = {
   TRACE: 10,
   DEBUG: 20,

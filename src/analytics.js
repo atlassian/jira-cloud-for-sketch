@@ -1,7 +1,6 @@
 import fetch from 'sketch-module-fetch-polyfill'
 import moment from 'moment'
 import {
-  OFFLINE_DEV,
   pluginVersion,
   analyticsApiSingleEvent,
   analyticsApiMultipleEvents,
@@ -57,7 +56,7 @@ export function event (eventName, properties) {
   // https://extranet.atlassian.com/display/MOD/Public+Analytics+aka+GAS
   const payload = {
     name: eventName,
-    server: (!OFFLINE_DEV && isAuthorized()) ? getJiraHost() : '-',
+    server: isAuthorized() ? getJiraHost() : '-',
     product: 'atlassian-sketch-plugin',
     subproduct: 'jira',
     version: pluginVersion,
@@ -89,21 +88,19 @@ export default events
 async function _postToAnalyticsApi (api, payload) {
   const body = JSON.stringify(payload)
   trace(`analytics event(s) ${body}`)
-  if (!OFFLINE_DEV) {
-    try {
-      const res = await fetch(api, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: body
-      })
-      if (isTraceEnabled()) {
-        trace(`analytics posted (${res.status})`)
-        trace(await res.text())
-      }
-    } catch (e) {
-      warn(`Failed to send analytics event(s) ${e}`)
+  try {
+    const res = await fetch(api, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: body
+    })
+    if (isTraceEnabled()) {
+      trace(`analytics posted (${res.status})`)
+      trace(await res.text())
     }
+  } catch (e) {
+    warn(`Failed to send analytics event(s) ${e}`)
   }
 }
