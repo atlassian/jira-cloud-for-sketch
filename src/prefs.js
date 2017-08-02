@@ -7,6 +7,7 @@ const _NOT_SET = '__NOT_SET'
 export const keys = {
   clientId: 'clientId',
   sharedSecret: 'sharedSecret',
+  addonUrl: 'addonUrl',
   jiraHost: 'jiraHost',
   authToken: 'authToken',
   authTokenExpiry: 'authTokenExpiry'
@@ -31,7 +32,7 @@ export function getString (key) {
   const prefs = getUserPrefs()
   const value = prefs[key]
   if (isValueSet(value)) {
-    return value
+    return value + ''
   }
   throw new Error(`No preference set for key "${key}"`)
 }

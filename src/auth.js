@@ -1,6 +1,7 @@
 import fetch from 'sketch-module-fetch-polyfill'
 import { openInBrowser } from './util'
 import {
+  jiraSketchIntegrationBaseUrl,
   jiraSketchIntegrationApi,
   jiraSketchIntegrationAuthRedirectUrl
 } from './config'
@@ -15,8 +16,16 @@ import TokenCache from './token-cache'
 
 const tokenCache = new TokenCache(_getBearerToken)
 
+/**
+ * We store the addon base URL in order to detect if the user switches addons
+ * (e.g. to staging or dogfooding)
+ */
+function isAddonUrlChanged () {
+  return !isSet(keys.addonUrl) || getString(keys.addonUrl) != jiraSketchIntegrationBaseUrl
+}
+
 export async function getSketchClientDetails () {
-  if (!isSet(keys.clientId, keys.sharedSecret)) {
+  if (!isSet(keys.clientId, keys.sharedSecret) || isAddonUrlChanged()) {
     // let any http errors bubble up for now
     const response = await fetch(jiraSketchIntegrationApi.client, {
       method: 'POST'
@@ -27,6 +36,7 @@ export async function getSketchClientDetails () {
     }
     setString(keys.clientId, json.data.id)
     setString(keys.sharedSecret, json.data.sharedSecret)
+    setString(keys.addonUrl, jiraSketchIntegrationBaseUrl)
     analytics.clientIdRetrieved()
   }
   return {
@@ -53,7 +63,8 @@ export async function authorizeSketchForJira (context, jiraUrl) {
 }
 
 export function isAuthorized () {
-  return isSet(keys.jiraHost, keys.clientId, keys.sharedSecret)
+  return isSet(keys.jiraHost, keys.clientId, keys.sharedSecret) &&
+    !isAddonUrlChanged()
 }
 
 export async function getBearerToken (force) {
