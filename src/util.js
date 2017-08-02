@@ -126,10 +126,18 @@ export function sleep (delay) {
 }
 
 export function resourcesPath () {
+  return basePath() + '/Resources/'
+}
+
+export function scriptsPath () {
+  return basePath() + '/Sketch/'
+}
+
+function basePath () {
   return COScript.currentCOScript().env()
     .scriptURL.path()
     .stringByDeletingLastPathComponent()
-    .stringByDeletingLastPathComponent() + '/Resources/'
+    .stringByDeletingLastPathComponent()
 }
 
 export function readFileAsJson (path) {

@@ -1,5 +1,5 @@
 import { assign, isNumber } from 'lodash'
-import { resourcesPath, readFileAsJson } from './util'
+import { resourcesPath, scriptsPath, readFileAsJson } from './util'
 
 const defaults = {
   logLevel: 10,
@@ -18,6 +18,8 @@ const config = assign({}, defaults,
   readFileAsJson(`${resourcesPath()}/config.json`)
 )
 
+const manifest = readFileAsJson(`${scriptsPath()}/manifest.json`)
+
 export const logLevels = {
   TRACE: 10,
   DEBUG: 20,
@@ -31,7 +33,7 @@ export const logLevel = parseLogLevel(config.logLevel)
 export const pluginName = 'jira-sketch-plugin'
 export const tempDirName = pluginName
 
-export const pluginVersion = PLUGIN_VERSION
+export const pluginVersion = manifest.version
 
 export const jiraSketchIntegrationBaseUrl = config.jiraSketchIntegrationBaseUrl
 
