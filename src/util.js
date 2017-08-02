@@ -1,5 +1,5 @@
-import { tempDirName } from './config'
 import { trace } from './logger'
+import { readFile } from 'sketch-module-fs'
 
 export function setIconForAlert (context, alert) {
   alert.setIcon(
@@ -50,7 +50,7 @@ export function openInDefaultApp (filepath) {
 }
 
 export function tempDir (name) {
-  var tmp = NSTemporaryDirectory() + tempDirName + '/'
+  var tmp = NSTemporaryDirectory() + 'jira-sketch-plugin/'
   if (name) {
     tmp += name + '/'
   }
@@ -123,4 +123,15 @@ export function sleep (delay) {
   return new Promise(function (resolve) {
     setTimeout(resolve, delay)
   })
+}
+
+export function resourcesPath () {
+  return COScript.currentCOScript().env()
+    .scriptURL.path()
+    .stringByDeletingLastPathComponent()
+    .stringByDeletingLastPathComponent() + '/Resources/'
+}
+
+export function readFileAsJson (path) {
+  return JSON.parse(readFile(path, NSUTF8StringEncoding) + '')
 }

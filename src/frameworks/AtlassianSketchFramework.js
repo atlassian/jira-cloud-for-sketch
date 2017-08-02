@@ -1,19 +1,15 @@
 import { trace } from '../logger'
-
-var frameworkPath = COScript.currentCOScript().env()
-    .scriptURL.path()
-    .stringByDeletingLastPathComponent()
-    .stringByDeletingLastPathComponent() + '/Resources/'
+import { resourcesPath } from '../util'
 
 var mocha = Mocha.sharedRuntime()
 var frameworkName = 'AtlassianSketchFramework'
 if (mocha.valueForKey(frameworkName)) {
-  trace(`😎 loadFramework: ${frameworkName} already loaded.`)
+  trace(`${frameworkName} already loaded.`)
 } else if (
-  mocha.loadFrameworkWithName_inDirectory(frameworkName, frameworkPath)
+  mocha.loadFrameworkWithName_inDirectory(frameworkName, resourcesPath())
 ) {
-  trace(`✅ loadFramework: ${frameworkName} success!`)
+  trace(`${frameworkName} loaded!`)
   mocha.setValue_forKey_(true, frameworkName)
 } else {
-  trace(`❌ loadFramework: ${frameworkName} failed!`)
+  trace(`${frameworkName} failed to load!`)
 }
