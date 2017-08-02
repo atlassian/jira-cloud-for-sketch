@@ -17,7 +17,6 @@ export default class Attachment {
 
   constructor (attachment, doUpload) {
     assign(this, attachment)
-    this.loadThumbnail()
   }
 
   async loadThumbnail () {

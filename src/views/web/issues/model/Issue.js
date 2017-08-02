@@ -23,6 +23,7 @@ export default class Issue {
   }
 
   async onSelected () {
+    this.loadThumbnails()
     const issue = await _touchIssueAndReloadAttachments(this.key)
     // convert from @observable array to real array TODO this could be nicer!
     const newAttachments = [].slice.call(issue.attachments)
@@ -32,7 +33,17 @@ export default class Issue {
         return attachment.uploading
       }).concat(newAttachments)
     )
+    // in case of new attachments (pre-existing will hit the cache)
+    this.loadThumbnails()
     analytics('viewIssue')
+  }
+
+  async loadThumbnails () {
+    this.attachments.forEach(attachment => {
+      if (!attachment.uploading) {
+        attachment.loadThumbnail()
+      }
+    })
   }
 
   async uploadDroppedFiles (replacedAttachment) {
