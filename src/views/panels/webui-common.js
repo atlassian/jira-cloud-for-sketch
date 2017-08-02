@@ -3,6 +3,7 @@ import { executeSafely, randomHex, openInBrowser } from '../../util'
 import { trace } from '../../logger'
 import createBridgedWebUI from '../bridge/host'
 import analytics from '../../analytics'
+import { titlebarHeight } from './ui-constants'
 
 /**
  * Important to note:
@@ -53,9 +54,9 @@ export default function (context, options) {
         const webViewFrame = webUI.webView.frame()
         webUI.webView.setFrame(NSMakeRect(
           webViewFrame.origin.x,
-          options.hideTitleBar ? -22 : 0,
+          options.hideTitleBar ? -titlebarHeight : 0,
           width,
-          height - (options.hideTitleBar ? 0 : 22)
+          height - (options.hideTitleBar ? 0 : titlebarHeight)
         ))
 
         // resize NSPanel
