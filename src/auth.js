@@ -1,9 +1,8 @@
 import fetch from 'sketch-module-fetch-polyfill'
-import { openInBrowser } from './util'
 import {
   jiraSketchIntegrationBaseUrl,
   jiraSketchIntegrationApi,
-  jiraSketchIntegrationAuthRedirectUrl,
+  jiraSketchIntegrationApiAuth,
   authorizationPollInterval
 } from './config'
 import { isSet, setString, getString, unset, keys } from './prefs'
@@ -46,19 +45,31 @@ export async function getSketchClientDetails () {
   }
 }
 
-export async function authorizeSketchForJira (context, jiraUrl) {
+export function setJiraUrl (jiraUrl) {
   const jiraHost = parseHostname(jiraUrl)
-  // for now, let's clear existing host if they hit the 'Connect' button in the Sketch client
   unset(keys.jiraHost)
   tokenCache.flush()
+  setString(keys.jiraHost, jiraHost)
+}
+
+export async function getAuthorizationUrl () {
+  const jiraHost = getString(keys.jiraHost)
   const clientDetails = await getSketchClientDetails()
   const params = {
     clientId: clientDetails.clientId,
     jiraHost: jiraHost
   }
-  // store the JIRA host (TODO multi-instance support)
-  setString(keys.jiraHost, jiraHost)
-  return `${jiraSketchIntegrationAuthRedirectUrl}?${queryString.stringify(params)}`
+  return `https://sketch.prod.atl-paas.net/auth/jira?${queryString.stringify(params)}`
+  // const authApiUrl = `${jiraSketchIntegrationApi}?${queryString.stringify(params)}`
+  // const response = await fetch(authApiUrl, {
+  //   headers: {
+  //     Authorization: jwtAuthHeader()
+  //   }
+  // })
+  // const json = await response.json()
+  // trace(json)
+  // if (!json.authorizeUrl) throw new Error('Response from authorize API did not contain `authorizeUrl`')
+  // return json.authorizeUrl
 }
 
 export async function awaitAuthorization () {

@@ -24,7 +24,7 @@ class Connect extends Component {
   constructor (props) {
     super(props)
     this.handleJiraUrlChange = this.handleJiraUrlChange.bind(this)
-    this.handleConnect = this.handleConnect.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.handleErrorRetry = this.handleErrorRetry.bind(this)
   }
   render () {
@@ -35,7 +35,7 @@ class Connect extends Component {
         <CharlieBanner>
           <img src='charlie.svg' alt='Atlassian logo' />
         </CharlieBanner>
-        <ConnectForm>
+        <ConnectForm onSubmit={this.handleSubmit}>
           <ConnectHeader>Connect to your Atlassian site</ConnectHeader>
           <ConnectParagraph>
             You’re almost ready to upload designs to your team’s Atlassian site.
@@ -61,7 +61,7 @@ class Connect extends Component {
             <Button
               appearance='primary'
               type='submit'
-              onClick={this.handleConnect}
+              onClick={this.handleSubmit}
               isDisabled={!isButtonEnabled}
             >
               Connect
@@ -82,7 +82,8 @@ class Connect extends Component {
   handleJiraUrlChange (event) {
     this.props.viewmodel.jiraUrl = event.target.value
   }
-  handleConnect () {
+  handleSubmit (event) {
+    event.preventDefault()
     this.props.viewmodel.connect()
   }
   handleErrorRetry () {

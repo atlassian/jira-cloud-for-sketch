@@ -1,5 +1,5 @@
 import createWebUI from './webui-common'
-import { authorizeSketchForJira, awaitAuthorization, testAuthorization } from '../../auth'
+import { setJiraUrl, getAuthorizationUrl, awaitAuthorization, testAuthorization } from '../../auth'
 import analytics from '../../analytics'
 import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import { titlebarHeight } from './ui-constants'
@@ -11,29 +11,25 @@ export default function (context) {
     width: 44 * akGridSizeUnitless,
     height: titlebarHeight + 40 * akGridSizeUnitless + 2, // fudge
     handlers: {
-      async connectOrGetAuthUrl (jiraUrl) {
-        analytics.jiraConnectInitiateDance()
-        const authUrl = await authorizeSketchForJira(context, jiraUrl)
-        if (await testAuthorization()) {
-          // the user has already authorized this instance
-          connectionSucessful()
-        } else {
-          // the user must authorize Sketch via JIRA
-          return authUrl
-        }
+      async setJiraUrl (jiraUrl) {
+        return setJiraUrl(jiraUrl)
+      },
+      async testAuthorization () {
+        return testAuthorization()
+      },
+      async getAuthorizationUrl () {
+        return getAuthorizationUrl()
       },
       async awaitAuthorization () {
-        await awaitAuthorization()
-        connectionSucessful()
+        return awaitAuthorization()
+      },
+      async authorizationComplete () {
+        webUI.panel.close()
+        openIssuesPanel(context)
       }
     }
   })
   analytics.jiraConnectPanelOpen()
-
-  function connectionSucessful () {
-    webUI.panel.close()
-    openIssuesPanel(context)
-  }
 
   return webUI
 }

@@ -38,22 +38,20 @@ export const pluginVersion = manifest.version
 
 export const jiraSketchIntegrationBaseUrl = config.jiraSketchIntegrationBaseUrl
 
-export const jiraSketchIntegrationAuthRedirectUrl =
-  jiraSketchIntegrationBaseUrl + '/auth/jira'
+export const jiraSketchIntegrationApiBaseUrl = `${jiraSketchIntegrationBaseUrl}/api`
 
-export const jiraSketchIntegrationApiBaseUrl =
-  jiraSketchIntegrationBaseUrl + '/api'
+export const jiraSketchIntegrationApiAuth = `${jiraSketchIntegrationApiBaseUrl}/authorize`
 
 export const standardIssueFields = ['issuetype', 'summary', 'attachment']
 
 export const jiraSketchIntegrationApi = {
-  client: jiraSketchIntegrationApiBaseUrl + '/clients',
-  bearer: jiraSketchIntegrationApiBaseUrl + '/clients/bearer'
+  client: `${jiraSketchIntegrationApiBaseUrl}/clients`,
+  bearer: `${jiraSketchIntegrationApiBaseUrl}/clients/bearer`
 }
 
 export const analyticsApiBaseUrl = config.analyticsApiBaseUrl
-export const analyticsApiSingleEvent = analyticsApiBaseUrl + '/event'
-export const analyticsApiMultipleEvents = analyticsApiBaseUrl + '/events'
+export const analyticsApiSingleEvent = `${analyticsApiBaseUrl}/event`
+export const analyticsApiMultipleEvents = `${analyticsApiBaseUrl}/events`
 export const analyticsIdKey = 'atlassian.analytics.id'
 
 export const bearerTokenExpirySafetyMargin = config.bearerTokenExpirySafetyMargin

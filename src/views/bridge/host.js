@@ -46,7 +46,7 @@ export default function createBridgedWebUI (context, htmlName, options) {
       }
       trace(error)
     }
-    webUI.dispatchWindowEvent(SketchBridgeFunctionResultEvent, {invocationId, result, error})
+    webUI.dispatchWindowEvent(SketchBridgeFunctionResultEvent, {invocationId, result, error, handlerFunctionName})
   }
 
   webUI = new WebUI(context, options.page, options)

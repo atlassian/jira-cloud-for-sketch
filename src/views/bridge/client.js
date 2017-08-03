@@ -49,8 +49,8 @@ if (window.__bridgeFunctionCallbackEventListener === undefined) {
     const invocationCallback = invocation.callbacks[callbackIndex]
     if (!invocationCallback) {
       console.error(
-        `No callback found for invocation id '${invocationId}' ` +
-        `and callback index '${callbackIndex}'`
+        `No callback found for invocation id '${invocationId}' and callback ` +
+        `index '${callbackIndex}'. Did window location change?`
       )
       return
     }
