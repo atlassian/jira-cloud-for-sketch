@@ -47,7 +47,7 @@ export async function getSketchClientDetails () {
 
 export function setJiraUrl (jiraUrl) {
   const jiraHost = parseHostname(jiraUrl)
-  unset(keys.jiraHost)
+  unset(keys.jiraHost, keys.authorized)
   tokenCache.flush()
   setString(keys.jiraHost, jiraHost)
 }
@@ -59,7 +59,7 @@ export async function getAuthorizationUrl () {
     clientId: clientDetails.clientId,
     jiraHost: jiraHost
   }
-  return `https://sketch.prod.atl-paas.net/auth/jira?${queryString.stringify(params)}`
+  return `${jiraSketchIntegrationBaseUrl}/auth/jira?${queryString.stringify(params)}`
   // const authApiUrl = `${jiraSketchIntegrationApi}?${queryString.stringify(params)}`
   // const response = await fetch(authApiUrl, {
   //   headers: {
@@ -88,6 +88,7 @@ export async function awaitAuthorization () {
 export async function testAuthorization () {
   try {
     await _getBearerToken()
+    setString(keys.authorized, 'true')
     return true
   } catch (e) {
     trace(`Test authorization failed: ${JSON.stringify(e)}`)
@@ -96,8 +97,12 @@ export async function testAuthorization () {
 }
 
 export function isAuthorized () {
-  return isSet(keys.jiraHost, keys.clientId, keys.sharedSecret) &&
-    !isAddonUrlChanged()
+  return isSet(
+    keys.jiraHost,
+    keys.clientId,
+    keys.sharedSecret,
+    keys.authorized
+  ) && !isAddonUrlChanged()
 }
 
 export async function getBearerToken (force) {

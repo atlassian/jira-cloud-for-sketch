@@ -31,6 +31,7 @@ export default class ViewModel {
         await _authorizationComplete()
       } else {
         this.authUrl = await _getAuthorizationUrl()
+        _openInBrowser(this.authUrl)
         await _awaitAuthorization()
         await _authorizationComplete()
       }
