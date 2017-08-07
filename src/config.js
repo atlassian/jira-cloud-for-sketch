@@ -16,10 +16,10 @@ const defaults = {
   jiraAuthorizationUrlMaxRetries: 3,
   jiraAuthorizationUrlRetryInterval: 3000 // milliseconds
 }
+const configFile = readFileAsJson(`${resourcesPath()}/config.json`)
+const config = assign({}, defaults, configFile)
 
-const config = assign({}, defaults,
-  readFileAsJson(`${resourcesPath()}/config.json`)
-)
+console.log(JSON.stringify(config))
 
 const manifest = readFileAsJson(`${scriptsPath()}/manifest.json`)
 

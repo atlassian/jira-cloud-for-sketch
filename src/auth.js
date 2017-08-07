@@ -11,7 +11,7 @@ import queryString from 'query-string'
 import jwt from 'atlassian-jwt'
 import moment from 'moment'
 import URL from 'url-parse'
-import { trace } from './logger'
+import { trace, isTraceEnabled } from './logger'
 import analytics from './analytics'
 import TokenCache from './token-cache'
 import { retryUntilReturn, retryUntilTruthy } from './util'
@@ -23,7 +23,16 @@ const tokenCache = new TokenCache(_getBearerToken)
  * (e.g. to staging or dogfooding)
  */
 function isAddonUrlChanged () {
-  return !isSet(keys.addonUrl) || getString(keys.addonUrl) != jiraSketchIntegrationBaseUrl
+  if (!isSet(keys.addonUrl)) {
+    trace('Addon URL not set!')
+    return true
+  } else if (getString(keys.addonUrl) != jiraSketchIntegrationBaseUrl) {
+    if (isTraceEnabled()) {
+      trace(`Addon URL switched from ${getString(keys.addonUrl)} to ${jiraSketchIntegrationBaseUrl}`)
+    }
+    return true
+  }
+  return false
 }
 
 export async function getSketchClientDetails () {
@@ -75,7 +84,7 @@ async function _getAuthorizationUrl (clientId, jiraHost) {
   const authApiUrl = `${jiraSketchIntegrationApi.authorize}?${qs}`
   const response = await fetch(authApiUrl, {
     headers: {
-      Authorization: jwtAuthHeader()
+      Authorization: await jwtAuthHeader()
     }
   })
   const json = await response.json()
@@ -90,7 +99,7 @@ export async function awaitAuthorization () {
 
 export async function testAuthorization () {
   try {
-    await _getBearerToken()
+    await tokenCache.get(true)
     setString(keys.authorized, 'true')
     return true
   } catch (e) {
@@ -100,12 +109,16 @@ export async function testAuthorization () {
 }
 
 export function isAuthorized () {
-  return isSet(
+  const authorized = isSet(
     keys.jiraHost,
     keys.clientId,
     keys.sharedSecret,
     keys.authorized
   ) && !isAddonUrlChanged()
+  if (!authorized) {
+    unset(keys.authorized)
+  }
+  return authorized
 }
 
 export async function getBearerToken (force) {
@@ -117,7 +130,7 @@ async function _getBearerToken () {
   const response = await fetch(jiraSketchIntegrationApi.bearer, {
     method: 'POST',
     headers: {
-      Authorization: jwtAuthHeader()
+      Authorization: await jwtAuthHeader()
     }
   })
   const json = await response.json()
@@ -130,10 +143,6 @@ async function _getBearerToken () {
   return [json.data.access_token, json.data.expires_in]
 }
 
-export function getClientId () {
-  return getString(keys.clientId)
-}
-
 export function getJiraHost () {
   return getString(keys.jiraHost)
 }
@@ -144,17 +153,18 @@ function checkAuthorized () {
   }
 }
 
-function jwtAuthHeader () {
+async function jwtAuthHeader () {
+  const clientDetails = await getSketchClientDetails()
   const now = moment().utc()
   const token = jwt.encode(
     {
-      iss: getClientId(),
+      iss: clientDetails.clientId,
       iat: now.unix(),
       exp: now.add(60, 'minutes').unix(),
       aud: ['jira-sketch-integration'],
       sub: getJiraHost()
     },
-    getString(keys.sharedSecret)
+    clientDetails.sharedSecret
   )
   return `JWT ${token}`
 }
