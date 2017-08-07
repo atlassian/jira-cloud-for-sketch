@@ -41,6 +41,9 @@ export function createFailAlert (context, title, error) {
 }
 
 export function openInBrowser (urlString) {
+  if (!urlString || !urlString.trim()) {
+    throw new Error('Can\'t open blank url!')
+  }
   var url = NSURL.URLWithString(urlString)
   NSWorkspace.sharedWorkspace().openURL(url)
 }
@@ -123,6 +126,48 @@ export function sleep (delay) {
   return new Promise(function (resolve) {
     setTimeout(resolve, delay)
   })
+}
+
+/**
+ * @param {function} fn the function to retry until an exception is not thrown
+ * @param {number} maxRetries the number of times to retry (0 == unlimited retries)
+ * @param {number} delay the delay to wait between retries
+ */
+export async function retryUntilReturn (fn, maxRetries, delay) {
+  while (true) {
+    try {
+      return await fn()
+    } catch (e) {
+      if (maxRetries) {
+        if (--maxRetries) {
+          await sleep(delay)
+        } else {
+          throw e
+        }
+      }
+    }
+  }
+}
+
+/**
+ * @param {function} fn the function to retry until it returns a truthy result
+ * @param {number} maxRetries the number of times to retry (0 == unlimited retries)
+ * @param {number} delay the delay to wait between retries
+ */
+export async function retryUntilTruthy (fn, maxRetries, delay) {
+  while (true) {
+    const result = await fn()
+    if (result) {
+      return result
+    }
+    if (maxRetries) {
+      if (--maxRetries) {
+        await sleep(delay)
+      } else {
+        return result
+      }
+    }
+  }
 }
 
 export function resourcesPath () {

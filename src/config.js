@@ -11,8 +11,10 @@ const defaults = {
   attachmentUploadConcurrency: 4,
   thumbnailRetryMax: 10,
   thumbnailRetryDelay: 1500, // milliseconds
-  authorizationPollInterval: 3000, // milliseconds
-  cocoaDelegatePollInterval: 200 // milliseconds
+  userAuthorizationPollInterval: 3000, // milliseconds
+  cocoaDelegatePollInterval: 200, // milliseconds
+  jiraAuthorizationUrlMaxRetries: 3,
+  jiraAuthorizationUrlRetryInterval: 3000 // milliseconds
 }
 
 const config = assign({}, defaults,
@@ -40,14 +42,15 @@ export const jiraSketchIntegrationBaseUrl = config.jiraSketchIntegrationBaseUrl
 
 export const jiraSketchIntegrationApiBaseUrl = `${jiraSketchIntegrationBaseUrl}/api`
 
-export const jiraSketchIntegrationApiAuth = `${jiraSketchIntegrationApiBaseUrl}/authorize`
-
-export const standardIssueFields = ['issuetype', 'summary', 'attachment']
+export const jiraSketchIntegrationApiAuth = `${jiraSketchIntegrationApiBaseUrl}`
 
 export const jiraSketchIntegrationApi = {
+  authorize: `${jiraSketchIntegrationApiBaseUrl}/authorize`,
   client: `${jiraSketchIntegrationApiBaseUrl}/clients`,
   bearer: `${jiraSketchIntegrationApiBaseUrl}/clients/bearer`
 }
+
+export const standardIssueFields = ['issuetype', 'summary', 'attachment']
 
 export const analyticsApiBaseUrl = config.analyticsApiBaseUrl
 export const analyticsApiSingleEvent = `${analyticsApiBaseUrl}/event`
@@ -63,7 +66,10 @@ export const attachmentUploadConcurrency = config.attachmentUploadConcurrency
 export const thumbnailRetryMax = config.thumbnailRetryMax
 export const thumbnailRetryDelay = config.thumbnailRetryDelay
 
-export const authorizationPollInterval = config.authorizationPollInterval
+export const userAuthorizationPollInterval = config.userAuthorizationPollInterval
+
+export const jiraAuthorizationUrlMaxRetries = config.jiraAuthorizationUrlMaxRetries
+export const jiraAuthorizationUrlRetryInterval = config.jiraAuthorizationUrlRetryInterval
 
 export const feedbackUrl = 'https://goo.gl/forms/OrIB4RoEePhL3lkv2'
 

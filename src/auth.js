@@ -2,8 +2,9 @@ import fetch from 'sketch-module-fetch-polyfill'
 import {
   jiraSketchIntegrationBaseUrl,
   jiraSketchIntegrationApi,
-  jiraSketchIntegrationApiAuth,
-  authorizationPollInterval
+  userAuthorizationPollInterval,
+  jiraAuthorizationUrlMaxRetries,
+  jiraAuthorizationUrlRetryInterval
 } from './config'
 import { isSet, setString, getString, unset, keys } from './prefs'
 import queryString from 'query-string'
@@ -13,6 +14,7 @@ import URL from 'url-parse'
 import { trace } from './logger'
 import analytics from './analytics'
 import TokenCache from './token-cache'
+import { retryUntilReturn, retryUntilTruthy } from './util'
 
 const tokenCache = new TokenCache(_getBearerToken)
 
@@ -52,37 +54,38 @@ export function setJiraUrl (jiraUrl) {
   setString(keys.jiraHost, jiraHost)
 }
 
+/**
+ * The first time the authorization URL is retrieved for a particular JIRA
+ * instance, the supporting Atlassian Cloud add-on will be automatically
+ * installed. This can take some time, so this function will re-request the
+ * authorization URL multiple times in case of error or timeout.
+ */
 export async function getAuthorizationUrl () {
   const jiraHost = getString(keys.jiraHost)
   const clientDetails = await getSketchClientDetails()
-  const params = {
-    clientId: clientDetails.clientId,
-    jiraHost: jiraHost
-  }
-  return `${jiraSketchIntegrationBaseUrl}/auth/jira?${queryString.stringify(params)}`
-  // const authApiUrl = `${jiraSketchIntegrationApi}?${queryString.stringify(params)}`
-  // const response = await fetch(authApiUrl, {
-  //   headers: {
-  //     Authorization: jwtAuthHeader()
-  //   }
-  // })
-  // const json = await response.json()
-  // trace(json)
-  // if (!json.authorizeUrl) throw new Error('Response from authorize API did not contain `authorizeUrl`')
-  // return json.authorizeUrl
+  return retryUntilReturn(
+    () => { return _getAuthorizationUrl(clientDetails.clientId, jiraHost) },
+    jiraAuthorizationUrlMaxRetries,
+    jiraAuthorizationUrlRetryInterval
+  )
+}
+
+async function _getAuthorizationUrl (clientId, jiraHost) {
+  const qs = queryString.stringify({clientId, jiraHost})
+  const authApiUrl = `${jiraSketchIntegrationApi.authorize}?${qs}`
+  const response = await fetch(authApiUrl, {
+    headers: {
+      Authorization: jwtAuthHeader()
+    }
+  })
+  const json = await response.json()
+  trace(json)
+  if (!json.authorizeUrl) throw new Error('Response from authorize API did not contain `authorizeUrl`')
+  return json.authorizeUrl
 }
 
 export async function awaitAuthorization () {
-  return new Promise((resolve, reject) => {
-    const poller = setInterval(async () => {
-      if (await testAuthorization()) {
-        clearInterval(poller)
-        resolve()
-      } else {
-        trace(`Not yet authorized, retrying in ${authorizationPollInterval}`)
-      }
-    }, authorizationPollInterval)
-  })
+  return retryUntilTruthy(testAuthorization, 0, userAuthorizationPollInterval)
 }
 
 export async function testAuthorization () {
@@ -118,6 +121,7 @@ async function _getBearerToken () {
     }
   })
   const json = await response.json()
+  trace(json)
   if (!json.data.access_token) {
     throw new Error(
       'Bad response from jira-sketch-integration /clients/bearer API'
