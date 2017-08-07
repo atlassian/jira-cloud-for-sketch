@@ -8,6 +8,7 @@ const _loadFilters = bridgedFunctionCall('loadFilters', FiltersMapper)
 const _loadIssuesForFilter = bridgedFunctionCall('loadIssuesForFilter', IssuesMapper)
 const _loadProfile = bridgedFunctionCall('loadProfile', ProfileMapper)
 const _resizePanel = bridgedFunctionCall('resizePanel')
+const _viewSettings = bridgedFunctionCall('viewSettings')
 
 export default class ViewModel {
   @observable filters = {
@@ -51,6 +52,10 @@ export default class ViewModel {
       filter => filter.key === filterKey
     )
     this.loadIssues()
+  }
+
+  async viewSettings () {
+    _viewSettings()
   }
 
   async loadIssues () {

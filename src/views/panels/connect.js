@@ -9,7 +9,8 @@ export default function (context) {
   const webUI = createWebUI(context, {
     name: 'connect',
     width: 44 * akGridSizeUnitless,
-    height: titlebarHeight + 40 * akGridSizeUnitless + 2, // fudge
+    // +2 == fudge (lineheights don't quite add up to a multiple of akGridSize)
+    height: titlebarHeight + 40 * akGridSizeUnitless + 2,
     handlers: {
       async setJiraUrl (jiraUrl) {
         return setJiraUrl(jiraUrl)

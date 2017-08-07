@@ -5,13 +5,16 @@ import Attachments from './helpers/attachments'
 import Comments from './helpers/comments'
 import Profile from './helpers/profile'
 import analytics from '../../analytics'
+import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
+import { titlebarHeight } from './ui-constants'
 import JIRA from '../../jira'
+import openConnectPanel from './connect'
 
 export default function (context) {
   const webUI = createWebUI(context, {
     name: 'issues',
-    width: 510,
-    height: 382,
+    width: akGridSizeUnitless * 64,
+    height: akGridSizeUnitless * 45 + titlebarHeight,
     handlers: {
       async loadFilters () {
         return filters.loadFilters()
@@ -42,6 +45,10 @@ export default function (context) {
       },
       addComment (issueKey, comment) {
         return comments.addComment(issueKey, comment)
+      },
+      viewSettings () {
+        webUI.panel.close()
+        openConnectPanel(context)
       }
     }
   })
