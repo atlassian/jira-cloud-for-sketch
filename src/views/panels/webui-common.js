@@ -50,19 +50,7 @@ export default function (context, options) {
         })
       },
       resizePanel (width, height, animate) {
-        // resize WebView
-        const webViewFrame = webUI.webView.frame()
-        webUI.webView.setFrame(NSMakeRect(
-          webViewFrame.origin.x,
-          options.hideTitleBar ? -titlebarHeight : 0,
-          width,
-          height - (options.hideTitleBar ? 0 : titlebarHeight)
-        ))
-
-        // resize NSPanel
-        const panelFrame = webUI.panel.frame()
-        const newPanelY = panelFrame.origin.y + panelFrame.size.height - height
-        webUI.panel.setFrame_display_animate(NSMakeRect(panelFrame.origin.x, newPanelY, width, height), true, animate)
+        webUI.resizePanel(width, height, animate)
       }
     },
     options.handlers
@@ -70,8 +58,24 @@ export default function (context, options) {
 
   const webUI = createBridgedWebUI(context, options.page, options)
 
+  webUI.resizePanel = function (width, height, animate) {
+    // resize WebView
+    const webViewFrame = webUI.webView.frame()
+    webUI.webView.setFrame(NSMakeRect(
+      webViewFrame.origin.x,
+      options.hideTitleBar ? -titlebarHeight : 0,
+      width,
+      height - (options.hideTitleBar ? 0 : titlebarHeight)
+    ))
+
+    // resize NSPanel
+    const panelFrame = webUI.panel.frame()
+    const newPanelY = panelFrame.origin.y + panelFrame.size.height - height
+    webUI.panel.setFrame_display_animate(NSMakeRect(panelFrame.origin.x, newPanelY, width, height), true, animate)
+  }
+
   // ASP-12: workaround incorrect sizing in sketch-module-web-view
-  options.handlers.resizePanel(options.width, options.height)
+  webUI.resizePanel(options.width, options.height)
 
   // default panel behaviour
   // webUI.panel.hidesOnDeactivate = false

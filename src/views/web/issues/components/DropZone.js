@@ -61,8 +61,8 @@ export default class DropZone extends Component {
         onDragOver={(event) => { event.preventDefault() }}
         onDropCapture={this.drop}
       >
-        <DocumentsImg src='documents.png' alt='Documents' />
-        <TextDiv>Drag your artboards and layers here</TextDiv>
+        <DocumentsImg src='upload.png' alt='Upload' />
+        <TextDiv>Drag your <strong>artboards</strong> and <strong>layers</strong> here</TextDiv>
       </DropZoneDiv>
     )
   }

@@ -10,11 +10,21 @@ import { titlebarHeight } from './ui-constants'
 import JIRA from '../../jira'
 import openConnectPanel from './connect'
 
+const issueListDimensions = [
+  akGridSizeUnitless * 64,
+  akGridSizeUnitless * 45 + titlebarHeight
+]
+
+const issueViewDimensions = [
+  akGridSizeUnitless * 64,
+  akGridSizeUnitless * 50
+]
+
 export default function (context) {
   const webUI = createWebUI(context, {
     name: 'issues',
-    width: akGridSizeUnitless * 64,
-    height: akGridSizeUnitless * 45 + titlebarHeight,
+    width: issueListDimensions[0],
+    height: issueListDimensions[1],
     handlers: {
       async loadFilters () {
         return filters.loadFilters()
@@ -49,6 +59,12 @@ export default function (context) {
       viewSettings () {
         webUI.panel.close()
         openConnectPanel(context)
+      },
+      resizeForIssueList () {
+        webUI.resizePanel(...issueListDimensions)
+      },
+      resizeForIssueView () {
+        webUI.resizePanel(...issueViewDimensions)
       }
     }
   })
