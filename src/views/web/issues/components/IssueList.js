@@ -6,16 +6,22 @@ import '@atlaskit/css-reset'
 
 @observer
 export default class IssueList extends Component {
+  constructor (props) {
+    super(props)
+    this.calculateMaxKeyLength = this.calculateMaxKeyLength.bind(this)
+  }
   render () {
     var list
     if (this.props.issues.length === 0) {
       list = <span>No issues found.</span>
     } else {
+      const maxKeyLength = this.calculateMaxKeyLength()
       list = (
         <div>
           {this.props.issues.map(issue => (
             <Issue
               key={issue.key}
+              maxKeyLength={maxKeyLength}
               issue={issue}
               onSelectIssue={this.props.onSelectIssue}
             />
@@ -30,6 +36,15 @@ export default class IssueList extends Component {
         </ScrollDiv>
       </div>
     )
+  }
+  calculateMaxKeyLength () {
+    let maxLength = 0
+    this.props.issues.forEach(issue => {
+      if (issue.key.length > maxLength) {
+        maxLength = issue.key.length
+      }
+    })
+    return maxLength
   }
 }
 
@@ -48,7 +63,7 @@ const ScrollDiv = styled.div`
 @observer
 class Issue extends Component {
   render () {
-    var issue = this.props.issue
+    const { issue, maxKeyLength } = this.props
     return (
       <IssueDiv
         onClick={() => {
@@ -56,7 +71,7 @@ class Issue extends Component {
         }}
       >
         <IssueTypeField type={issue.type} />
-        <IssueKeyField issueKey={issue.key} />
+        <IssueKeyField maxKeyLength={maxKeyLength} issueKey={issue.key} />
         <IssueSummaryField summary={issue.summary} />
       </IssueDiv>
     )
@@ -64,6 +79,7 @@ class Issue extends Component {
 }
 
 Issue.propTypes = {
+  maxKeyLength: PropTypes.number.isRequired,
   issue: PropTypes.object.isRequired,
   onSelectIssue: PropTypes.func.isRequired
 }
@@ -127,9 +143,10 @@ const TypeImage = styled.img`
 @observer
 class IssueKeyField extends Component {
   render () {
-    var issueKey = this.props.issueKey
+    const { issueKey, maxKeyLength } = this.props
+    const style = { width: (3 + maxKeyLength * 8) + 'px' }
     return (
-      <KeyDiv>
+      <KeyDiv style={style}>
         {issueKey}
       </KeyDiv>
     )
@@ -137,11 +154,11 @@ class IssueKeyField extends Component {
 }
 
 IssueKeyField.propTypes = {
+  maxKeyLength: PropTypes.number.isRequired,
   issueKey: PropTypes.string.isRequired
 }
 
 const KeyDiv = styled.div`
-  width: 72px;
   font-size: 12px;
   color: #7a869a;
 `
