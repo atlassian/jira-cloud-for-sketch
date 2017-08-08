@@ -2,6 +2,7 @@ import { observable } from 'mobx'
 import bridgedFunctionCall from '../../../bridge/client'
 import { analytics } from '../../util'
 
+const _getJiraUrl = bridgedFunctionCall('getJiraUrl')
 const _setJiraUrl = bridgedFunctionCall('setJiraUrl')
 const _authorizationComplete = bridgedFunctionCall('authorizationComplete')
 const _testAuthorization = bridgedFunctionCall('testAuthorization')
@@ -10,10 +11,20 @@ const _awaitAuthorization = bridgedFunctionCall('awaitAuthorization')
 const _openInBrowser = bridgedFunctionCall('openInBrowser')
 
 export default class ViewModel {
+  @observable initializing = true
   @observable error = null
   @observable loading = false
   @observable jiraUrl = ''
   @observable authUrl = ''
+
+  constructor () {
+    this.init()
+  }
+
+  async init () {
+    this.jiraUrl = await _getJiraUrl()
+    this.initializing = false
+  }
 
   async connect () {
     if (this.authUrl && !this.error) {

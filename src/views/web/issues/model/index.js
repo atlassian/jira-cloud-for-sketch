@@ -1,4 +1,4 @@
-import { observable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { find } from 'lodash'
 import bridgedFunctionCall, { addGlobalErrorHandler } from '../../../bridge/client'
 import { analytics } from '../../util'
@@ -8,8 +8,11 @@ const _loadFilters = bridgedFunctionCall('loadFilters', FiltersMapper)
 const _loadIssuesForFilter = bridgedFunctionCall('loadIssuesForFilter', IssuesMapper)
 const _loadProfile = bridgedFunctionCall('loadProfile', ProfileMapper)
 const _viewSettings = bridgedFunctionCall('viewSettings')
+const _reauthorize = bridgedFunctionCall('reauthorize')
 const _resizeForIssueView = bridgedFunctionCall('resizeForIssueView')
 const _resizeForIssueList = bridgedFunctionCall('resizeForIssueList')
+
+const maxErrorMessageLength = 55
 
 export default class ViewModel {
   @observable filters = {
@@ -25,6 +28,7 @@ export default class ViewModel {
   @observable profile = null
   @observable error = null
   @observable retry = null
+  @observable reauthorize = null
 
   constructor () {
     this.loadFilters()
@@ -89,12 +93,30 @@ export default class ViewModel {
     analytics('viewIssueProfileLoaded')
   }
 
+  @computed get truncatedErrorMessage () {
+    let message = this.errorMessage
+    if (message && message.length > maxErrorMessageLength) {
+      message = message.substring(0, maxErrorMessageLength - 3) + '...'
+    }
+    return message
+  }
+
+  @computed get errorMessage () {
+    return this.error && (this.error.message || this.error.name)
+  }
+
   registerGlobalErrorHandler () {
     addGlobalErrorHandler((error, retry) => {
       this.error = error
-      this.retry = () => {
-        this.error = this.retry = null
-        retry()
+      if (error.name === 'AuthorizationError') {
+        this.reauthorize = () => {
+          _reauthorize()
+        }
+      } else {
+        this.retry = () => {
+          this.error = this.retry = null
+          retry()
+        }
       }
       // indicate that this error handler will facilitate retries
       return true

@@ -1,9 +1,17 @@
 import createWebUI from './webui-common'
-import { setJiraUrl, getAuthorizationUrl, awaitAuthorization, testAuthorization } from '../../auth'
+import {
+  setJiraUrl,
+  getJiraHost,
+  isJiraHostSet,
+  getAuthorizationUrl,
+  awaitAuthorization,
+  testAuthorization
+} from '../../auth'
 import analytics from '../../analytics'
 import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import { titlebarHeight } from './ui-constants'
 import openIssuesPanel from './issues'
+import { trace } from '../../logger'
 
 export default function (context) {
   const webUI = createWebUI(context, {
@@ -12,6 +20,15 @@ export default function (context) {
     // +2 == fudge (lineheights don't quite add up to a multiple of akGridSize)
     height: titlebarHeight + 40 * akGridSizeUnitless + 2,
     handlers: {
+      async getJiraUrl () {
+        if (isJiraHostSet()) {
+          trace(`jira host is ${getJiraHost()}`)
+          return getJiraHost()
+        } else {
+          trace(`jira host is not set`)
+          return ''
+        }
+      },
       async setJiraUrl (jiraUrl) {
         return setJiraUrl(jiraUrl)
       },

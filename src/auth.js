@@ -15,6 +15,7 @@ import { trace, isTraceEnabled } from './logger'
 import analytics from './analytics'
 import TokenCache from './token-cache'
 import { retryUntilReturn, retryUntilTruthy } from './util'
+import AuthorizationError from './AuthorizationError'
 
 const tokenCache = new TokenCache(_getBearerToken)
 
@@ -135,12 +136,27 @@ async function _getBearerToken () {
   })
   const json = await response.json()
   trace(json)
-  if (!json.data.access_token) {
+  if (json.error) {
+    const error = json.error
+    switch (error.code) {
+      case 'WRONG_ID':
+      case 'NOT_AUTHORIZED':
+        unset(keys.authorized)
+        throw new AuthorizationError('JIRA requires the Sketch plugin to be reauthorized')
+      default:
+        throw new Error(error.message)
+    }
+  }
+  if (!json.data || !json.data.access_token) {
     throw new Error(
       'Bad response from jira-sketch-integration /clients/bearer API'
     )
   }
   return [json.data.access_token, json.data.expires_in]
+}
+
+export function isJiraHostSet () {
+  return isSet(keys.jiraHost)
 }
 
 export function getJiraHost () {

@@ -30,10 +30,20 @@ class ViewIssuesPanel extends Component {
     this.handleIssueSelected = this.handleIssueSelected.bind(this)
     this.handleIssueDeselected = this.handleIssueDeselected.bind(this)
     this.handleErrorRetry = this.handleErrorRetry.bind(this)
+    this.handleReauthorize = this.handleReauthorize.bind(this)
     this.preventDefault = this.preventDefault.bind(this)
   }
   render () {
-    const {issues, filters, profile, error} = this.props.viewmodel
+    const {
+      issues,
+      filters,
+      profile,
+      error,
+      errorMessage,
+      truncatedErrorMessage,
+      retry,
+      reauthorize
+    } = this.props.viewmodel
     return (
       <div>
         <PanelWrapper onDrop={this.preventDefault} onDragOver={this.preventDefault}>
@@ -76,10 +86,18 @@ class ViewIssuesPanel extends Component {
             </ModalPanel>}
         </PanelWrapper>
         <BannerWrapper>
-          <Banner icon={<ErrorIcon label='Error' />} isOpen={error && true} appearance='error'>
-            {error && (error.message || error.name)}
-            {this.props.viewmodel.retry && (
+          <Banner
+            icon={<ErrorIcon label='Error' />}
+            isOpen={error && true}
+            appearance='error'>
+            <span title={errorMessage}>
+              {truncatedErrorMessage}
+            </span>
+            {retry && (
               <ClickableSpan onClick={this.handleErrorRetry}>Retry</ClickableSpan>
+            )}
+            {reauthorize && (
+              <ClickableSpan onClick={this.handleReauthorize}>Reauthorize</ClickableSpan>
             )}
           </Banner>
         </BannerWrapper>
@@ -100,6 +118,9 @@ class ViewIssuesPanel extends Component {
   }
   handleErrorRetry () {
     this.props.viewmodel.retry()
+  }
+  handleReauthorize () {
+    this.props.viewmodel.reauthorize()
   }
   preventDefault (event) {
     event.preventDefault()

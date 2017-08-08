@@ -60,6 +60,10 @@ export default function (context) {
         webUI.panel.close()
         openConnectPanel(context)
       },
+      reauthorize () {
+        webUI.panel.close()
+        openConnectPanel(context)
+      },
       resizeForIssueList () {
         webUI.resizePanel(...issueListDimensions)
       },

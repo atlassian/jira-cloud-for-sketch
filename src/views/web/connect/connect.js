@@ -28,46 +28,48 @@ class Connect extends Component {
     this.handleErrorRetry = this.handleErrorRetry.bind(this)
   }
   render () {
-    const {loading, error, jiraUrl, authUrl} = this.props.viewmodel
+    const {initializing, loading, error, jiraUrl, authUrl} = this.props.viewmodel
     const isButtonEnabled = jiraUrl.trim() || authUrl
     return (
       <ConnectPanel>
         <CharlieBanner>
           <img src='charlie.svg' alt='Atlassian logo' />
         </CharlieBanner>
-        <ConnectForm onSubmit={this.handleSubmit}>
-          <ConnectHeader>Connect to your Atlassian site</ConnectHeader>
-          <ConnectParagraph>
-            You’re almost ready to upload designs to your team’s Atlassian site.
-          </ConnectParagraph>
-          <ConnectFields>
-            <TextFieldWrapper>
-              <TextField
-                value={jiraUrl}
-                autofocus
-                placeholder='sketchfan.atlassian.net'
-                label='JIRA cloud site'
-                disabled={loading}
-                onChange={this.handleJiraUrlChange}
-                shouldFitContainer
-              />
-            </TextFieldWrapper>
-            <SpinnerWrapper>
-              {loading && (<Spinner size='medium' />)}
-            </SpinnerWrapper>
-          </ConnectFields>
-          <br />
-          <ButtonGroup>
-            <Button
-              appearance='primary'
-              type='submit'
-              onClick={this.handleSubmit}
-              isDisabled={!isButtonEnabled}
-            >
-              Connect
-            </Button>
-          </ButtonGroup>
-        </ConnectForm>
+        {initializing || (
+          <ConnectForm onSubmit={this.handleSubmit}>
+            <ConnectHeader>Connect to your Atlassian site</ConnectHeader>
+            <ConnectParagraph>
+              You’re almost ready to upload designs to your team’s Atlassian site.
+            </ConnectParagraph>
+            <ConnectFields>
+              <TextFieldWrapper>
+                <TextField
+                  value={jiraUrl}
+                  autofocus
+                  placeholder='sketchfan.atlassian.net'
+                  label='JIRA cloud site'
+                  disabled={loading}
+                  onChange={this.handleJiraUrlChange}
+                  shouldFitContainer
+                />
+              </TextFieldWrapper>
+              <SpinnerWrapper>
+                {loading && (<Spinner size='medium' />)}
+              </SpinnerWrapper>
+            </ConnectFields>
+            <br />
+            <ButtonGroup>
+              <Button
+                appearance='primary'
+                type='submit'
+                onClick={this.handleSubmit}
+                isDisabled={!isButtonEnabled}
+              >
+                Connect
+              </Button>
+            </ButtonGroup>
+          </ConnectForm>
+        )}
         <BannerWrapper>
           <Banner icon={<ErrorIcon label='Error' />} isOpen={error && true} appearance='error'>
             {error && (error.message || error.name)}
