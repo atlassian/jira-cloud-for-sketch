@@ -94,4 +94,5 @@ const TextDiv = styled.div`
   margin-left: 8px;
   color: #7a869a;
   font-size: 12px;
+  font-weight: 500;
 `

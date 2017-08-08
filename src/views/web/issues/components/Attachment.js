@@ -82,7 +82,7 @@ class AttachmentCard extends Component {
     this.handleDeleteAction = this.handleDeleteAction.bind(this)
   }
   render () {
-    var attachment = this.props.attachment
+    var {attachment, dragHover} = this.props
     var imageMetadata = {
       id: attachment.id,
       mediaType: 'image',
@@ -98,9 +98,9 @@ class AttachmentCard extends Component {
     var style = {}
     var actions = []
     if (attachment.readyForAction) {
-      if (this.props.dragHover) {
+      if (dragHover) {
         style.padding = '0'
-        style.border = '2px dashed #FF5630'
+        style.border = '1px solid #FFAB00'
       }
       actions.push({
         label: 'Delete',
@@ -120,6 +120,14 @@ class AttachmentCard extends Component {
           resizeMode='full-fit'
           actions={actions}
         />
+        {dragHover && (
+          <ReplaceHover>
+            <ReplaceLabel>
+              <img src='replace.svg' alt='Replace' />
+              <ReplaceLabelText>Replace</ReplaceLabelText>
+            </ReplaceLabel>
+          </ReplaceHover>
+        )}
       </CardWrapper>
     )
   }
@@ -139,5 +147,31 @@ AttachmentCard.propTypes = {
 
 const CardWrapper = styled.div`
   width: 141px;
-  padding: 2px;
+  padding: 1px;
+  position: relative;
+`
+
+const ReplaceHover = styled.div`
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(9, 30, 66, 0.5);
+  color: #FFFFFF;
+`
+
+const ReplaceLabel = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 0 7px 9px;
+`
+const ReplaceLabelText = styled.div`
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: -0.07;
+  margin-left: 8px;
 `
