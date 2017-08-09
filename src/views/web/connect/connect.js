@@ -119,6 +119,7 @@ const CharlieBanner = styled.div`
   height: ${akGridSizeUnitless * 9}px;
   background-color: ${akColorB500};
 `
+// the no-op -webkit-transform works around a render bug in safari
 const ConnectForm = styled.form`
   -webkit-transform: translate3d(0,0,0);
   padding:
