@@ -1,6 +1,6 @@
 {
   "name": "jira-for-sketch",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A Sketch plugin for interacting with Atlassian JIRA",
   "main": "jira.sketchplugin",
   "manifest": "src/manifest.json",

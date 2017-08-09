@@ -6,6 +6,24 @@
     <description>Streamlined uploads of Sketch assets to JIRA.</description>
     <language>en</language>
       <item>
+        <title>v0.0.7</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Disallow dropping attachments on invalid drop targets</li>
+              <li>Display errors using ADG3 banners with faq & retry links</li>
+              <li>Queue and parallelize attachment uploads and thumbnail downloads</li>
+              <li>Dynamically resize window when switching between issue and list</li>
+              <li>Unify Connect and JIRA panel commands</li>
+              <li>Read config from config.json</li>
+              <li>Update look and feel</li>
+              <li>Use new add-on authorization API</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-0.0.7.zip" sparkle:version="0.0.7" />
+      </item>
+      <item>
         <title>v0.0.6</title>
         <description>
           <![CDATA[
