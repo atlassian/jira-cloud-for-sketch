@@ -38,11 +38,7 @@ export default function createBridgedWebUI (context, htmlName, options) {
           message: e.localizedDescription() + ''
         }
       } else {
-        error = {
-          error: String.valueOf(e),
-          name: e.name,
-          message: e.message
-        }
+        error = e
       }
       trace(error)
     }

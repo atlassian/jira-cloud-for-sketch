@@ -1,5 +1,6 @@
 import { assign } from 'lodash'
 import { executeSafely, randomHex, openInBrowser } from '../../util'
+import { jiraSketchIntegrationFaqUrl } from '../../config'
 import { trace } from '../../logger'
 import createBridgedWebUI from '../bridge/host'
 import analytics from '../../analytics'
@@ -47,6 +48,11 @@ export default function (context, options) {
       openInBrowser (url) {
         executeSafely(context, function () {
           openInBrowser(url)
+        })
+      },
+      openFaqPage (topic) {
+        executeSafely(context, function () {
+          openInBrowser(`${jiraSketchIntegrationFaqUrl}#${topic}`)
         })
       },
       resizePanel (width, height, animate) {

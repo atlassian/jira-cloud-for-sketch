@@ -42,13 +42,13 @@ export const jiraSketchIntegrationBaseUrl = config.jiraSketchIntegrationBaseUrl
 
 export const jiraSketchIntegrationApiBaseUrl = `${jiraSketchIntegrationBaseUrl}/api`
 
-export const jiraSketchIntegrationApiAuth = `${jiraSketchIntegrationApiBaseUrl}`
-
 export const jiraSketchIntegrationApi = {
   authorize: `${jiraSketchIntegrationApiBaseUrl}/authorize`,
   client: `${jiraSketchIntegrationApiBaseUrl}/clients`,
   bearer: `${jiraSketchIntegrationApiBaseUrl}/clients/bearer`
 }
+
+export const jiraSketchIntegrationFaqUrl = `${jiraSketchIntegrationBaseUrl}/faq`
 
 export const standardIssueFields = ['issuetype', 'summary', 'attachment']
 

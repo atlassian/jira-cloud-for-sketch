@@ -25,60 +25,72 @@ class Connect extends Component {
     super(props)
     this.handleJiraUrlChange = this.handleJiraUrlChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleErrorRetry = this.handleErrorRetry.bind(this)
+    this.handleMoreInfoClick = this.handleMoreInfoClick.bind(this)
   }
   render () {
-    const {initializing, loading, error, jiraUrl, authUrl} = this.props.viewmodel
+    const {
+      initializing,
+      loading,
+      error,
+      errorMessage,
+      truncatedErrorMessage,
+      jiraUrl,
+      authUrl
+    } = this.props.viewmodel
     const isButtonEnabled = jiraUrl.trim() || authUrl
     return (
-      <ConnectPanel>
-        <CharlieBanner>
-          <img src='charlie.svg' alt='Atlassian logo' />
-        </CharlieBanner>
-        {initializing || (
-          <ConnectForm onSubmit={this.handleSubmit}>
-            <ConnectHeader>Connect to your Atlassian site</ConnectHeader>
-            <ConnectParagraph>
-              You’re almost ready to upload designs to your team’s Atlassian site.
-            </ConnectParagraph>
-            <ConnectFields>
-              <TextFieldWrapper>
-                <TextField
-                  value={jiraUrl}
-                  autofocus
-                  placeholder='sketchfan.atlassian.net'
-                  label='JIRA cloud site'
-                  disabled={loading}
-                  onChange={this.handleJiraUrlChange}
-                  shouldFitContainer
-                />
-              </TextFieldWrapper>
-              <SpinnerWrapper>
-                {loading && (<Spinner size='medium' />)}
-              </SpinnerWrapper>
-            </ConnectFields>
-            <br />
-            <ButtonGroup>
-              <Button
-                appearance='primary'
-                type='submit'
-                onClick={this.handleSubmit}
-                isDisabled={!isButtonEnabled}
-              >
-                Connect
-              </Button>
-            </ButtonGroup>
-          </ConnectForm>
-        )}
+      <div>
+        <ConnectPanel>
+          <CharlieBanner>
+            <img src='charlie.svg' alt='Atlassian logo' />
+          </CharlieBanner>
+          {initializing || (
+            <ConnectForm onSubmit={this.handleSubmit}>
+              <ConnectHeader>Connect to your Atlassian site</ConnectHeader>
+              <ConnectParagraph>
+                You’re almost ready to upload designs to your team’s Atlassian site.
+              </ConnectParagraph>
+              <ConnectFields>
+                <TextFieldWrapper>
+                  <TextField
+                    value={jiraUrl}
+                    autofocus
+                    placeholder='sketchfan.atlassian.net'
+                    label='JIRA cloud site'
+                    disabled={loading}
+                    onChange={this.handleJiraUrlChange}
+                    shouldFitContainer
+                  />
+                </TextFieldWrapper>
+                <SpinnerWrapper>
+                  {loading && (<Spinner size='medium' />)}
+                </SpinnerWrapper>
+              </ConnectFields>
+              <br />
+              <ButtonGroup>
+                <Button
+                  appearance='primary'
+                  type='submit'
+                  onClick={this.handleSubmit}
+                  isDisabled={!isButtonEnabled}
+                >
+                  Connect
+                </Button>
+              </ButtonGroup>
+            </ConnectForm>
+          )}
+        </ConnectPanel>
         <BannerWrapper>
           <Banner icon={<ErrorIcon label='Error' />} isOpen={error && true} appearance='error'>
-            {error && (error.message || error.name)}
-            {this.props.viewmodel.retry && (
-              <ClickableSpan onClick={this.handleErrorRetry}>Retry</ClickableSpan>
+            <span title={errorMessage}>
+              {truncatedErrorMessage}
+            </span>
+            {error && error.faqTopic && (
+              <ClickableSpan onClick={this.handleMoreInfoClick}>More info</ClickableSpan>
             )}
           </Banner>
         </BannerWrapper>
-      </ConnectPanel>
+      </div>
     )
   }
   handleJiraUrlChange (event) {
@@ -88,8 +100,8 @@ class Connect extends Component {
     event.preventDefault()
     this.props.viewmodel.connect()
   }
-  handleErrorRetry () {
-    this.props.viewmodel.connect()
+  handleMoreInfoClick () {
+    this.props.viewmodel.moreInfo()
   }
 }
 
@@ -108,6 +120,7 @@ const CharlieBanner = styled.div`
   background-color: ${akColorB500};
 `
 const ConnectForm = styled.form`
+  -webkit-transform: translate3d(0,0,0);
   padding:
     ${akGridSizeUnitless}px
     ${akGridSizeUnitless * 3}px
@@ -141,10 +154,12 @@ const SpinnerWrapper = styled.div`
   width: 30px;
 `
 const BannerWrapper = styled.div`
+  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 10;
+  -webkit-transform: translate3d(0,0,0);
 `
 const ClickableSpan = styled.span`
   margin-left: ${akGridSizeUnitless}px;

@@ -1,7 +1,7 @@
 import { observable, computed } from 'mobx'
 import { find } from 'lodash'
 import bridgedFunctionCall, { addGlobalErrorHandler } from '../../../bridge/client'
-import { analytics } from '../../util'
+import { analytics, truncateWithEllipsis } from '../../util'
 import { FiltersMapper, IssuesMapper, ProfileMapper } from './mapper'
 
 const _loadFilters = bridgedFunctionCall('loadFilters', FiltersMapper)
@@ -94,11 +94,7 @@ export default class ViewModel {
   }
 
   @computed get truncatedErrorMessage () {
-    let message = this.errorMessage
-    if (message && message.length > maxErrorMessageLength) {
-      message = message.substring(0, maxErrorMessageLength - 3) + '...'
-    }
-    return message
+    return truncateWithEllipsis(this.errorMessage, maxErrorMessageLength)
   }
 
   @computed get errorMessage () {

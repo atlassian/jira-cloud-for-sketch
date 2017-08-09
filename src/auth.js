@@ -15,7 +15,8 @@ import { trace, isTraceEnabled } from './logger'
 import analytics from './analytics'
 import TokenCache from './token-cache'
 import { retryUntilReturn, retryUntilTruthy } from './util'
-import AuthorizationError from './AuthorizationError'
+import AuthorizationError from './error/AuthorizationError'
+import FaqError, { faqTopics } from './error/FaqError'
 
 const tokenCache = new TokenCache(_getBearerToken)
 
@@ -90,7 +91,9 @@ async function _getAuthorizationUrl (clientId, jiraHost) {
   })
   const json = await response.json()
   trace(json)
-  if (!json.authorizeUrl) throw new Error('Response from authorize API did not contain `authorizeUrl`')
+  if (!json.authorizeUrl) {
+    throw new FaqError(`Couldn't connect to ${jiraHost}`, faqTopics.CAN_NOT_CONNECT)
+  }
   return json.authorizeUrl
 }
 
