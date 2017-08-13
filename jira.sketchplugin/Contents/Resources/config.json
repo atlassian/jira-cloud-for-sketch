@@ -11,5 +11,6 @@
   "userAuthorizationPollInterval": 3000,
   "cocoaDelegatePollInterval": 200,
   "jiraAuthorizationUrlRetryInterval": 3000,
-  "jiraAuthorizationUrlMaxRetries": 3
+  "jiraAuthorizationUrlMaxRetries": 3,
+  "maxUserPickerResults": 7
 }

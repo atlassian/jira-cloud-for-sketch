@@ -14,7 +14,8 @@ const defaults = {
   userAuthorizationPollInterval: 3000, // milliseconds
   cocoaDelegatePollInterval: 200, // milliseconds
   jiraAuthorizationUrlMaxRetries: 3,
-  jiraAuthorizationUrlRetryInterval: 3000 // milliseconds
+  jiraAuthorizationUrlRetryInterval: 3000, // milliseconds
+  maxUserPickerResults: 7
 }
 const configFile = readFileAsJson(`${resourcesPath()}/config.json`)
 const config = assign({}, defaults, configFile)
@@ -76,6 +77,8 @@ export const feedbackUrl = 'https://goo.gl/forms/OrIB4RoEePhL3lkv2'
 export const cocoaDelegatePollInterval = config.cocoaDelegatePollInterval
 
 export const jiraDateMomentFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZZ'
+
+export const maxUserPickerResults = config.maxUserPickerResults
 
 function parseLogLevel (level) {
   if (isNumber(level)) {

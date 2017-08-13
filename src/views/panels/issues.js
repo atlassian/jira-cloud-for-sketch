@@ -2,8 +2,6 @@ import createWebUI from './webui-common'
 import Filters from './helpers/filters'
 import Uploads from './helpers/uploads'
 import Attachments from './helpers/attachments'
-import Comments from './helpers/comments'
-import Profile from './helpers/profile'
 import analytics from '../../analytics'
 import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import { titlebarHeight } from './ui-constants'
@@ -30,7 +28,7 @@ export default function (context) {
         return filters.loadFilters()
       },
       loadProfile () {
-        return profile.loadProfile()
+        return jira.getProfile()
       },
       loadIssuesForFilter (filterKey) {
         return filters.onFilterChanged(filterKey)
@@ -54,7 +52,14 @@ export default function (context) {
         return attachments.deleteAttachment(id)
       },
       addComment (issueKey, comment) {
-        return comments.addComment(issueKey, comment)
+        analytics.viewIssueCommentAdd({
+          length: comment.length,
+          lines: comment.split('\n').length
+        })
+        return jira.addComment(issueKey, comment)
+      },
+      findUsersForPicker (query) {
+        return jira.findUsersForPicker(query)
       },
       viewSettings () {
         webUI.panel.close()
@@ -77,8 +82,6 @@ export default function (context) {
   var filters = new Filters(context, webUI, jira)
   var attachments = new Attachments(context, webUI, jira)
   var uploads = new Uploads(context, webUI, jira, attachments)
-  var comments = new Comments(context, webUI, jira)
-  var profile = new Profile(context, webUI, jira)
 
   analytics.viewIssueListPanelOpen()
 

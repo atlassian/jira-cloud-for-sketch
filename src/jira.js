@@ -4,7 +4,7 @@ import { download, upload } from './request'
 import { getJiraHost, getBearerToken } from './auth'
 import JQL_FILTERS from './jql-filters'
 import { issueFromRest } from './entity-mappers'
-import { standardIssueFields } from './config'
+import { standardIssueFields, maxUserPickerResults } from './config'
 import { trace } from './logger'
 
 export default class JIRA {
@@ -18,13 +18,13 @@ export default class JIRA {
    * Retrieves issues using JIRA's search API.
    */
   async getFilteredIssues (filterKey, opts) {
-    var filter = this.jqlFilters[filterKey]
+    const filter = this.jqlFilters[filterKey]
     if (!filter) {
       throw new Error(`No filter defined for ${filterKey}`)
     }
     opts = assign({}, { fields: standardIssueFields }, opts)
-    var jql = encodeURIComponent(filter.jql)
-    var searchUrl = `${this.apiRoot}/search?jql=${jql}&fields=${opts.fields.join(',')}`
+    const jql = encodeURIComponent(filter.jql)
+    let searchUrl = `${this.apiRoot}/search?jql=${jql}&fields=${opts.fields.join(',')}`
     if (opts.startAt) {
       searchUrl += `&startAt=${opts.startAt}`
     }
@@ -37,7 +37,7 @@ export default class JIRA {
         Authorization: await authHeader()
       }
     })
-    var json = await res.json()
+    const json = await res.json()
     return json.issues.map(issueFromRest)
   }
 
@@ -46,7 +46,7 @@ export default class JIRA {
    */
   async getIssue (issueKey, opts) {
     opts = assign({}, { fields: standardIssueFields }, opts)
-    var issueUrl = `${this.apiRoot}/issue/${issueKey}?fields=${opts.fields.join(',')}`
+    let issueUrl = `${this.apiRoot}/issue/${issueKey}?fields=${opts.fields.join(',')}`
     if (opts.updateHistory) {
       issueUrl += '&updateHistory=true'
     }
@@ -67,11 +67,10 @@ export default class JIRA {
         Authorization: await authHeader()
       }
     })
-    var data = await res.blob()
+    let data = await res.blob()
     data = data.base64EncodedDataWithOptions(null)
     data = NSString.alloc().initWithData_encoding(data, NSUTF8StringEncoding)
-    var dataUri = `data:${mimeType};base64,${data}`
-    return dataUri
+    return `data:${mimeType};base64,${data}`
   }
 
   async downloadAttachment (url, filename, progress) {
@@ -97,7 +96,7 @@ export default class JIRA {
   }
 
   async deleteAttachment (id) {
-    var deleteUrl = `${this.apiRoot}/attachment/${id}`
+    const deleteUrl = `${this.apiRoot}/attachment/${id}`
     return fetch(deleteUrl, {
       method: 'DELETE',
       headers: {
@@ -107,8 +106,8 @@ export default class JIRA {
   }
 
   async addComment (issueKey, comment) {
-    var commentUrl = `${this.apiRoot}/issue/${issueKey}/comment`
-    var body = JSON.stringify({body: comment})
+    const commentUrl = `${this.apiRoot}/issue/${issueKey}/comment`
+    const body = JSON.stringify({body: comment})
     const res = await fetch(commentUrl, {
       method: 'POST',
       headers: {
@@ -122,7 +121,7 @@ export default class JIRA {
   }
 
   async getProfile () {
-    var myselfUrl = `${this.apiRoot}/myself`
+    const myselfUrl = `${this.apiRoot}/myself`
     const res = await fetch(myselfUrl, {
       headers: {
         Accept: 'application/json',
@@ -130,6 +129,21 @@ export default class JIRA {
       }
     })
     return res.json()
+  }
+
+  async findUsersForPicker (query, opts) {
+    opts = assign({}, {maxResults: maxUserPickerResults}, opts)
+    let pickerUrl = `${this.apiRoot}/user/picker?query=${query}`
+    if (opts.maxResults) {
+      pickerUrl += `&maxResults=${opts.maxResults}`
+    }
+    const res = await fetch(pickerUrl, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: await authHeader()
+      }
+    })
+    return (await res.json()).users
   }
 }
 
