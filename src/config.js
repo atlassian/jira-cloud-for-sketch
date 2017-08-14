@@ -15,7 +15,7 @@ const defaults = {
   cocoaDelegatePollInterval: 200, // milliseconds
   jiraAuthorizationUrlMaxRetries: 3,
   jiraAuthorizationUrlRetryInterval: 3000, // milliseconds
-  maxUserPickerResults: 5
+  maxMentionPickerResults: 20
 }
 const configFile = readFileAsJson(`${resourcesPath()}/config.json`)
 const config = assign({}, defaults, configFile)
@@ -78,7 +78,7 @@ export const cocoaDelegatePollInterval = config.cocoaDelegatePollInterval
 
 export const jiraDateMomentFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZZ'
 
-export const maxUserPickerResults = config.maxUserPickerResults
+export const maxMentionPickerResults = config.maxMentionPickerResults
 
 function parseLogLevel (level) {
   if (isNumber(level)) {

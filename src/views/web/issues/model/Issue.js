@@ -110,13 +110,8 @@ export default class Issue {
   }
 
   clearMentions () {
-    console.log('clearing mentions')
     this.loadingMentionQuery = null
     this.mentions.replace([])
-  }
-
-  async onMentionSelected (selection) {
-    console.log(selection)
   }
 
   async postComment () {

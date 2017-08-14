@@ -156,8 +156,18 @@ class Mentions extends Component {
     if (!mentions.length || !isFocused) {
       return null
     }
-    const wrapperStyle = {
-      top: `${mentions.length * -48 - 12}px`
+    let wrapperStyle
+    const maxDisplayedMentions = 5
+    if (mentions.length > maxDisplayedMentions) {
+      // will scroll
+      wrapperStyle = {
+        top: `${maxDisplayedMentions * -48 - 36}px`,
+        maxHeight: `${maxDisplayedMentions * -48}px`
+      }
+    } else {
+      wrapperStyle = {
+        top: `${mentions.length * -48 - 12}px`
+      }
     }
     return (
       <MentionListWrapper style={wrapperStyle}>

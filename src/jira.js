@@ -4,7 +4,7 @@ import { download, upload } from './request'
 import { getJiraHost, getBearerToken } from './auth'
 import JQL_FILTERS from './jql-filters'
 import { issueFromRest } from './entity-mappers'
-import { standardIssueFields, maxUserPickerResults } from './config'
+import { standardIssueFields, maxMentionPickerResults } from './config'
 import { trace } from './logger'
 
 export default class JIRA {
@@ -133,7 +133,7 @@ export default class JIRA {
 
   async findUsersForPicker (query, opts) {
     opts = assign({}, {
-      maxResults: maxUserPickerResults,
+      maxResults: maxMentionPickerResults,
       showAvatar: true
     }, opts)
     let pickerUrl = `${this.apiRoot}/user/picker?query=${query}`
