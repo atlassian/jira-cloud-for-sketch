@@ -9,13 +9,14 @@ import '@atlaskit/css-reset'
 @observer
 export default class IssueView extends Component {
   render () {
+    const { issue, profile } = this.props
     return (
       <div>
-        <IssueSummary issue={this.props.issue} />
-        <Attachments issue={this.props.issue} />
+        <IssueSummary issue={issue} />
+        <Attachments issue={issue} />
         <Comments
-          issue={this.props.issue}
-          profile={this.props.profile}
+          issue={issue}
+          profile={profile}
         />
       </div>
     )

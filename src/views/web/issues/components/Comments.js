@@ -10,12 +10,13 @@ import CommentEditor from './CommentEditor'
 @observer
 export default class Comments extends Component {
   render () {
-    var avatar
-    if (this.props.profile) {
+    const { profile, issue } = this.props
+    let avatar
+    if (profile) {
       avatar = <Avatar
         size='medium'
-        src={this.props.profile.avatarUrls['32x32']}
-        label={this.props.profile.displayName}
+        src={profile.avatarUrls['32x32']}
+        label={profile.displayName}
       />
     } else {
       avatar = <Avatar size='medium' />
@@ -26,9 +27,9 @@ export default class Comments extends Component {
           <AvatarWrapper>
             {avatar}
           </AvatarWrapper>
-          <CommentEditor issue={this.props.issue} />
+          <CommentEditor commentEditor={issue.commentEditor} />
         </CommentInput>
-        <CommentStatus issue={this.props.issue} />
+        <CommentStatus commentEditor={issue.commentEditor} />
       </CommentsArea>
     )
   }
@@ -40,7 +41,6 @@ Comments.propTypes = {
 }
 
 const CommentsArea = styled.div`
-  padding-bottom: 24px;
 `
 
 const CommentInput = styled.div`
@@ -55,62 +55,75 @@ const AvatarWrapper = styled.div`
 class CommentStatus extends Component {
   constructor (props) {
     super(props)
-    this.handleClick = this.handleClick.bind(this)
+    this.model = props.commentEditor
+    this.handleLinkClick = this.handleLinkClick.bind(this)
   }
   render () {
-    const issue = this.props.issue
-    let status = null
-    if (issue.postingComment) {
+    const { isPosting, isFocused, href } = this.model
+    let status = ' '
+    if (isPosting) {
       status = (
         <SpinnerWrapper>
           <Spinner size='small' />
         </SpinnerWrapper>
       )
-    } else if (issue.postedCommentHref) {
+    } else if (href) {
       status = (
-        <SuccessWrapper>
+        <StatusTextWrapper>
           <CheckIcon
             size='small'
             label='Success'
             primaryColor='#36B37E'
           />
           <CommentLinkWrapper>
-            Comment posted (<a href={issue.postedCommentHref} onClick={this.handleClick}>
+            Comment posted (<a href={href} onClick={this.handleLinkClick}>
               View in JIRA
             </a>)
           </CommentLinkWrapper>
-        </SuccessWrapper>
+        </StatusTextWrapper>
+      )
+    } else if (isFocused) {
+      status = (
+        <HelpTextWrapper>
+          Enter to submit,
+          Shift-Enter for new line,
+          @mention a user
+        </HelpTextWrapper>
       )
     }
     return (
       <StatusWrapper>{status}</StatusWrapper>
     )
   }
-  handleClick (event) {
+  handleLinkClick (event) {
     event.preventDefault()
-    this.props.issue.openPostedCommentInBrowser()
+    this.model.openPostedCommentInBrowser()
   }
 }
 
 CommentStatus.propTypes = {
-  issue: PropTypes.object.isRequired
+  commentEditor: PropTypes.object.isRequired
 }
 
 const StatusWrapper = styled.div`
   margin-left: 40px;
   display: flex;
   align-items: center;
+  height: 35px;
 `
-
 const SpinnerWrapper = styled.div`
   margin-top: 4px;
+  padding-bottom: 6px;
 `
-
-const SuccessWrapper = styled.div`
+const StatusTextWrapper = styled.div`
   display: flex;
   align-items: center;
+  padding-bottom: 12px;
 `
-
+const HelpTextWrapper = styled.div`
+  font-size: 12px;
+  padding-bottom: 12px;
+`
 const CommentLinkWrapper = styled.span`
   margin-left: 4px;
   font-size: 12px;

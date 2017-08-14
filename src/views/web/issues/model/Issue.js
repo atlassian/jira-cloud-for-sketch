@@ -2,6 +2,7 @@ import { observable, computed } from 'mobx'
 import { assign } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import { IssueMapper, AttachmentsMapper } from './mapper'
+import CommentEditor from './CommentEditor'
 import { analytics } from '../../util'
 
 const _touchIssueAndReloadAttachments = bridgedFunctionCall(
@@ -9,19 +10,14 @@ const _touchIssueAndReloadAttachments = bridgedFunctionCall(
 )
 const _getDroppedFiles = bridgedFunctionCall('getDroppedFiles', AttachmentsMapper)
 const _openInBrowser = bridgedFunctionCall('openInBrowser')
-const _findUsersForPicker = bridgedFunctionCall('findUsersForPicker')
-const _addComment = bridgedFunctionCall('addComment')
 
 export default class Issue {
   @observable attachments = []
-  @observable commentText = ''
-  @observable postingComment = false
-  @observable postedCommentHref = null
-  @observable mentions = []
 
   constructor (issue, attachments) {
     assign(this, issue)
     this.attachments.replace(attachments)
+    this.commentEditor = new CommentEditor(this.key)
   }
 
   async onSelected () {
@@ -70,56 +66,5 @@ export default class Issue {
   openInBrowser () {
     _openInBrowser(this.browseUrl)
     analytics('viewIssueOpenInBrowser')
-  }
-
-  openPostedCommentInBrowser () {
-    if (this.postedCommentHref) {
-      _openInBrowser(this.postedCommentHref)
-      analytics('viewIssueOpenCommentInBrowser')
-    }
-  }
-
-  onCommentTextChanged (newText, mention) {
-    this.commentText = newText
-    if (mention) {
-      this.loadMentions(mention)
-    } else {
-      this.clearMentions()
-    }
-  }
-
-  async loadMentions (query) {
-    this.loadingMentionQuery = query
-    const users = await _findUsersForPicker(query)
-    if (this.loadingMentionQuery === query) {
-      this.mentions.replace(users.map(user => {
-        // HACK: JIRA returns tiny avatars by default. Here we verride the 's'
-        // parameter to get the desired resolution
-        const avatarUrl32px = user.avatarUrl.replace(/[?&]s=\d+/, str => {
-          return str.charAt(0) + 's=32'
-        })
-        return {
-          id: user.key,
-          avatarUrl: avatarUrl32px,
-          name: user.displayName,
-          mentionName: user.name,
-          nickname: user.name
-        }
-      }))
-    }
-  }
-
-  clearMentions () {
-    this.loadingMentionQuery = null
-    this.mentions.replace([])
-  }
-
-  async postComment () {
-    if (!this.postingComment && this.commentText.trim()) {
-      this.postingComment = true
-      this.postedCommentHref = await _addComment(this.key, this.commentText)
-      this.commentText = ''
-      this.postingComment = false
-    }
   }
 }
