@@ -132,10 +132,16 @@ export default class JIRA {
   }
 
   async findUsersForPicker (query, opts) {
-    opts = assign({}, {maxResults: maxUserPickerResults}, opts)
+    opts = assign({}, {
+      maxResults: maxUserPickerResults,
+      showAvatar: true
+    }, opts)
     let pickerUrl = `${this.apiRoot}/user/picker?query=${query}`
     if (opts.maxResults) {
       pickerUrl += `&maxResults=${opts.maxResults}`
+    }
+    if (opts.showAvatar) {
+      pickerUrl += '&showAvatar=true'
     }
     const res = await fetch(pickerUrl, {
       headers: {

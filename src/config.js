@@ -15,7 +15,7 @@ const defaults = {
   cocoaDelegatePollInterval: 200, // milliseconds
   jiraAuthorizationUrlMaxRetries: 3,
   jiraAuthorizationUrlRetryInterval: 3000, // milliseconds
-  maxUserPickerResults: 7
+  maxUserPickerResults: 5
 }
 const configFile = readFileAsJson(`${resourcesPath()}/config.json`)
 const config = assign({}, defaults, configFile)

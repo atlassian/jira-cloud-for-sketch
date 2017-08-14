@@ -9,6 +9,7 @@ const _touchIssueAndReloadAttachments = bridgedFunctionCall(
 )
 const _getDroppedFiles = bridgedFunctionCall('getDroppedFiles', AttachmentsMapper)
 const _openInBrowser = bridgedFunctionCall('openInBrowser')
+const _findUsersForPicker = bridgedFunctionCall('findUsersForPicker')
 const _addComment = bridgedFunctionCall('addComment')
 
 export default class Issue {
@@ -16,6 +17,7 @@ export default class Issue {
   @observable commentText = ''
   @observable postingComment = false
   @observable postedCommentHref = null
+  @observable mentions = []
 
   constructor (issue, attachments) {
     assign(this, issue)
@@ -75,6 +77,41 @@ export default class Issue {
       _openInBrowser(this.postedCommentHref)
       analytics('viewIssueOpenCommentInBrowser')
     }
+  }
+
+  onCommentTextChanged (newText, mention) {
+    this.commentText = newText
+    if (mention) {
+      this.loadMentions(mention)
+    } else {
+      this.clearMentions()
+    }
+  }
+
+  async loadMentions (query) {
+    this.loadingMentionQuery = query
+    const users = await _findUsersForPicker(query)
+    if (this.loadingMentionQuery === query) {
+      this.mentions.replace(users.map(user => {
+        return {
+          id: user.key,
+          avatarUrl: user.avatarUrl,
+          name: user.displayName,
+          mentionName: user.name,
+          nickname: user.name
+        }
+      }))
+    }
+  }
+
+  clearMentions () {
+    console.log('clearing mentions')
+    this.loadingMentionQuery = null
+    this.mentions.replace([])
+  }
+
+  async onMentionSelected (selection) {
+    console.log(selection)
   }
 
   async postComment () {
