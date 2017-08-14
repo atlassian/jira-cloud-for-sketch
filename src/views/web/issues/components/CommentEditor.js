@@ -6,6 +6,8 @@ import FieldBase from '@atlaskit/field-base'
 import { MentionList } from '@atlaskit/mention'
 import TextArea from 'react-textarea-autosize'
 
+const atMentionRegex = /@(\w*( \w*){0,2})$/
+
 @observer
 export default class CommentEditor extends Component {
   constructor (props) {
@@ -112,7 +114,7 @@ export default class CommentEditor extends Component {
   findMentionUnderCaret () {
     const input = this.commentInputRef
     if (input && input.selectionStart === input.selectionEnd) {
-      const mention = input.value.substring(0, input.selectionStart).match(/@(\w*)$/)
+      const mention = input.value.substring(0, input.selectionStart).match(atMentionRegex)
       if (mention) {
         return mention[1]
       }
@@ -124,7 +126,7 @@ export default class CommentEditor extends Component {
   handleMentionSelected (selectedUser) {
     const input = this.commentInputRef
     if (input && input.selectionStart === input.selectionEnd) {
-      let mention = input.value.substring(0, input.selectionStart).match(/@\w*$/)
+      let mention = input.value.substring(0, input.selectionStart).match(atMentionRegex)
       if (!mention) {
         // avoid race condition
         return

@@ -136,7 +136,7 @@ export default class JIRA {
       maxResults: maxMentionPickerResults,
       showAvatar: true
     }, opts)
-    let pickerUrl = `${this.apiRoot}/user/picker?query=${query}`
+    let pickerUrl = `${this.apiRoot}/user/picker?query=${encodeURIComponent(query)}`
     if (opts.maxResults) {
       pickerUrl += `&maxResults=${opts.maxResults}`
     }
