@@ -93,9 +93,14 @@ export default class Issue {
     const users = await _findUsersForPicker(query)
     if (this.loadingMentionQuery === query) {
       this.mentions.replace(users.map(user => {
+        // HACK: JIRA returns tiny avatars by default. Here we verride the 's'
+        // parameter to get the desired resolution
+        const avatarUrl32px = user.avatarUrl.replace(/[?&]s=\d+/, str => {
+          return str.charAt(0) + 's=32'
+        })
         return {
           id: user.key,
-          avatarUrl: user.avatarUrl,
+          avatarUrl: avatarUrl32px,
           name: user.displayName,
           mentionName: user.name,
           nickname: user.name
