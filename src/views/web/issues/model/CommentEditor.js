@@ -24,7 +24,7 @@ export default class CommentEditor {
     this.initDefaultMentions(issue)
   }
 
-  initDefaultMentions (issue) {
+  async initDefaultMentions (issue) {
     this.defaultMentions.replace(
       uniqBy( // in case assignee == reporter
         without( // remove nulls
@@ -35,6 +35,10 @@ export default class CommentEditor {
         , null)
       , 'id')
     )
+  }
+
+  onIssueRefreshed (issue) {
+    // TODO
   }
 
   onTextChanged (newText) {
