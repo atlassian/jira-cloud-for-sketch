@@ -5,7 +5,7 @@ import { getJiraHost, getBearerToken } from './auth'
 import JQL_FILTERS from './jql-filters'
 import { issueFromRest } from './entity-mappers'
 import { standardIssueFields, maxMentionPickerResults } from './config'
-import { trace } from './logger'
+import { trace, isTraceEnabled } from './logger'
 
 export default class JIRA {
   constructor () {
@@ -22,7 +22,7 @@ export default class JIRA {
     if (!filter) {
       throw new Error(`No filter defined for ${filterKey}`)
     }
-    opts = assign({}, { fields: standardIssueFields }, opts)
+    opts = assign({ fields: standardIssueFields }, opts)
     const jql = encodeURIComponent(filter.jql)
     let searchUrl = `${this.apiRoot}/search?jql=${jql}&fields=${opts.fields.join(',')}`
     if (opts.startAt) {
@@ -31,42 +31,34 @@ export default class JIRA {
     if (opts.maxResults) {
       searchUrl += `&maxResults=${opts.maxResults}`
     }
-    const res = await fetch(searchUrl, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: await authHeader()
-      }
-    })
-    const json = await res.json()
-    return json.issues.map(issueFromRest)
+    return (await jiraFetch(searchUrl)).issues.map(issueFromRest)
   }
 
   /**
    * Retrieve a JIRA issue using the issue API.
    */
   async getIssue (issueKey, opts) {
-    opts = assign({}, { fields: standardIssueFields }, opts)
+    opts = assign({ fields: standardIssueFields }, opts)
     let issueUrl = `${this.apiRoot}/issue/${issueKey}?fields=${opts.fields.join(',')}`
     if (opts.updateHistory) {
       issueUrl += '&updateHistory=true'
     }
-    const res = await fetch(issueUrl, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: await authHeader()
-      }
-    })
-    const json = await res.json()
-    trace(json)
-    return issueFromRest(json)
+    return issueFromRest(await jiraFetch(issueUrl))
+  }
+
+  async getWatchers (issueKey) {
+    return jiraFetch(`${this.apiRoot}/issue/${issueKey}/watchers`)
   }
 
   async getImageAsDataUri (url, mimeType) {
-    const res = await fetch(url, {
-      headers: {
+    const opts = {}
+    // only authenticate requests to JIRA
+    if (url.indexOf(this.baseUrl) == 0) {
+      opts.headers = {
         Authorization: await authHeader()
       }
-    })
+    }
+    const res = await fetch(url, opts)
     let data = await res.blob()
     data = data.base64EncodedDataWithOptions(null)
     data = NSString.alloc().initWithData_encoding(data, NSUTF8StringEncoding)
@@ -96,43 +88,22 @@ export default class JIRA {
   }
 
   async deleteAttachment (id) {
-    const deleteUrl = `${this.apiRoot}/attachment/${id}`
-    return fetch(deleteUrl, {
-      method: 'DELETE',
-      headers: {
-        Authorization: await authHeader()
-      }
-    })
+    return jiraFetch(`${this.apiRoot}/attachment/${id}`, {method: 'DELETE'})
   }
 
   async addComment (issueKey, comment) {
     const commentUrl = `${this.apiRoot}/issue/${issueKey}/comment`
     const body = JSON.stringify({body: comment})
-    const res = await fetch(commentUrl, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: await authHeader()
-      },
-      body
-    })
-    return commentPermalink(issueKey, await res.json())
+    const commentJson = await jiraFetch(commentUrl, {method: 'POST', body})
+    return commentPermalink(issueKey, commentJson)
   }
 
   async getProfile () {
-    const myselfUrl = `${this.apiRoot}/myself`
-    const res = await fetch(myselfUrl, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: await authHeader()
-      }
-    })
-    return res.json()
+    return jiraFetch(`${this.apiRoot}/myself`)
   }
 
   async findUsersForPicker (query, opts) {
-    opts = assign({}, {
+    opts = assign({
       maxResults: maxMentionPickerResults,
       showAvatar: true
     }, opts)
@@ -143,14 +114,24 @@ export default class JIRA {
     if (opts.showAvatar) {
       pickerUrl += '&showAvatar=true'
     }
-    const res = await fetch(pickerUrl, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: await authHeader()
-      }
-    })
-    return (await res.json()).users
+    return (await jiraFetch(pickerUrl)).users
   }
+}
+
+async function jiraFetch (url, opts) {
+  opts = opts || {}
+  const headers = assign({
+    Accept: 'application/json',
+    Authorization: await authHeader()
+  }, opts.headers)
+  if (opts.body) {
+    headers['Content-Type'] = 'application/json'
+  }
+  opts = assign({}, opts, {headers})
+  const res = await fetch(url, opts)
+  const json = await res.json()
+  isTraceEnabled() && trace(`response from ${opts.method || 'GET'} ${url}\n${JSON.stringify(json, null, 2)}`)
+  return json
 }
 
 async function authHeader () {
