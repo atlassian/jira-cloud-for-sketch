@@ -33,7 +33,7 @@ export default class Issue {
     )
     // in case of new attachments (pre-existing will hit the cache)
     this.loadThumbnails()
-    this.commentEditor.onIssueRefreshed(issue)
+    this.commentEditor.onIssueSelected(issue)
     analytics('viewIssue')
   }
 

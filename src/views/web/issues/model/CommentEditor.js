@@ -8,6 +8,7 @@ const atMentionRegex = /(@\w*( \w*){0,2})$/
 const _openInBrowser = bridgedFunctionCall('openInBrowser')
 const _findUsersForPicker = bridgedFunctionCall('findUsersForPicker')
 const _addComment = bridgedFunctionCall('addComment')
+const _getWatchers = bridgedFunctionCall('getWatchers')
 
 export default class CommentEditor {
   @observable text = ''
@@ -24,21 +25,31 @@ export default class CommentEditor {
     this.initDefaultMentions(issue)
   }
 
-  async initDefaultMentions (issue) {
+  replaceDefaultMentions (mentions) {
     this.defaultMentions.replace(
-      uniqBy( // in case assignee == reporter
-        without( // remove nulls
-          ['assignee', 'reporter'].map(field => {
-            let user = issue[field]
-            return user && user.active ? mentionFromUser(user) : null
-          })
-        , null)
-      , 'id')
+      // remove dupes & nulls
+      uniqBy(without(mentions, null), 'id')
     )
   }
 
-  onIssueRefreshed (issue) {
-    // TODO
+  initDefaultMentions (issue) {
+    this.replaceDefaultMentions(['assignee', 'reporter'].map(field => {
+      return mentionFromUser(issue[field])
+    }))
+  }
+
+  async onIssueSelected (issue) {
+    this.initDefaultMentions(issue)
+    // use mutex to guard against user selecting/deselecting multiple times
+    const mutex = this.watchersMutex = new Date().getTime()
+    const watchers = await _getWatchers(this.issueKey)
+    if (mutex == this.watchersMutex) {
+      this.replaceDefaultMentions(
+        this.defaultMentions.slice().concat(
+          watchers.map(mentionFromUser)
+        )
+      )
+    }
   }
 
   onTextChanged (newText) {
@@ -69,11 +80,15 @@ export default class CommentEditor {
 
   onKeyDown (event) {
     if (this.isFocused && this.mentions.length && this.mentionListRef) {
-      // mention list is open, steal enter and cursor keys
+      // mention list is open, steal relevant keys
       switch (event.keyCode) {
         case 13: // enter
           event.preventDefault()
           this.mentionListRef.chooseCurrentSelection()
+          break
+        case 27: // escape
+          event.preventDefault()
+          this.clearMentions()
           break
         case 38: // up
           event.preventDefault()
@@ -118,8 +133,8 @@ export default class CommentEditor {
     const precedingText = input.value.substring(0, input.selectionStart - mention.length)
     const trailingText = input.value.substring(input.selectionStart)
     let textToInsert = `[~${selection.mentionName}]`
-    if (precedingText.charAt(precedingText.length - 1) === ' ') {
-      // auto-insert a trailing space iff the @mention is preceded by a space
+    if (precedingText.length === 0 || precedingText.charAt(precedingText.length - 1) === ' ') {
+      // auto-insert a trailing space if the @mention is preceded by space or start of line
       textToInsert += ' '
     }
     this.text = `${precedingText}${textToInsert}${trailingText}`
@@ -151,8 +166,17 @@ export default class CommentEditor {
  * Converts a JSON user representation from a /api/2/issue field or
  * /api/2/user/picker into a user object suitable for displaying in
  * an AtlasKit MentionList.
+ *
+ * Returns null if the user is supplied user is null or inactive.
  */
 function mentionFromUser (restUser) {
+  if (!restUser) {
+    return null
+  }
+  // n.b. active flag is not set on responses from /user/picker
+  if (restUser.active === false) {
+    return null
+  }
   let avatarUrl = null
   if (restUser.avatarUrls) {
     avatarUrl = restUser.avatarUrls['32x32']

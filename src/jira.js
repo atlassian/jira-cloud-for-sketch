@@ -47,7 +47,7 @@ export default class JIRA {
   }
 
   async getWatchers (issueKey) {
-    return jiraFetch(`${this.apiRoot}/issue/${issueKey}/watchers`)
+    return (await jiraFetch(`${this.apiRoot}/issue/${issueKey}/watchers`)).watchers
   }
 
   async getImageAsDataUri (url, mimeType) {

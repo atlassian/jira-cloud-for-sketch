@@ -42,6 +42,9 @@ export default function (context) {
       touchIssueAndReloadAttachments (issueKey) {
         return attachments.touchIssueAndReloadAttachments(issueKey)
       },
+      getWatchers (issueKey) {
+        return jira.getWatchers(issueKey)
+      },
       getThumbnail (url, mimeType) {
         return attachments.getThumbnail(url, mimeType)
       },
