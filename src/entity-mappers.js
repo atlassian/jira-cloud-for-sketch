@@ -15,16 +15,17 @@ const attachmentProperties = [
 ]
 
 export function issueFromRest (issue) {
-  const { issuetype, attachment, summary } = issue.fields
+  const { issuetype, attachment, summary, assignee, reporter } = issue.fields
   // we always display attachments by created date
   const attachments = attachment ? sortBy(attachment, 'created').reverse() : []
   return assign(
     pick(issue, 'key', 'self'),
     {
-      key: issue.key,
       summary,
       type: issuetype ? pick(issuetype, typeProperties) : null,
-      attachments
+      attachments,
+      assignee,
+      reporter
     }
   )
 }

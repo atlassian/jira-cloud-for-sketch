@@ -17,7 +17,7 @@ export default class Issue {
   constructor (issue, attachments) {
     assign(this, issue)
     this.attachments.replace(attachments)
-    this.commentEditor = new CommentEditor(this.key)
+    this.commentEditor = new CommentEditor(this)
   }
 
   async onSelected () {
@@ -33,6 +33,7 @@ export default class Issue {
     )
     // in case of new attachments (pre-existing will hit the cache)
     this.loadThumbnails()
+    this.commentEditor.onIssueRefreshed(issue)
     analytics('viewIssue')
   }
 

@@ -1,8 +1,9 @@
 import { observable } from 'mobx'
 import bridgedFunctionCall from '../../../bridge/client'
 import { analytics } from '../../util'
+import { uniqBy, without } from 'lodash'
 
-const atMentionRegex = /@(\w*( \w*){0,2})$/
+const atMentionRegex = /(@\w*( \w*){0,2})$/
 
 const _openInBrowser = bridgedFunctionCall('openInBrowser')
 const _findUsersForPicker = bridgedFunctionCall('findUsersForPicker')
@@ -14,11 +15,26 @@ export default class CommentEditor {
   @observable isPosting = false
   @observable href = null
   @observable mentions = []
+  @observable defaultMentions = []
   @observable inputRef = null
   @observable mentionListRef = null
 
-  constructor (issueKey) {
-    this.issueKey = issueKey
+  constructor (issue) {
+    this.issueKey = issue.key
+    this.initDefaultMentions(issue)
+  }
+
+  initDefaultMentions (issue) {
+    this.defaultMentions.replace(
+      uniqBy( // in case assignee == reporter
+        without( // remove nulls
+          ['assignee', 'reporter'].map(field => {
+            let user = issue[field]
+            return user && user.active ? mentionFromUser(user) : null
+          })
+        , null)
+      , 'id')
+    )
   }
 
   onTextChanged (newText) {
@@ -28,7 +44,9 @@ export default class CommentEditor {
 
   checkForMentions () {
     const mention = this.findMentionUnderCaret()
-    if (mention) {
+    if (mention === '@') {
+      this.mentions.replace(this.defaultMentions)
+    } else if (mention) {
       this.loadMentions(mention)
     } else {
       this.clearMentions()
@@ -71,24 +89,12 @@ export default class CommentEditor {
     }
   }
 
-  async loadMentions (query) {
+  async loadMentions (mention) {
+    const query = mention.substring(1) // trim leading '@'
     this.loadingMentionQuery = query
     const users = await _findUsersForPicker(query)
     if (this.loadingMentionQuery === query) {
-      this.mentions.replace(users.map(user => {
-        // HACK: JIRA returns tiny avatars by default. Here we verride the 's'
-        // parameter to get the desired resolution
-        const avatarUrl32px = user.avatarUrl.replace(/[?&]s=\d+/, str => {
-          return str.charAt(0) + 's=32'
-        })
-        return {
-          id: user.key,
-          avatarUrl: avatarUrl32px,
-          name: user.displayName,
-          mentionName: user.name,
-          nickname: user.name
-        }
-      }))
+      this.mentions.replace(users.map(mentionFromUser))
     }
   }
 
@@ -102,16 +108,20 @@ export default class CommentEditor {
     if (!mention) {
       return
     }
-    mention = '@' + mention
 
     // replace the @mention with the correct JIRA syntax
     const input = this.inputRef
     const precedingText = input.value.substring(0, input.selectionStart - mention.length)
     const trailingText = input.value.substring(input.selectionStart)
-    this.text = `${precedingText}[~${selection.mentionName}]${trailingText}`
+    let textToInsert = `[~${selection.mentionName}]`
+    if (precedingText.charAt(precedingText.length - 1) === ' ') {
+      // auto-insert a trailing space iff the @mention is preceded by a space
+      textToInsert += ' '
+    }
+    this.text = `${precedingText}${textToInsert}${trailingText}`
 
     // move caret to end of inserted @mention
-    input.selectionStart = input.selectionEnd = precedingText.length + selection.mentionName.length + 3
+    input.selectionStart = input.selectionEnd = precedingText.length + textToInsert.length
 
     this.mentions.replace([])
   }
@@ -130,5 +140,30 @@ export default class CommentEditor {
       _openInBrowser(this.href)
       analytics('viewIssueOpenCommentInBrowser')
     }
+  }
+}
+
+/**
+ * Converts a JSON user representation from a /api/2/issue field or
+ * /api/2/user/picker into a user object suitable for displaying in
+ * an AtlasKit MentionList.
+ */
+function mentionFromUser (restUser) {
+  let avatarUrl = null
+  if (restUser.avatarUrls) {
+    avatarUrl = restUser.avatarUrls['32x32']
+  } else if (restUser.avatarUrl) {
+    // HACK: JIRA's /user/picker API returns tiny avatars by default. Here we
+    // override the 's' parameter to get the desired resolution
+    avatarUrl = restUser.avatarUrl.replace(/[?&]s=\d+/, str => {
+      return str.charAt(0) + 's=32'
+    })
+  }
+  return {
+    id: restUser.key,
+    avatarUrl,
+    name: restUser.displayName,
+    mentionName: restUser.name,
+    nickname: restUser.name
   }
 }
