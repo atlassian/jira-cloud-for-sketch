@@ -19,6 +19,7 @@ export default class CommentEditor {
   @observable defaultMentions = []
   @observable inputRef = null
   @observable mentionListRef = null
+  @observable isDisplayingDefaultMentions = false
 
   constructor (issue) {
     this.issueKey = issue.key
@@ -61,6 +62,7 @@ export default class CommentEditor {
     const mention = this.findMentionUnderCaret()
     if (mention === '@') {
       this.mentions.replace(this.defaultMentions)
+      this.isDisplayingDefaultMentions = true
     } else if (mention) {
       this.loadMentions(mention)
     } else {
@@ -90,6 +92,13 @@ export default class CommentEditor {
           event.preventDefault()
           this.clearMentions()
           break
+        case 32: // space
+          if (this.mentions.length === 1 && !this.isDisplayingDefaultMentions) {
+            // auto-insert a single mention result, as long as it's not a default
+            event.preventDefault()
+            this.mentionListRef.chooseCurrentSelection()
+          }
+          break
         case 38: // up
           event.preventDefault()
           this.mentionListRef.selectPrevious()
@@ -114,12 +123,14 @@ export default class CommentEditor {
     const users = await _findUsersForPicker(query)
     if (this.loadingMentionQuery === query) {
       this.mentions.replace(users.map(mentionFromUser))
+      this.isDisplayingDefaultMentions = false
     }
   }
 
   clearMentions () {
     this.loadingMentionQuery = null
     this.mentions.replace([])
+    this.isDisplayingDefaultMentions = false
   }
 
   onMentionSelected (selection) {
@@ -142,7 +153,7 @@ export default class CommentEditor {
     // move caret to end of inserted @mention
     input.selectionStart = input.selectionEnd = precedingText.length + textToInsert.length
 
-    this.mentions.replace([])
+    this.clearMentions()
   }
 
   async postComment () {
