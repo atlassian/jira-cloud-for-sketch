@@ -1,9 +1,10 @@
 import { observable } from 'mobx'
 import bridgedFunctionCall from '../../../bridge/client'
 import { analytics } from '../../util'
-import { uniqBy, without } from 'lodash'
+import { uniqBy, without, debounce } from 'lodash'
 
 const atMentionRegex = /(@\w*( \w*){0,2})$/
+const atMentionDebounceDelay = 250 // sticks finger in mouth, raises to wind
 
 const _openInBrowser = bridgedFunctionCall('openInBrowser')
 const _findUsersForPicker = bridgedFunctionCall('findUsersForPicker')
@@ -23,6 +24,11 @@ export default class CommentEditor {
 
   constructor (issue) {
     this.issueKey = issue.key
+    this.loadMentions = debounce(
+      this.loadMentions,
+      atMentionDebounceDelay,
+      {trailing: true}
+    ).bind(this)
     this.initDefaultMentions(issue)
   }
 
@@ -117,6 +123,7 @@ export default class CommentEditor {
     }
   }
 
+  // debounced, see constructor
   async loadMentions (mention) {
     const query = mention.substring(1) // trim leading '@'
     this.loadingMentionQuery = query
