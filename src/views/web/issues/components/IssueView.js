@@ -12,8 +12,10 @@ export default class IssueView extends Component {
     const { issue, profile } = this.props
     return (
       <div>
-        <IssueSummary issue={issue} />
-        <Attachments issue={issue} />
+        <MinHeight>
+          <IssueSummary issue={issue} />
+          <Attachments issue={issue} />
+        </MinHeight>
         <Comments
           issue={issue}
           profile={profile}
@@ -27,6 +29,11 @@ IssueView.propTypes = {
   issue: PropTypes.object.isRequired,
   profile: PropTypes.object
 }
+
+/** ensures the comment input box is at the bottom of the frame */
+const MinHeight = styled.div`
+  min-height: 262px;
+`
 
 @observer
 class IssueSummary extends Component {
