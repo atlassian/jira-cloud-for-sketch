@@ -129,9 +129,15 @@ async function jiraFetch (url, opts) {
   }
   opts = assign({}, opts, {headers})
   const res = await fetch(url, opts)
-  const json = await res.json()
-  isTraceEnabled() && trace(`response from ${opts.method || 'GET'} ${url}\n${JSON.stringify(json, null, 2)}`)
-  return json
+  trace(`${res.status} from ${opts.method || 'GET'} ${url}`)
+  if (!res.ok) {
+    throw new Error(`JIRA responded with ${res.status} ${res.statusText}`)
+  }
+  if (res.status != 204) {
+    const json = await res.json()
+    isTraceEnabled() && trace(`body from ${opts.method || 'GET'} ${url}\n${JSON.stringify(json, null, 2)}`)
+    return json
+  }
 }
 
 async function authHeader () {
