@@ -6,6 +6,7 @@ import {
   SketchBridgeFunctionCallback
 } from './common'
 import { isTraceEnabled, trace } from '../../logger'
+import { pick, assign } from 'lodash'
 
 export default function createBridgedWebUI (context, htmlName, options) {
   let webUI
@@ -38,7 +39,10 @@ export default function createBridgedWebUI (context, htmlName, options) {
           message: e.localizedDescription() + ''
         }
       } else {
-        error = e
+        error = assign(
+          {error: String.valueOf(e)},
+          pick(e, 'name', 'message', 'column', 'line')
+        )
       }
       trace(error)
     }
