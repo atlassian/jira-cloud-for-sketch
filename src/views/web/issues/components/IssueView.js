@@ -28,6 +28,7 @@ IssueView.propTypes = {
   profile: PropTypes.object
 }
 
+@observer
 class IssueSummary extends Component {
   render () {
     var issue = this.props.issue

@@ -104,6 +104,7 @@ const IssueDiv = styled.div`
   }
 `
 
+@observer
 class IssueTypeField extends Component {
   render () {
     var type = this.props.type
@@ -163,6 +164,7 @@ const KeyDiv = styled.div`
   color: #7a869a;
 `
 
+@observer
 class IssueSummaryField extends Component {
   render () {
     var summary = this.props.summary

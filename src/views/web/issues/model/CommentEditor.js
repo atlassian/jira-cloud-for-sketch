@@ -29,7 +29,7 @@ export default class CommentEditor {
       atMentionDebounceDelay,
       {trailing: true}
     ).bind(this)
-    this.initDefaultMentions(issue)
+    this.resetDefaultMentions(issue)
   }
 
   replaceDefaultMentions (mentions) {
@@ -39,14 +39,14 @@ export default class CommentEditor {
     )
   }
 
-  initDefaultMentions (issue) {
+  resetDefaultMentions (issue) {
     this.replaceDefaultMentions(['assignee', 'reporter'].map(field => {
       return mentionFromUser(issue[field])
     }))
   }
 
-  async onIssueSelected (issue) {
-    this.initDefaultMentions(issue)
+  async onIssueUpdated (issue) {
+    this.resetDefaultMentions(issue)
     // use mutex to guard against user selecting/deselecting multiple times
     const mutex = this.watchersMutex = new Date().getTime()
     const watchers = await _getWatchers(this.issueKey)

@@ -39,8 +39,8 @@ export default function (context) {
       uploadAttachment (issueKey, attachment, progress) {
         return uploads.uploadAttachment(issueKey, attachment, progress)
       },
-      touchIssueAndReloadAttachments (issueKey) {
-        return attachments.touchIssueAndReloadAttachments(issueKey)
+      getIssue (issueKey, updateHistory) {
+        return attachments.getIssue(issueKey, updateHistory)
       },
       getWatchers (issueKey) {
         return jira.getWatchers(issueKey)

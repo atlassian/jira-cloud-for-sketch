@@ -17,8 +17,8 @@ export default class Attachments {
     this.thumbnailQueue = new Queue(thumbnailDownloadConcurrency, Infinity)
   }
 
-  async touchIssueAndReloadAttachments (issueKey) {
-    const issue = await this.jira.getIssue(issueKey, { updateHistory: true })
+  async getIssue (issueKey, updateHistory) {
+    const issue = await this.jira.getIssue(issueKey, { updateHistory })
     postAnalytics(issue.attachments)
     return issue
   }

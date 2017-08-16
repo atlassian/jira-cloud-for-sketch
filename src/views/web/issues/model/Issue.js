@@ -1,40 +1,72 @@
-import { observable, computed } from 'mobx'
-import { assign } from 'lodash'
+import { observable, computed, reaction } from 'mobx'
+import { assign, concat, partition, omit, filter, includes, differenceBy, intersectionBy } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import { IssueMapper, AttachmentsMapper } from './mapper'
 import CommentEditor from './CommentEditor'
 import { analytics } from '../../util'
 
-const _touchIssueAndReloadAttachments = bridgedFunctionCall(
-  'touchIssueAndReloadAttachments', IssueMapper
-)
+const _getIssue = bridgedFunctionCall('getIssue', IssueMapper)
 const _getDroppedFiles = bridgedFunctionCall('getDroppedFiles', AttachmentsMapper)
 const _openInBrowser = bridgedFunctionCall('openInBrowser')
 
 export default class Issue {
   @observable attachments = []
+  @observable type = null
+  @observable summary = null
+  @observable assignee = null
+  @observable reporter = null
 
   constructor (issue, attachments) {
     assign(this, issue)
     this.attachments.replace(attachments)
     this.commentEditor = new CommentEditor(this)
+
+    // There's a small race condition where duplicate attachments may appear
+    // if the user deselects then reselects an issue while an upload is in
+    // progress (JIRA may return the attachment as part of the issue payload
+    // before our upload request completes). This autorun function cleans up
+    // any dupes for us, before they're displayed to the user.
+    reaction(
+      () => this.attachments.map(attachment => attachment.id),
+      (ids) => {
+        // based on the awesome https://stackoverflow.com/a/31681942
+        filter(ids, (value, i) => includes(ids, value, i + 1))
+        .forEach(duplicateId => {
+          this.attachments.remove(
+            this.attachments.find(a => a.id === duplicateId)
+          )
+        })
+      }
+    )
   }
 
   async onSelected () {
     this.loadThumbnails()
-    const issue = await _touchIssueAndReloadAttachments(this.key)
-    // convert from @observable array to real array TODO this could be nicer!
-    const newAttachments = [].slice.call(issue.attachments)
-    // retain attachments that are currently uploading
-    this.attachments.replace(
-      this.attachments.filter(attachment => {
-        return attachment.uploading
-      }).concat(newAttachments)
-    )
-    // in case of new attachments (pre-existing will hit the cache)
-    this.loadThumbnails()
-    this.commentEditor.onIssueSelected(issue)
+    const issue = await _getIssue(this.key, true)
+    this.updateIssueFields(issue)
+    this.updateAttachments(issue)
+    this.commentEditor.onIssueUpdated(issue)
     analytics('viewIssue')
+  }
+
+  updateIssueFields (issue) {
+    assign(this, omit(issue, 'attachments'))
+  }
+
+  /**
+   * Updating attachments is a bit complicated, since some may be uploading
+   * (and not yet on the server) or in the middle of a download or delete.
+   * Here we add any new attachments, remove any deleted attachments, and
+   * retain any that are currently uploading.
+   */
+  async updateAttachments (issue) {
+    const [uploading, existingAttachments] = partition(
+      this.attachments.slice(), 'uploading'
+    )
+    const newAttachments = differenceBy(issue.attachments.slice(), existingAttachments, 'id')
+    const retainedAttachments = intersectionBy(existingAttachments, issue.attachments.slice(), 'id')
+    this.attachments.replace(concat(uploading, newAttachments, retainedAttachments))
+    newAttachments.forEach(a => a.loadThumbnail())
   }
 
   async loadThumbnails () {

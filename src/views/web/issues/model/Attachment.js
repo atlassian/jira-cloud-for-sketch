@@ -14,13 +14,16 @@ export default class Attachment {
   @observable deleting = false
   @observable progress = 0
   @observable thumbnailDataUri = null
+  @observable id = null
 
   constructor (attachment, doUpload) {
     assign(this, attachment)
   }
 
   async loadThumbnail () {
-    this.thumbnailDataUri = await getThumbnail(this)
+    if (!this.thumbnailDataUri) {
+      this.thumbnailDataUri = await getThumbnail(this)
+    }
   }
 
   async upload (issueKey) {
