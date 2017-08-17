@@ -9,8 +9,8 @@ const defaults = {
   bearerTokenRefreshInterval: 1000 * 60 * 10, // milliseconds
   thumbnailDownloadConcurrency: 4,
   attachmentUploadConcurrency: 4,
-  thumbnailRetryMax: 10,
-  thumbnailRetryDelay: 1500, // milliseconds
+  thumbnailRetryMax: 25,
+  thumbnailRetryDelay: 600, // milliseconds
   userAuthorizationPollInterval: 3000, // milliseconds
   cocoaDelegatePollInterval: 200, // milliseconds
   jiraAuthorizationUrlMaxRetries: 3,
