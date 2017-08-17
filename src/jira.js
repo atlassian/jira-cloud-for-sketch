@@ -134,9 +134,17 @@ async function jiraFetch (url, opts) {
     throw new Error(`JIRA responded with ${res.status} ${res.statusText}`)
   }
   if (res.status != 204) {
-    const json = await res.json()
-    isTraceEnabled() && trace(`body from ${opts.method || 'GET'} ${url}\n${JSON.stringify(json, null, 2)}`)
-    return json
+    try {
+      const json = await res.json()
+      isTraceEnabled() &&
+        trace(`body from ${opts.method || 'GET'} ${url}\n${JSON.stringify(json, null, 2)}`)
+      return json
+    } catch (e) {
+      try {
+        isTraceEnabled() && trace(`Failed to parse body as JSON: ${await res.text()}`)
+      } catch (ignored) {}
+      throw e
+    }
   }
 }
 
