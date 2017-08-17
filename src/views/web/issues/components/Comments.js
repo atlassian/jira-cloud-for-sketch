@@ -59,15 +59,9 @@ class CommentStatus extends Component {
     this.handleLinkClick = this.handleLinkClick.bind(this)
   }
   render () {
-    const { isPosting, isFocused, href } = this.model
+    const { isFocused, href } = this.model
     let status = ' '
-    if (isPosting) {
-      status = (
-        <SpinnerWrapper>
-          <Spinner size='small' />
-        </SpinnerWrapper>
-      )
-    } else if (href) {
+    if (href) {
       status = (
         <StatusTextWrapper>
           <CheckIcon
@@ -106,10 +100,10 @@ CommentStatus.propTypes = {
 }
 
 const StatusWrapper = styled.div`
-  margin-left: 40px;
+  margin-left: 47px;
   display: flex;
   align-items: center;
-  height: 35px;
+  height: 24px;
 `
 const SpinnerWrapper = styled.div`
   margin-top: 4px;
@@ -121,11 +115,12 @@ const StatusTextWrapper = styled.div`
   padding-bottom: 12px;
 `
 const HelpTextWrapper = styled.div`
-  font-size: 12px;
+  font-size: 10px;
   padding-bottom: 12px;
+  color: #7a869a;
 `
 const CommentLinkWrapper = styled.span`
   margin-left: 4px;
-  font-size: 12px;
+  font-size: 10px;
   color: #5E6C84;
 `

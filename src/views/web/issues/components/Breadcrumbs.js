@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
+import ChevronLeftIcon from '@atlaskit/icon/glyph/chevron-left';
 import { akColorN100, akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 
 @observer
@@ -14,10 +15,17 @@ export default class Breadcrumbs extends Component {
     const filter = this.props.viewmodel.filters.selected
     const issue = this.props.viewmodel.issues.selected
     // create a single text node to work around https://github.com/facebook/react/issues/10116
-    const backText = `< ${filter.displayName}`
     return (
       <BreadcrumbsWrapper>
-        <BackLink onClick={this.handleClickBack}>{backText}</BackLink>
+        <BackLink onClick={this.handleClickBack}>
+          <div>
+            <ChevronLeftIcon size='small' label='Back' />
+          </div>
+          <BackTextWrapper>
+            {'\u00A0'}
+            {filter.displayName}
+          </BackTextWrapper>
+        </BackLink>
         <Separator>/</Separator>
         <IssueKey issue={issue} />
       </BreadcrumbsWrapper>
@@ -36,15 +44,19 @@ const BreadcrumbsWrapper = styled.div`
   display: flex;
   align-items: center;
 `
-
 const BackLink = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: -2px;
   cursor: pointer;
   font-size: 12px
   font-weight: 600
   character-spacing: 0
   color: #5E6C84
 `
-
+const BackTextWrapper = styled.div`
+  height: 19px;
+`
 const Separator = styled.div`
   color: ${akColorN100};
   padding-left: ${akGridSizeUnitless}px;

@@ -32,7 +32,7 @@ IssueView.propTypes = {
 
 /** ensures the comment input box is at the bottom of the frame */
 const MinHeight = styled.div`
-  min-height: 262px;
+  min-height: 272px;
 `
 
 @observer
@@ -41,7 +41,7 @@ class IssueSummary extends Component {
     var issue = this.props.issue
     return (
       <SummaryDiv>
-        <h5>{issue.summary}</h5>
+        <SummaryH5>{issue.summary}</SummaryH5>
       </SummaryDiv>
     )
   }
@@ -52,5 +52,13 @@ IssueSummary.propTypes = {
 }
 
 const SummaryDiv = styled.div`
-  margin-top: 10px;
+  margin-top: 7px;
+  margin-bottom: 5px;
+`
+const SummaryH5 = styled.h5`
+  line-height: 1.4;
+  letter-spacing: -.008em;
+  font-size: 14px;
+  font-weight: 400;
+  color: #253858;
 `
