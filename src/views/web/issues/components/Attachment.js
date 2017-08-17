@@ -116,7 +116,7 @@ class AttachmentCard extends Component {
           appearance='image'
           metadata={imageMetadata}
           dataURI={attachment.thumbnailDataUri}
-          dimensions={{width: 141}}
+          dimensions={{width: 141, height: 106}}
           resizeMode='full-fit'
           actions={actions}
         />
