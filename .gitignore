@@ -1,7 +1,7 @@
 # build artefacts
-jira.sketchplugin/Contents/**/*.js
-jira.sketchplugin/Contents/**/*.json
-!jira.sketchplugin/Contents/**/config.json
+atlassian.sketchplugin/Contents/**/*.js
+atlassian.sketchplugin/Contents/**/*.json
+!atlassian.sketchplugin/Contents/**/config.json
 
 # npm
 node_modules

@@ -214,7 +214,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Copy .js to .framework/.js\nRESOURCES_TARGET=${SRCROOT}/../jira.sketchplugin/Contents/Resources/${FULL_PRODUCT_NAME}\nrm -rf ${RESOURCES_TARGET}\ncp -r ${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME} ${RESOURCES_TARGET}";
+			shellScript = "# Copy .js to .framework/.js\nRESOURCES_TARGET=${SRCROOT}/../atlassian.sketchplugin/Contents/Resources/${FULL_PRODUCT_NAME}\nrm -rf ${RESOURCES_TARGET}\ncp -r ${TARGET_BUILD_DIR}/${FULL_PRODUCT_NAME} ${RESOURCES_TARGET}";
 		};
 /* End PBXShellScriptBuildPhase section */
 

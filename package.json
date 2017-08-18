@@ -1,8 +1,8 @@
 {
-  "name": "jira-for-sketch",
+  "name": "atlassian-sketch-plugin",
   "version": "0.0.7",
-  "description": "A Sketch plugin for interacting with Atlassian JIRA",
-  "main": "jira.sketchplugin",
+  "description": "Share designs, assets, and feedback with your team",
+  "main": "atlassian.sketchplugin",
   "manifest": "src/manifest.json",
   "resources": [
     "src/views/web/connect/connect.js",
