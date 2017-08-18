@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
-import Spinner from '@atlaskit/spinner'
 import Avatar from '@atlaskit/avatar'
 import CheckIcon from '@atlaskit/icon/glyph/check'
 import CommentEditor from './CommentEditor'
@@ -104,10 +103,6 @@ const StatusWrapper = styled.div`
   display: flex;
   align-items: center;
   height: 24px;
-`
-const SpinnerWrapper = styled.div`
-  margin-top: 4px;
-  padding-bottom: 6px;
 `
 const StatusTextWrapper = styled.div`
   display: flex;

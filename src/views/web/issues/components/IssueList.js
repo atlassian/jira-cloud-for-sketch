@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
+import AssigneeAvatar from './AssigneeAvatar'
+import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import '@atlaskit/css-reset'
 
 @observer
@@ -73,6 +75,9 @@ class Issue extends Component {
         <IssueTypeField type={issue.type} />
         <IssueKeyField maxKeyLength={maxKeyLength} issueKey={issue.key} />
         <IssueSummaryField summary={issue.summary} />
+        <IssueAssigneeField>
+          <AssigneeAvatar assignee={issue.assignee} />
+        </IssueAssigneeField>
       </IssueDiv>
     )
   }
@@ -185,7 +190,11 @@ const SummaryDiv = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 340px;
+  width: 334px;
   margin-right: 5px;
   font-family: -apple-system;
+`
+
+const IssueAssigneeField = styled.div`
+  margin-right: ${akGridSizeUnitless * 2}px;
 `
