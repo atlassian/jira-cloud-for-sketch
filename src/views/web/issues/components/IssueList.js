@@ -66,6 +66,8 @@ const ScrollDiv = styled.div`
 class Issue extends Component {
   render () {
     const { issue, maxKeyLength } = this.props
+    const keyWidthPx = 3 + maxKeyLength * 8
+    const summaryWidthPx = 386 - keyWidthPx
     return (
       <IssueDiv
         onClick={() => {
@@ -73,8 +75,8 @@ class Issue extends Component {
         }}
       >
         <IssueTypeField type={issue.type} />
-        <IssueKeyField maxKeyLength={maxKeyLength} issueKey={issue.key} />
-        <IssueSummaryField summary={issue.summary} />
+        <IssueKeyField issueKey={issue.key} widthPx={keyWidthPx} />
+        <IssueSummaryField summary={issue.summary} widthPx={summaryWidthPx} />
         <IssueAssigneeField>
           <AssigneeAvatar assignee={issue.assignee} />
         </IssueAssigneeField>
@@ -112,7 +114,7 @@ const IssueDiv = styled.div`
 @observer
 class IssueTypeField extends Component {
   render () {
-    var type = this.props.type
+    const type = this.props.type
     return (
       <TypeDiv>
         <TypeImage src={type.iconUrl} title={type.name} />
@@ -149,10 +151,9 @@ const TypeImage = styled.img`
 @observer
 class IssueKeyField extends Component {
   render () {
-    const { issueKey, maxKeyLength } = this.props
-    const style = { width: (3 + maxKeyLength * 8) + 'px' }
+    const { issueKey, widthPx } = this.props
     return (
-      <KeyDiv style={style}>
+      <KeyDiv style={{width: `${widthPx}px`}}>
         {issueKey}
       </KeyDiv>
     )
@@ -160,8 +161,8 @@ class IssueKeyField extends Component {
 }
 
 IssueKeyField.propTypes = {
-  maxKeyLength: PropTypes.number.isRequired,
-  issueKey: PropTypes.string.isRequired
+  issueKey: PropTypes.string.isRequired,
+  widthPx: PropTypes.number.isRequired
 }
 
 const KeyDiv = styled.div`
@@ -172,9 +173,9 @@ const KeyDiv = styled.div`
 @observer
 class IssueSummaryField extends Component {
   render () {
-    var summary = this.props.summary
+    const {summary, widthPx} = this.props
     return (
-      <SummaryDiv title={summary}>
+      <SummaryDiv title={summary} style={{width: `${widthPx}px`}}>
         {summary}
       </SummaryDiv>
     )
@@ -182,7 +183,8 @@ class IssueSummaryField extends Component {
 }
 
 IssueSummaryField.propTypes = {
-  summary: PropTypes.string.isRequired
+  summary: PropTypes.string.isRequired,
+  widthPx: PropTypes.number.isRequired
 }
 
 const SummaryDiv = styled.div`
@@ -190,7 +192,6 @@ const SummaryDiv = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 334px;
   margin-right: 5px;
   font-family: -apple-system;
 `
