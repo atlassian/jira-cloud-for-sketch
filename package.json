@@ -72,7 +72,7 @@
     "@atlaskit/field-base": "^7.4.2",
     "@atlaskit/field-text": "^3.4.2",
     "@atlaskit/icon": "^7.0.1",
-    "@atlaskit/lozenge": "^3.0.2",
+    "@atlaskit/lozenge": "^3.4.2",
     "@atlaskit/media-card": "^17.9.0",
     "@atlaskit/media-core": "^8.2.0",
     "@atlaskit/mention": "^7.3.2",

@@ -15,6 +15,7 @@ export default class Issue {
   @observable summary = null
   @observable assignee = null
   @observable reporter = null
+  @observable status = null
 
   constructor (issue, attachments) {
     assign(this, issue)

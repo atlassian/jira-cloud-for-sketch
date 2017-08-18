@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
-import ChevronLeftIcon from '@atlaskit/icon/glyph/chevron-left';
+import ChevronLeftIcon from '@atlaskit/icon/glyph/chevron-left'
+import Lozenge from '@atlaskit/lozenge'
 import { akColorN100, akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 
 @observer
@@ -14,20 +15,27 @@ export default class Breadcrumbs extends Component {
   render () {
     const filter = this.props.viewmodel.filters.selected
     const issue = this.props.viewmodel.issues.selected
-    // create a single text node to work around https://github.com/facebook/react/issues/10116
     return (
       <BreadcrumbsWrapper>
-        <BackLink onClick={this.handleClickBack}>
-          <div>
-            <ChevronLeftIcon size='small' label='Back' />
-          </div>
-          <BackTextWrapper>
-            {'\u00A0'}
-            {filter.displayName}
-          </BackTextWrapper>
-        </BackLink>
-        <Separator>/</Separator>
-        <IssueKey issue={issue} />
+        <Left>
+          <BackLink onClick={this.handleClickBack}>
+            <div>
+              <ChevronLeftIcon size='small' label='Back' />
+            </div>
+            <BackTextWrapper>
+              {'\u00A0'}
+              {filter.displayName}
+            </BackTextWrapper>
+          </BackLink>
+          <Separator>/</Separator>
+          <IssueKey issue={issue} />
+        </Left>
+        <Right>
+          <Lozenge
+            title={issue.status.description || issue.status.name}
+            appearance={issue.status.statusCategory.key}
+          >{issue.status.name}</Lozenge>
+        </Right>
       </BreadcrumbsWrapper>
     )
   }
@@ -43,10 +51,19 @@ Breadcrumbs.propTypes = {
 const BreadcrumbsWrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+`
+const Left = styled.div`
+  display: flex;
+  align-items: center;
+`
+const Right = styled.div`
+  padding-right: 4px;
 `
 const BackLink = styled.div`
   display: flex;
   align-items: center;
+  padding-top: 1px;
   margin-left: -2px;
   cursor: pointer;
   font-size: 12px
@@ -93,6 +110,7 @@ const IssueKeyLink = styled.div`
   margin-left: ${akGridSizeUnitless}px;
   color: #7a869a;
   font-size: 12px;
+  font-weight: 600
   display: flex;
   align-items: center;
 `

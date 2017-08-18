@@ -51,7 +51,14 @@ export const jiraSketchIntegrationApi = {
 
 export const jiraSketchIntegrationFaqUrl = `${jiraSketchIntegrationBaseUrl}/faq`
 
-export const standardIssueFields = ['issuetype', 'summary', 'attachment', 'assignee', 'reporter']
+export const standardIssueFields = [
+  'issuetype',
+  'summary',
+  'status',
+  'attachment',
+  'assignee',
+  'reporter'
+]
 
 export const analyticsApiBaseUrl = config.analyticsApiBaseUrl
 export const analyticsApiSingleEvent = `${analyticsApiBaseUrl}/event`
