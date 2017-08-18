@@ -55,6 +55,26 @@ export default class Issue {
   }
 
   /**
+   * Map JIRA statusCategory keys to @atlaskit/lozenge appearances.
+   */
+  @computed get statusAppearance () {
+    if (!this.status) {
+      return 'default'
+    }
+    switch (this.status.statusCategory.key) {
+      case 'new':
+        return 'new'
+      case 'indeterminate':
+        return 'inprogress'
+      case 'done':
+        return 'success'
+      case 'undefined':
+      default:
+        return 'default'
+    }
+  }
+
+  /**
    * Updating attachments is a bit complicated, since some may be uploading
    * (and not yet on the server) or in the middle of a download or delete.
    * Here we add any new attachments, remove any deleted attachments, and

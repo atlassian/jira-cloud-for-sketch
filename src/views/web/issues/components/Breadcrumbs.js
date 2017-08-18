@@ -30,11 +30,8 @@ export default class Breadcrumbs extends Component {
           <Separator>/</Separator>
           <IssueKey issue={issue} />
         </Left>
-        <Right>
-          <Lozenge
-            title={issue.status.description || issue.status.name}
-            appearance={issue.status.statusCategory.key}
-          >{issue.status.name}</Lozenge>
+        <Right title={issue.status.description || issue.status.name}>
+          <Lozenge appearance={issue.statusAppearance}>{issue.status.name}</Lozenge>
         </Right>
       </BreadcrumbsWrapper>
     )
