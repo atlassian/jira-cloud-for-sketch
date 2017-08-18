@@ -39,10 +39,8 @@ export default function createBridgedWebUI (context, htmlName, options) {
           message: e.localizedDescription() + ''
         }
       } else {
-        error = assign(
-          {error: String.valueOf(e)},
-          pick(e, 'name', 'message', 'column', 'line')
-        )
+        // the default string representation of the error omits most fields
+        error = assign({error: String.valueOf(e)}, e)
       }
       trace(error)
     }
