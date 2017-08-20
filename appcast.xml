@@ -3,8 +3,23 @@
   <channel>
     <title>Atlassian Sketch Plugin</title>
     <link>https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/appcast.xml</link>
-    <description>Streamlined uploads of Sketch assets to JIRA.</description>
+    <description>Share from Sketch to JIRA, without losing focus</description>
     <language>en</language>
+      <item>
+        <title>v0.0.8</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>@mentions</li>
+              <li>Status lozenges</li>
+              <li>Assignee avatars</li>
+              <li>Faster thumbnail loading</li>
+              <li>Numerous UI/UX improvements</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-0.0.8.zip" sparkle:version="0.0.8" />
+      </item>
       <item>
         <title>v0.0.7</title>
         <description>

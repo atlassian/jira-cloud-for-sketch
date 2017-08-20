@@ -1,6 +1,6 @@
 {
   "name": "atlassian-sketch-plugin",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Share designs, assets, and feedback with your team",
   "main": "atlassian.sketchplugin",
   "manifest": "src/manifest.json",
