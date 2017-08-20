@@ -32,23 +32,23 @@ postBuildStatus () {
     -r ${BITBUCKET_REPO_SLUG} \
     -c ${BITBUCKET_COMMIT} \
     -s "SUCCESSFUL" \
-    -k $1 -n $2 -d $3 -l $4
+    -k "$1" -n "$2" -d "$3" -l "$4"
 }
 
 # deploy plugin artifact(s)
 python s3_upload.py $S3_BUCKET $PLUGIN_ZIP $PLUGIN_ZIP
 postBuildStatus "sketch-plugin-zip" $PLUGIN_ZIP \
-    'Sketch plugin zip' "${S3_BUCKET_URL}/${PLUGIN_ZIP}"
+  "Sketch plugin zip" "${S3_BUCKET_URL}/${PLUGIN_ZIP}"
 
 if [ -v PIPELINES_DEPLOY_AS_LATEST ]; then
   python s3_upload.py $S3_BUCKET $PLUGIN_ZIP "${PLUGIN_NAME}-latest.zip"
 fi
 
 if [ -v PIPELINES_DEPLOY_TAG ]; then
-  export RELEASE_ZIP_NAME="${PLUGIN_NAME}-$BITBUCKET_TAG.zip"
+  export PLUGIN_RELEASE_ZIP="${PLUGIN_NAME}-$BITBUCKET_TAG.zip"
   python s3_upload.py $S3_BUCKET $PLUGIN_ZIP $PLUGIN_RELEASE_ZIP
   postBuildStatus "sketch-plugin-release-zip" $PLUGIN_RELEASE_ZIP \
-    'Sketch plugin release zip' "${S3_BUCKET_URL}/${PLUGIN_RELEASE_ZIP}"
+    "Sketch plugin release zip" "${S3_BUCKET_URL}/${PLUGIN_RELEASE_ZIP}"
   python s3_upload.py $S3_BUCKET $PLUGIN_ZIP "${PLUGIN_NAME}-release.zip"
 fi
 
