@@ -1,5 +1,5 @@
-import { forOwn, assign } from 'lodash'
 import { postSingle } from '../../../analytics'
+import { jqlFilterArray } from '../../../jql-filters'
 
 export default class Filters {
   constructor (context, webUI, jira) {
@@ -9,12 +9,8 @@ export default class Filters {
     this.currentFilter = null
   }
 
-  async loadFilters () {
-    const filters = []
-    forOwn(this.jira.jqlFilters, (filter, key) => {
-      filters.push(assign({key}, filter))
-    })
-    return filters
+  loadFilters () {
+    return jqlFilterArray
   }
 
   async onFilterChanged (newFilter) {

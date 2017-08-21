@@ -6,7 +6,7 @@ import {
   SketchBridgeFunctionCallback
 } from './common'
 import { isTraceEnabled, trace } from '../../logger'
-import { pick, assign } from 'lodash'
+import { assign } from 'lodash'
 
 export default function createBridgedWebUI (context, htmlName, options) {
   let webUI

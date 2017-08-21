@@ -30,7 +30,7 @@ export default class Breadcrumbs extends Component {
           <Separator>/</Separator>
           <IssueKey issue={issue} />
         </Left>
-        <Right title={issue.status.description || issue.status.name}>
+        <Right className='selected-issue-status' title={issue.status.description || issue.status.name}>
           <Lozenge appearance={issue.statusAppearance}>{issue.status.name}</Lozenge>
         </Right>
       </BreadcrumbsWrapper>
@@ -87,7 +87,10 @@ class IssueKey extends Component {
   }
   render () {
     return (
-      <IssueKeyLink onClick={this.handleClick} title='Open issue in browser'>
+      <IssueKeyLink
+        onClick={this.handleClick}
+        className='selected-issue-key'
+        title='Open issue in browser'>
         <IssueType type={this.props.issue.type} />
         {this.props.issue.key}
       </IssueKeyLink>
@@ -116,7 +119,11 @@ class IssueType extends Component {
   render () {
     var type = this.props.type
     return (
-      <TypeIcon src={type.iconUrl} title={type.name} />
+      <TypeIcon
+        className='selected-issue-type'
+        src={type.iconUrl}
+        title={type.name}
+      />
     )
   }
 }

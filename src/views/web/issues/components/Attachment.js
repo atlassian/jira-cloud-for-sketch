@@ -19,7 +19,7 @@ export default class Attachment extends Component {
   render () {
     var attachment = this.props.attachment
     return (
-      <AttachmentWrapper
+      <AttachmentWrapper className='issue-attachment'
         onDragEnter={this.dragEnter}
         onDragLeave={this.dragLeave}
         onDragOver={(event) => { event.preventDefault() }}

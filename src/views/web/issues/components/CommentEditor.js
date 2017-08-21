@@ -36,6 +36,7 @@ export default class CommentEditor extends Component {
         />
         <FieldBase isPaddingDisabled>
           <TextArea
+            className='issue-comment-input'
             inputRef={this.handleInputRef}
             useCacheForDOMMeasurements
             style={style}

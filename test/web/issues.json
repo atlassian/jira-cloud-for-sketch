@@ -1,0 +1,815 @@
+{
+    "expand": "schema,names",
+    "issues": [
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": {
+                    "accountId": "557058:6ea56496-8c9b-4e0a-bc03-7412dedb3304",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Tim Pettersen",
+                    "emailAddress": "test@example.com",
+                    "key": "admin",
+                    "name": "admin",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=admin",
+                    "timeZone": "Australia/Sydney"
+                },
+                "attachment": [],
+                "issuetype": {
+                    "avatarId": 10303,
+                    "description": "A problem which impairs or prevents the functions of the product.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+                    "id": "10103",
+                    "name": "Bug",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10103",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557058:1c79d767-ed85-43a8-b9ba-fabc63d66496",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Danny Wu",
+                    "emailAddress": "test@example.com",
+                    "key": "dwu",
+                    "name": "dwu",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=dwu",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/images/icons/statuses/generic.png",
+                    "id": "10102",
+                    "name": "DEVELOPING",
+                    "self": "https://example.atlassian.net/rest/api/2/status/10102",
+                    "statusCategory": {
+                        "colorName": "yellow",
+                        "id": 4,
+                        "key": "indeterminate",
+                        "name": "In Progress",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/4"
+                    }
+                },
+                "summary": "Show loading indicator & download attachment thumbnails in parallel"
+            },
+            "id": "10601",
+            "key": "SFJ-29",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10601"
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": {
+                    "accountId": "557057:fdcbc796-ea98-4b6c-bf98-80df643bce14",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "afenwick",
+                    "emailAddress": "test@example.com",
+                    "key": "afenwick",
+                    "name": "afenwick",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=afenwick",
+                    "timeZone": "Australia/Sydney"
+                },
+                "attachment": [
+                    {
+                        "author": {
+                            "accountId": "557057:fdcbc796-ea98-4b6c-bf98-80df643bce14",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "afenwick",
+                            "emailAddress": "test@example.com",
+                            "key": "afenwick",
+                            "name": "afenwick",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=afenwick",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/11051/Attach+via+JIRA.png",
+                        "created": "2017-07-11T12:15:06.660+1000",
+                        "filename": "Attach via JIRA.png",
+                        "id": "11051",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/11051",
+                        "size": 24478,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/11051/Attach+via+JIRA.png"
+                    },
+                    {
+                        "author": {
+                            "accountId": "557057:fdcbc796-ea98-4b6c-bf98-80df643bce14",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "afenwick",
+                            "emailAddress": "test@example.com",
+                            "key": "afenwick",
+                            "name": "afenwick",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=afenwick",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/11115/Attach+via+Sketch.png",
+                        "created": "2017-07-12T14:03:28.207+1000",
+                        "filename": "Attach via Sketch.png",
+                        "id": "11115",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/11115",
+                        "size": 45118,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/11115/Attach+via+Sketch.png"
+                    }
+                ],
+                "issuetype": {
+                    "avatarId": 10315,
+                    "description": "Created by JIRA Agile - do not edit or delete. Issue type for a user story.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype",
+                    "id": "10100",
+                    "name": "Story",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10100",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557057:fdcbc796-ea98-4b6c-bf98-80df643bce14",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "afenwick",
+                    "emailAddress": "test@example.com",
+                    "key": "afenwick",
+                    "name": "afenwick",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=afenwick",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/",
+                    "id": "10101",
+                    "name": "DESIGNING",
+                    "self": "https://example.atlassian.net/rest/api/2/status/10101",
+                    "statusCategory": {
+                        "colorName": "yellow",
+                        "id": 4,
+                        "key": "indeterminate",
+                        "name": "In Progress",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/4"
+                    }
+                },
+                "summary": "Mock Prototype copied from InVision"
+            },
+            "id": "10500",
+            "key": "SFJ-28",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10500"
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": null,
+                "attachment": [],
+                "issuetype": {
+                    "avatarId": 10315,
+                    "description": "Created by JIRA Agile - do not edit or delete. Issue type for a user story.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype",
+                    "id": "10100",
+                    "name": "Story",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10100",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557058:1c79d767-ed85-43a8-b9ba-fabc63d66496",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Danny Wu",
+                    "emailAddress": "test@example.com",
+                    "key": "dwu",
+                    "name": "dwu",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=dwu",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/",
+                    "id": "10100",
+                    "name": "Backlog",
+                    "self": "https://example.atlassian.net/rest/api/2/status/10100",
+                    "statusCategory": {
+                        "colorName": "blue-gray",
+                        "id": 2,
+                        "key": "new",
+                        "name": "To Do",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/2"
+                    }
+                },
+                "summary": "As a designer, I can publish my selected layers/artboards with a keyboard shortcut or menu item, so I can export multiple sizes of an asset"
+            },
+            "id": "10426",
+            "key": "SFJ-27",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10426"
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": null,
+                "attachment": [],
+                "issuetype": {
+                    "avatarId": 10315,
+                    "description": "Created by JIRA Agile - do not edit or delete. Issue type for a user story.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype",
+                    "id": "10100",
+                    "name": "Story",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10100",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557058:1c79d767-ed85-43a8-b9ba-fabc63d66496",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Danny Wu",
+                    "emailAddress": "test@example.com",
+                    "key": "dwu",
+                    "name": "dwu",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=dwu",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/images/icons/statuses/inprogress.png",
+                    "id": "3",
+                    "name": "READY FOR DEV",
+                    "self": "https://example.atlassian.net/rest/api/2/status/3",
+                    "statusCategory": {
+                        "colorName": "yellow",
+                        "id": 4,
+                        "key": "indeterminate",
+                        "name": "In Progress",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/4"
+                    }
+                },
+                "summary": "As a designer, when I publish a design to a JIRA issue, I automatically watch that issue"
+            },
+            "id": "10425",
+            "key": "SFJ-26",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10425"
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": null,
+                "attachment": [],
+                "issuetype": {
+                    "avatarId": 10315,
+                    "description": "Created by JIRA Agile - do not edit or delete. Issue type for a user story.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype",
+                    "id": "10100",
+                    "name": "Story",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10100",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557058:1c79d767-ed85-43a8-b9ba-fabc63d66496",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Danny Wu",
+                    "emailAddress": "test@example.com",
+                    "key": "dwu",
+                    "name": "dwu",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=dwu",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/",
+                    "id": "10100",
+                    "name": "Backlog",
+                    "self": "https://example.atlassian.net/rest/api/2/status/10100",
+                    "statusCategory": {
+                        "colorName": "blue-gray",
+                        "id": 2,
+                        "key": "new",
+                        "name": "To Do",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/2"
+                    }
+                },
+                "summary": "As a designer, when I publish an artboard or layer that already exists in the issue, I can choose to replace existing attachments"
+            },
+            "id": "10424",
+            "key": "SFJ-25",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10424"
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": {
+                    "accountId": "557057:fdcbc796-ea98-4b6c-bf98-80df643bce14",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/b8ee2af056b7552e1d3676eec931341d?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fb8ee2af056b7552e1d3676eec931341d%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "afenwick",
+                    "emailAddress": "test@example.com",
+                    "key": "afenwick",
+                    "name": "afenwick",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=afenwick",
+                    "timeZone": "Australia/Sydney"
+                },
+                "attachment": [],
+                "issuetype": {
+                    "avatarId": 10315,
+                    "description": "Created by JIRA Agile - do not edit or delete. Issue type for a user story.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype",
+                    "id": "10100",
+                    "name": "Story",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10100",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557058:1c79d767-ed85-43a8-b9ba-fabc63d66496",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Danny Wu",
+                    "emailAddress": "test@example.com",
+                    "key": "dwu",
+                    "name": "dwu",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=dwu",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/",
+                    "id": "10101",
+                    "name": "DESIGNING",
+                    "self": "https://example.atlassian.net/rest/api/2/status/10101",
+                    "statusCategory": {
+                        "colorName": "yellow",
+                        "id": 4,
+                        "key": "indeterminate",
+                        "name": "In Progress",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/4"
+                    }
+                },
+                "summary": "As a designer, when I drag an asset over an existing attachment, it replaces (deletes) the old attachment"
+            },
+            "id": "10423",
+            "key": "SFJ-24",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10423"
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": null,
+                "attachment": [
+                    {
+                        "author": {
+                            "accountId": "557058:6ea56496-8c9b-4e0a-bc03-7412dedb3304",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "Tim Pettersen",
+                            "emailAddress": "test@example.com",
+                            "key": "admin",
+                            "name": "admin",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=admin",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/12534/Connect%401x.png",
+                        "created": "2017-08-17T16:08:08.812+1000",
+                        "filename": "test@example.com",
+                        "id": "12534",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/12534",
+                        "size": 481119,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/12534/Connect%401x.png"
+                    },
+                    {
+                        "author": {
+                            "accountId": "557058:6ea56496-8c9b-4e0a-bc03-7412dedb3304",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "Tim Pettersen",
+                            "emailAddress": "test@example.com",
+                            "key": "admin",
+                            "name": "admin",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=admin",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/12535/Details+empty%401x.png",
+                        "created": "2017-08-17T16:08:08.834+1000",
+                        "filename": "test@example.com",
+                        "id": "12535",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/12535",
+                        "size": 454449,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/12535/Details+empty%401x.png"
+                    },
+                    {
+                        "author": {
+                            "accountId": "557058:6ea56496-8c9b-4e0a-bc03-7412dedb3304",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "Tim Pettersen",
+                            "emailAddress": "test@example.com",
+                            "key": "admin",
+                            "name": "admin",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=admin",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/12538/Issue+list+dropdown%401x.png",
+                        "created": "2017-08-17T16:08:13.232+1000",
+                        "filename": "test@example.com",
+                        "id": "12538",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/12538",
+                        "size": 510791,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/12538/Issue+list+dropdown%401x.png"
+                    },
+                    {
+                        "author": {
+                            "accountId": "557058:6ea56496-8c9b-4e0a-bc03-7412dedb3304",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "Tim Pettersen",
+                            "emailAddress": "test@example.com",
+                            "key": "admin",
+                            "name": "admin",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=admin",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/12536/Issue+list+dropdown+hover%401x.png",
+                        "created": "2017-08-17T16:08:11.315+1000",
+                        "filename": "test@example.com",
+                        "id": "12536",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/12536",
+                        "size": 476893,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/12536/Issue+list+dropdown+hover%401x.png"
+                    },
+                    {
+                        "author": {
+                            "accountId": "557058:6ea56496-8c9b-4e0a-bc03-7412dedb3304",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "Tim Pettersen",
+                            "emailAddress": "test@example.com",
+                            "key": "admin",
+                            "name": "admin",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=admin",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/12509/Issue+list+dropdown+hover%401x.png",
+                        "created": "2017-08-17T10:05:03.670+1000",
+                        "filename": "test@example.com",
+                        "id": "12509",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/12509",
+                        "size": 476893,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/12509/Issue+list+dropdown+hover%401x.png"
+                    },
+                    {
+                        "author": {
+                            "accountId": "557058:6ea56496-8c9b-4e0a-bc03-7412dedb3304",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "Tim Pettersen",
+                            "emailAddress": "test@example.com",
+                            "key": "admin",
+                            "name": "admin",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=admin",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/12537/Issue+list+empty+state+-+%40mentioned%403x.png",
+                        "created": "2017-08-17T16:08:11.623+1000",
+                        "filename": "test@example.com",
+                        "id": "12537",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/12537",
+                        "size": 2570678,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/12537/Issue+list+empty+state+-+%40mentioned%403x.png"
+                    },
+                    {
+                        "author": {
+                            "accountId": "557058:6ea56496-8c9b-4e0a-bc03-7412dedb3304",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "Tim Pettersen",
+                            "emailAddress": "test@example.com",
+                            "key": "admin",
+                            "name": "admin",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=admin",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/12539/Issue+list+empty+state+-+assigned%403x.png",
+                        "created": "2017-08-17T16:08:13.642+1000",
+                        "filename": "test@example.com",
+                        "id": "12539",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/12539",
+                        "size": 2572543,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/12539/Issue+list+empty+state+-+assigned%403x.png"
+                    },
+                    {
+                        "author": {
+                            "accountId": "557058:6ea56496-8c9b-4e0a-bc03-7412dedb3304",
+                            "active": true,
+                            "avatarUrls": {
+                                "16x16": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                                "24x24": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                                "32x32": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                                "48x48": "https://avatar-cdn.atlassian.com/cdc341de052411b195074e3dabfd3c38?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fcdc341de052411b195074e3dabfd3c38%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                            },
+                            "displayName": "Tim Pettersen",
+                            "emailAddress": "test@example.com",
+                            "key": "admin",
+                            "name": "admin",
+                            "self": "https://example.atlassian.net/rest/api/2/user?username=admin",
+                            "timeZone": "Australia/Sydney"
+                        },
+                        "content": "https://example.atlassian.net/secure/attachment/12533/Issue+list+empty+state+-+recently+viewed%401x.png",
+                        "created": "2017-08-17T16:08:08.454+1000",
+                        "filename": "test@example.com",
+                        "id": "12533",
+                        "mimeType": "image/png",
+                        "self": "https://example.atlassian.net/rest/api/2/attachment/12533",
+                        "size": 468794,
+                        "thumbnail": "https://example.atlassian.net/secure/thumbnail/12533/Issue+list+empty+state+-+recently+viewed%401x.png"
+                    }
+                ],
+                "issuetype": {
+                    "avatarId": 10315,
+                    "description": "Created by JIRA Agile - do not edit or delete. Issue type for a user story.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype",
+                    "id": "10100",
+                    "name": "Story",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10100",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557058:1c79d767-ed85-43a8-b9ba-fabc63d66496",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Danny Wu",
+                    "emailAddress": "test@example.com",
+                    "key": "dwu",
+                    "name": "dwu",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=dwu",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/",
+                    "id": "10100",
+                    "name": "Backlog",
+                    "self": "https://example.atlassian.net/rest/api/2/status/10100",
+                    "statusCategory": {
+                        "colorName": "blue-gray",
+                        "id": 2,
+                        "key": "new",
+                        "name": "To Do",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/2"
+                    }
+                },
+                "summary": "As a designer, I can drag any number of layers to a JIRA issue to publish, so I can share assets"
+            },
+            "id": "10422",
+            "key": "SFJ-23",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10422"
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": null,
+                "attachment": [],
+                "issuetype": {
+                    "avatarId": 10315,
+                    "description": "Created by JIRA Agile - do not edit or delete. Issue type for a user story.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype",
+                    "id": "10100",
+                    "name": "Story",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10100",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557058:1c79d767-ed85-43a8-b9ba-fabc63d66496",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Danny Wu",
+                    "emailAddress": "test@example.com",
+                    "key": "dwu",
+                    "name": "dwu",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=dwu",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/",
+                    "id": "10100",
+                    "name": "Backlog",
+                    "self": "https://example.atlassian.net/rest/api/2/status/10100",
+                    "statusCategory": {
+                        "colorName": "blue-gray",
+                        "id": 2,
+                        "key": "new",
+                        "name": "To Do",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/2"
+                    }
+                },
+                "summary": "As a designer, I can drag an artboard to a JIRA issue in the list view to push, and the issue is expanded automatically, so I can verify I uploaded to the right issue and it's convenient for me to comment or update the issue"
+            },
+            "id": "10421",
+            "key": "SFJ-22",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10421"
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": null,
+                "attachment": [],
+                "issuetype": {
+                    "avatarId": 10315,
+                    "description": "Created by JIRA Agile - do not edit or delete. Issue type for a user story.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype",
+                    "id": "10100",
+                    "name": "Story",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10100",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557058:1c79d767-ed85-43a8-b9ba-fabc63d66496",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Danny Wu",
+                    "emailAddress": "test@example.com",
+                    "key": "dwu",
+                    "name": "dwu",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=dwu",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/",
+                    "id": "10100",
+                    "name": "Backlog",
+                    "self": "https://example.atlassian.net/rest/api/2/status/10100",
+                    "statusCategory": {
+                        "colorName": "blue-gray",
+                        "id": 2,
+                        "key": "new",
+                        "name": "To Do",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/2"
+                    }
+                },
+                "summary": "As a designer, I can drag an artboard to a JIRA issue to publish, so I can share designs"
+            },
+            "id": "10420",
+            "key": "SFJ-21",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10420"
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "fields": {
+                "assignee": null,
+                "attachment": [],
+                "issuetype": {
+                    "avatarId": 10315,
+                    "description": "Created by JIRA Agile - do not edit or delete. Issue type for a user story.",
+                    "iconUrl": "https://example.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10315&avatarType=issuetype",
+                    "id": "10100",
+                    "name": "Story",
+                    "self": "https://example.atlassian.net/rest/api/2/issuetype/10100",
+                    "subtask": false
+                },
+                "reporter": {
+                    "accountId": "557058:1c79d767-ed85-43a8-b9ba-fabc63d66496",
+                    "active": true,
+                    "avatarUrls": {
+                        "16x16": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=16&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D16%26noRedirect%3Dtrue",
+                        "24x24": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=24&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D24%26noRedirect%3Dtrue",
+                        "32x32": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=32&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D32%26noRedirect%3Dtrue",
+                        "48x48": "https://avatar-cdn.atlassian.com/bf5901da90384e1f3a9b2ceea0849c15?s=48&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fbf5901da90384e1f3a9b2ceea0849c15%3Fd%3Dmm%26s%3D48%26noRedirect%3Dtrue"
+                    },
+                    "displayName": "Danny Wu",
+                    "emailAddress": "test@example.com",
+                    "key": "dwu",
+                    "name": "dwu",
+                    "self": "https://example.atlassian.net/rest/api/2/user?username=dwu",
+                    "timeZone": "Australia/Sydney"
+                },
+                "status": {
+                    "description": "",
+                    "iconUrl": "https://example.atlassian.net/",
+                    "id": "10100",
+                    "name": "Backlog",
+                    "self": "https://example.atlassian.net/rest/api/2/status/10100",
+                    "statusCategory": {
+                        "colorName": "blue-gray",
+                        "id": 2,
+                        "key": "new",
+                        "name": "To Do",
+                        "self": "https://example.atlassian.net/rest/api/2/statuscategory/2"
+                    }
+                },
+                "summary": "As a designer, I can view existing comments on the issue, so I can see requirement clarifications, developer questions, and collaborate with my PM and developers in the plugin"
+            },
+            "id": "10419",
+            "key": "SFJ-20",
+            "self": "https://example.atlassian.net/rest/api/2/issue/10419"
+        }
+    ],
+    "maxResults": 10,
+    "startAt": 0,
+    "total": 39
+}

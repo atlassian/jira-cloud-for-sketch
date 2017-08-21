@@ -2,7 +2,7 @@ import fetch from 'sketch-module-fetch-polyfill'
 import { assign } from 'lodash'
 import { download, upload } from './request'
 import { getJiraHost, getBearerToken } from './auth'
-import JQL_FILTERS from './jql-filters'
+import jqlFilters from './jql-filters'
 import { issueFromRest } from './entity-mappers'
 import { standardIssueFields, maxMentionPickerResults } from './config'
 import { trace, isTraceEnabled } from './logger'
@@ -11,14 +11,13 @@ export default class JIRA {
   constructor () {
     this.baseUrl = `https://${getJiraHost()}`
     this.apiRoot = `${this.baseUrl}/rest/api/2`
-    this.jqlFilters = JQL_FILTERS
   }
 
   /**
    * Retrieves issues using JIRA's search API.
    */
   async getFilteredIssues (filterKey, opts) {
-    const filter = this.jqlFilters[filterKey]
+    const filter = jqlFilters[filterKey]
     if (!filter) {
       throw new Error(`No filter defined for ${filterKey}`)
     }

@@ -1,10 +1,12 @@
 import pluginCall from 'sketch-module-web-view/client'
 import uuid from 'uuid/v4'
+import { forOwn, assign } from 'lodash'
 import {
   SketchBridgeFunctionResultEvent,
   SketchBridgeFunctionCallbackEvent,
   SketchBridgeFunctionName,
-  SketchBridgeFunctionCallback
+  SketchBridgeFunctionCallback,
+  invocationKeyForTests
 } from './common'
 
 const invocations = window.__bridgeFunctionInvocations = window.__bridgeFunctionInvocations || {}
@@ -79,7 +81,7 @@ export default function bridgedFunctionCall (functionName, resultMapper) {
       const retry = () => {
         pluginCall(SketchBridgeFunctionName, invocationId, functionName, ...args)
       }
-      invocations[invocationId] = {resolve, reject, callbacks, retry}
+      invocations[invocationId] = {resolve, reject, callbacks, retry, functionName, args}
       retry()
     })
     .then(resultMapper || (x => x))
@@ -110,4 +112,34 @@ export function addGlobalErrorHandler (handler) {
 export function removeGlobalErrorHandler (handler) {
   const index = globalErrorHandlers.indexOf(handler)
   globalErrorHandlers.splice(index, 1)
+}
+
+/** Test utilities **/
+
+window.__addBridgeResponsesForTests = window.__addBridgeResponsesForTests || function (responses) {
+  console.log('Bridge responses for tests', responses)
+  function tryToRespondToPendingInvocations () {
+    forOwn(invocations, async (invocation, invocationId) => {
+      const key = invocationKeyForTests(invocation.functionName, ...invocation.args)
+      const response = responses[key]
+      if (response) {
+        console.log(`Found bridge response for for ${key}`, response)
+        window.__bridgeFunctionResultEventListener({
+          detail: assign({invocationId}, response)
+        })
+        delete invocations[invocationId]
+        if (response.once) {
+          delete responses[key]
+        }
+      } else {
+        console.log(`No bridge response yet for ${key}`)
+      }
+    })
+  }
+  // pluginCall updates the URL hash to communicate with the parent NSPanel
+  window.addEventListener('hashchange', () => {
+    tryToRespondToPendingInvocations()
+  })
+  // handle any invocations that were registered before we set up the listener
+  tryToRespondToPendingInvocations()
 }

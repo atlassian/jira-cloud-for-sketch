@@ -70,6 +70,7 @@ class Issue extends Component {
     const summaryWidthPx = 386 - keyWidthPx
     return (
       <IssueDiv
+        className='issue'
         onClick={() => {
           this.props.onSelectIssue(issue)
         }}
@@ -116,8 +117,8 @@ class IssueTypeField extends Component {
   render () {
     const type = this.props.type
     return (
-      <TypeDiv>
-        <TypeImage src={type.iconUrl} title={type.name} />
+      <TypeDiv className='issue-type' title={type.name}>
+        <TypeImage src={type.iconUrl} />
       </TypeDiv>
     )
   }
@@ -153,7 +154,9 @@ class IssueKeyField extends Component {
   render () {
     const { issueKey, widthPx } = this.props
     return (
-      <KeyDiv style={{width: `${widthPx}px`}}>
+      <KeyDiv
+        className='issue-key'
+        style={{width: `${widthPx}px`}}>
         {issueKey}
       </KeyDiv>
     )
@@ -175,7 +178,10 @@ class IssueSummaryField extends Component {
   render () {
     const {summary, widthPx} = this.props
     return (
-      <SummaryDiv title={summary} style={{width: `${widthPx}px`}}>
+      <SummaryDiv
+        className='issue-summary'
+        title={summary}
+        style={{width: `${widthPx}px`}}>
         {summary}
       </SummaryDiv>
     )

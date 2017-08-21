@@ -1,4 +1,6 @@
-export default {
+import { forOwn, assign } from 'lodash'
+
+const jqlFilters = {
   'RecentlyViewed': {
     displayName: 'Recently viewed',
     jql: 'issue in issueHistory() ' +
@@ -16,3 +18,11 @@ export default {
          'order by lastViewed'
   }
 }
+
+const filterArray = []
+forOwn(jqlFilters, (filter, key) => {
+  filterArray.push(assign({key}, filter))
+})
+
+export default jqlFilters
+export const jqlFilterArray = filterArray

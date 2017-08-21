@@ -41,7 +41,7 @@ class IssueSummary extends Component {
     var issue = this.props.issue
     return (
       <SummaryDiv>
-        <SummaryH5>{issue.summary}</SummaryH5>
+        <SummaryH5 className='selected-issue-summary'>{issue.summary}</SummaryH5>
       </SummaryDiv>
     )
   }

@@ -57,8 +57,10 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^3.0.1",
+    "http-server": "^0.10.0",
     "raw-loader": "^0.5.1",
     "regexp-replace-loader": "^1.0.0",
+    "selenium-webdriver": "^3.5.0",
     "skpm": "^0.9.13",
     "style-loader": "^0.18.1"
   },

@@ -17,8 +17,8 @@ export default class AssigneeAvatar extends Component {
       title = 'Unassigned'
     }
     return (
-      <AvatarDiv>
-        <AvatarWrapper title={title}>
+      <AvatarDiv className='issue-assignee' title={title}>
+        <AvatarWrapper>
           <Avatar src={avatarUrl} size='small' label={title} />
         </AvatarWrapper>
       </AvatarDiv>
