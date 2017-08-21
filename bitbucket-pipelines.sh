@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# install deps (TODO move these into a Dockerfile)
-apt-get update && apt-get install -y zip python-pip python-dev
-pip install boto3
-npm install -g skpm@0.9.16 bitbucket-build-status
-
 # run the tests
 npm install
 npm test
@@ -16,6 +11,10 @@ npm test
 
 # build the plugin
 skpm build
+
+# run the tests
+ava
+
 export PLUGIN_NAME="atlassian.sketchplugin"
 export PLUGIN_ZIP="${PLUGIN_NAME}-${BITBUCKET_COMMIT}.zip"
 export S3_BUCKET="atlassian-sketch-plugin"

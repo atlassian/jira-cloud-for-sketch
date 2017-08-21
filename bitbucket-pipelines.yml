@@ -1,4 +1,4 @@
-image: node:7.10.0
+image: kannonboy/atlassian-sketch-plugin:0.0.1
 
 pipelines:
   branches:

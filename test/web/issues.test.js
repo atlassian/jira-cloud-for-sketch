@@ -1,3 +1,4 @@
+import 'chromedriver'
 import 'babel-polyfill'
 import test from 'ava'
 import { HttpServer } from 'http-server'
@@ -14,17 +15,23 @@ const profile = require('./profile.json')
 const root = path.join(__dirname, '/../../atlassian.sketchplugin/Contents/Resources')
 new HttpServer({root}).listen(8080)
 
-test('Test plugin initializes', async t => {
-  const driver = await new webdriver.Builder()
-    .forBrowser('safari')
+let driver
+
+test.before(async () => {
+  driver = await new webdriver.Builder()
+    .forBrowser('chrome')
     .build()
 
   // Resizing is currently broken in Safari: https://github.com/SeleniumHQ/selenium/issues/3796
   // await driver.manage().window().setSize(512, 400)
+})
 
+test.serial('Test plugin initializes', async t => {
   await driver.get('http://localhost:8080/issues.html')
   await driver.wait(until.titleIs('Issues'), 1000)
-
+  await driver.wait(() => {
+    return driver.executeScript('return window.__addBridgeResponsesForTests != undefined')
+  }, 5000)
   await driver.executeScript(getTestDataScript())
 
   function getIssuesInList () {
@@ -55,6 +62,10 @@ test('Test plugin initializes', async t => {
     await firstIssue.findElement(By.css('.issue-assignee')).getAttribute('title'),
     'Assigned to Tim Pettersen'
   )
+})
+
+test.after.always(() => {
+  driver && driver.quit()
 })
 
 const bridgedFunctionResponses = {}
