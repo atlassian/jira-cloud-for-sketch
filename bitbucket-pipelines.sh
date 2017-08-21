@@ -13,7 +13,7 @@ npm test
 skpm build
 
 # run the tests
-ava
+# ava
 
 export PLUGIN_NAME="atlassian.sketchplugin"
 export PLUGIN_ZIP="${PLUGIN_NAME}-${BITBUCKET_COMMIT}.zip"
