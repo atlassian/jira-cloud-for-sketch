@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# run the tests
+# Install dependencies (there's a few!)
 npm install
-npm test
 
 # Note: the AtlassianSketchFramework is written in Objective-C and can not be
 # built in Bitbucket Pipelines' Docker environment. Therefore if you make
