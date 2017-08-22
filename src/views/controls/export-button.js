@@ -1,5 +1,6 @@
 import { createFailAlert } from '../../util'
 import { error, trace } from '../../logger'
+import buttonDelegate, { onClickSelector } from './button-delegate'
 
 export default { add, remove }
 
@@ -42,13 +43,14 @@ async function add (context) {
     const uploadIcon = NSImage.alloc().initWithContentsOfFile(
       context.plugin.urlForResourceNamed('upload-icon.png').path()
     )
-    const jiraButton = NSButton.buttonWithImage_target_action(uploadIcon, null, null)
-    jiraButton.setToolTip(jiraButtonToolTip)
-
-    jiraButton.setCOSJSTargetFunction(function (sender) {
-      trace('JIRA button pressed!')
-      createFailAlert(context, 'It worked', 'Sweet as')
+    const jiraButtonDelegate = buttonDelegate({
+      onClick: function () {
+        trace('JIRA button pressed!')
+        createFailAlert(context, 'It worked', 'Sweet as')
+      }
     })
+    const jiraButton = NSButton.buttonWithImage_target_action(uploadIcon, jiraButtonDelegate, onClickSelector)
+    jiraButton.setToolTip(jiraButtonToolTip)
 
     exportButtonBar.addSubview(jiraButton)
     jiraButton.setFrame(NSMakeRect(110, -2, 56, 32))
