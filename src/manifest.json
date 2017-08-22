@@ -32,6 +32,17 @@
 			"identifier": "test",
 			"script": "./commands/test.js",
 			"shortcut": "cmd alt b"
+		},
+		{
+			"name": "Add Export Button",
+			"identifier": "add-export-button",
+			"script": "./commands/add-export-button.js",
+			"handlers": {
+				"actions": {
+					"AddExportFormat": "onRun",
+					"SelectionChanged": "onRun"
+				}
+			}
 		}
 	],
 	"menu": {
