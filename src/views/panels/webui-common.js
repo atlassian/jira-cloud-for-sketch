@@ -5,6 +5,7 @@ import { trace } from '../../logger'
 import createBridgedWebUI from '../bridge/host'
 import analytics from '../../analytics'
 import { titlebarHeight } from './ui-constants'
+import panelDelegate from './panel-delegate'
 
 /**
  * Important to note:
@@ -87,6 +88,13 @@ export function createWebUI (context, identifier, page, options) {
   // webUI.panel.hidesOnDeactivate = false
   // webUI.panel.setLevel(NSNormalWindowLevel)
 
+  webUI.panel.delegate = panelDelegate({
+    onClose: () => {
+      trace(`Panel closed: ${identifier}`)
+      NSThread.mainThread().threadDictionary().removeObjectForKey(identifier)
+    }
+  })
+
   return webUI
 }
 
@@ -94,7 +102,7 @@ export function findPanel (id) {
   return NSThread.mainThread().threadDictionary()[id]
 }
 
-export function disposePanel (id) {
+export function closePanel (id) {
   const panel = findPanel(id)
   if (panel) {
     try {
@@ -102,13 +110,12 @@ export function disposePanel (id) {
     } catch (e) {
       trace(`Exception raised when closing window (already closed?): ${e}`)
     }
-    NSThread.mainThread().threadDictionary().removeObjectForKey(id)
   }
 }
 
-export function disposeAllPluginPanels () {
-  disposePanel(IssuePanelId)
-  disposePanel(ConnectPanelId)
+export function closeAllPluginPanels () {
+  closePanel(IssuePanelId)
+  closePanel(ConnectPanelId)
 }
 
 const panelPrefix = 'atlassian-sketch-plugin'
