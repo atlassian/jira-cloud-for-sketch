@@ -1,8 +1,11 @@
 import '../default-imports'
-import { executeSafelyAsync } from '../util'
+import { executeSafelyAsync, createFailAlert } from '../util'
 import { error, trace } from '../logger'
 
 export default async function (context) {
+  var coscript = COScript.currentCOScript()
+  coscript.setShouldKeepAround(true)
+
   executeSafelyAsync(context, function () {
     const document = context.document || (context.actionContext && context.actionContext.document)
     if (!document) {
@@ -31,7 +34,8 @@ export default async function (context) {
     const exportButtonBar = exportSubviews[exportSubviews.length - 1]
     const exportButtons = exportButtonBar.subviews()
 
-    if (exportButtons.length == 3 && exportButtons[2].title() == 'JIRA') {
+    // Assumption: There are two standard export buttons (plus ours)
+    if (exportButtons.length == 3) {
       // button already registered \o/
       return
     }
@@ -53,7 +57,15 @@ export default async function (context) {
     }
 
     // Add the JIRA button
-    const jiraButton = NSButton.buttonWithTitle_target_action('JIRA', null, null)
+    const uploadIcon = NSImage.alloc().initWithContentsOfFile(
+      context.plugin.urlForResourceNamed('upload-icon.png').path()
+    )
+    const jiraButton = NSButton.buttonWithImage_target_action(uploadIcon, null, null)
+    jiraButton.setCOSJSTargetFunction(function (sender) {
+      trace('JIRA button pressed!')
+      createFailAlert(context, 'It worked', 'Sweet as')
+    })
+
     exportButtonBar.addSubview(jiraButton)
     jiraButton.setFrame(NSMakeRect(110, -2, 56, 32))
 
