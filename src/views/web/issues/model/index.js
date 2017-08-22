@@ -9,8 +9,8 @@ const _loadIssuesForFilter = bridgedFunctionCall('loadIssuesForFilter', IssuesMa
 const _loadProfile = bridgedFunctionCall('loadProfile', ProfileMapper)
 const _viewSettings = bridgedFunctionCall('viewSettings')
 const _reauthorize = bridgedFunctionCall('reauthorize')
-const _resizeForIssueView = bridgedFunctionCall('resizeForIssueView')
-const _resizeForIssueList = bridgedFunctionCall('resizeForIssueList')
+const _onIssueSelected = bridgedFunctionCall('onIssueSelected')
+const _onIssueDeselected = bridgedFunctionCall('onIssueDeselected')
 
 const maxErrorMessageLength = 55
 
@@ -79,13 +79,13 @@ export default class ViewModel {
   selectIssue (issue) {
     this.issues.selected = issue
     issue.onSelected()
-    _resizeForIssueView()
+    _onIssueSelected()
   }
 
   deselectIssue () {
     this.issues.selected = null
     analytics('backToViewIssueList')
-    _resizeForIssueList()
+    _onIssueDeselected()
   }
 
   async loadProfile () {

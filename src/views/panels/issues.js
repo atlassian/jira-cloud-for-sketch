@@ -7,6 +7,7 @@ import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import { titlebarHeight } from './ui-constants'
 import JIRA from '../../jira'
 import openConnectPanel from './connect'
+import exportButton from '../controls/export-button'
 
 const issueListDimensions = [
   akGridSizeUnitless * 64,
@@ -41,6 +42,14 @@ export default function (context) {
       getIssue (issueKey, updateHistory) {
         return attachments.getIssue(issueKey, updateHistory)
       },
+      onIssueSelected (issueKey) {
+        webUI.resizePanel(...issueViewDimensions)
+        exportButton.add(context)
+      },
+      onIssueDeselected (issueKey) {
+        webUI.resizePanel(...issueListDimensions)
+        exportButton.remove(context)
+      },
       getWatchers (issueKey) {
         return jira.getWatchers(issueKey)
       },
@@ -70,12 +79,6 @@ export default function (context) {
       reauthorize () {
         webUI.panel.close()
         openConnectPanel(context)
-      },
-      resizeForIssueList () {
-        webUI.resizePanel(...issueListDimensions)
-      },
-      resizeForIssueView () {
-        webUI.resizePanel(...issueViewDimensions)
       }
     }
   })
