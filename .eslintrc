@@ -12,38 +12,38 @@ parserOptions:
   ecmaFeatures:
     jsx: true
 globals:
-  PLUGIN_VERSION: false
-  COScript: false
-  coscript: false
-  NSClosableWindowMask: false
-  NSTitledWindowMask: false
-  NSAlertFirstButtonReturn: false
-  NSPasteboard: false
-  NSDragPboard: false
-  NSTemporaryDirectory: false
-  MSImmutableColor: false
-  MOClassDescription: false
-  NSUUID: false
-  NSClassFromString: false
-  NSSelectorFromString: false
-  NSNotificationCenter: false
-  NSTaskDidTerminateNotification: false
-  NSFileHandleReadToEndOfFileCompletionNotification: false
-  NSFileManager: false
-  NSDownloadsDirectory: false
-  NSUserDomainMask: false
-  NSMutableURLRequest: false
-  NSURLConnection: false
-  NSOutputStream: false
-  NSURLSession: false
-  NSURLSessionConfiguration: false
-  MOPointer: false
-  NSOperationQueue: false
-  NSURLDownload: false
-  NSASCIIStringEncoding: false
-  NSInputStream: false
-  Mocha: false
   AtlassianSketchFramework: false
   AtlassianURLConnectionDelegate: false
   AtlassianURLDownloadDelegate: false
+  COScript: false
+  coscript: false
+  MOClassDescription: false
+  MOPointer: false
+  MSImmutableColor: false
+  Mocha: false
+  NSASCIIStringEncoding: false
+  NSAlertFirstButtonReturn: false
+  NSClassFromString: false
+  NSClosableWindowMask: false
+  NSDownloadsDirectory: false
+  NSDragPboard: false
+  NSFileHandleReadToEndOfFileCompletionNotification: false
+  NSFileManager: false
   NSFileSize: false
+  NSInputStream: false
+  NSMutableURLRequest: false
+  NSNotificationCenter: false
+  NSOperationQueue: false
+  NSOutputStream: false
+  NSPasteboard: false
+  NSSelectorFromString: false
+  NSTaskDidTerminateNotification: false
+  NSTemporaryDirectory: false
+  NSThread: false
+  NSTitledWindowMask: false
+  NSURLConnection: false
+  NSURLDownload: false
+  NSURLSession: false
+  NSURLSessionConfiguration: false
+  NSUUID: false
+  NSUserDomainMask: false

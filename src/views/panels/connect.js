@@ -1,4 +1,4 @@
-import createWebUI from './webui-common'
+import { createWebUI, ConnectPanelId } from './webui-common'
 import {
   setJiraUrl,
   getJiraHost,
@@ -14,8 +14,7 @@ import openIssuesPanel from './issues'
 import { trace } from '../../logger'
 
 export default function (context) {
-  const webUI = createWebUI(context, {
-    name: 'connect',
+  const webUI = createWebUI(context, ConnectPanelId, 'connect.html', {
     width: 44 * akGridSizeUnitless,
     // +2 == fudge (lineheights don't quite add up to a multiple of akGridSize)
     height: titlebarHeight + 40 * akGridSizeUnitless + 2,

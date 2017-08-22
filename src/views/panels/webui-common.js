@@ -1,5 +1,5 @@
 import { assign } from 'lodash'
-import { executeSafely, randomHex, openInBrowser } from '../../util'
+import { executeSafely, openInBrowser } from '../../util'
 import { jiraSketchIntegrationFaqUrl } from '../../config'
 import { trace } from '../../logger'
 import createBridgedWebUI from '../bridge/host'
@@ -19,12 +19,12 @@ import { titlebarHeight } from './ui-constants'
  *
  * via https://stackoverflow.com/a/7389032
  */
-export default function (context, options) {
+export function createWebUI (context, identifier, page, options) {
   // default options
   options = assign(
     {
-      identifier: `jira-sketch-plugin.${options.name}.` + randomHex(0xffffffff),
-      page: `${options.name}.html`,
+      identifier,
+      page,
       onlyShowCloseButton: true,
       hideTitleBar: false,
       title: ' ',
@@ -89,3 +89,28 @@ export default function (context, options) {
 
   return webUI
 }
+
+export function findPanel (id) {
+  return NSThread.mainThread().threadDictionary()[id]
+}
+
+export function disposePanel (id) {
+  const panel = findPanel(id)
+  if (panel) {
+    try {
+      panel.close()
+    } catch (e) {
+      trace(`Exception raised when closing window (already closed?): ${e}`)
+    }
+    NSThread.mainThread().threadDictionary().removeObjectForKey(id)
+  }
+}
+
+export function disposeAllPluginPanels () {
+  disposePanel(IssuePanelId)
+  disposePanel(ConnectPanelId)
+}
+
+const panelPrefix = 'atlassian-sketch-plugin'
+export const IssuePanelId = `${panelPrefix}-issues`
+export const ConnectPanelId = `${panelPrefix}-connect`

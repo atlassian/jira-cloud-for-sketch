@@ -1,4 +1,4 @@
-import createWebUI from './webui-common'
+import { createWebUI, IssuePanelId } from './webui-common'
 import Filters from './helpers/filters'
 import Uploads from './helpers/uploads'
 import Attachments from './helpers/attachments'
@@ -19,8 +19,7 @@ const issueViewDimensions = [
 ]
 
 export default function (context) {
-  const webUI = createWebUI(context, {
-    name: 'issues',
+  const webUI = createWebUI(context, IssuePanelId, 'issues.html', {
     width: issueListDimensions[0],
     height: issueListDimensions[1],
     handlers: {
