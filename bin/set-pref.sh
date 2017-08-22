@@ -1,3 +1,4 @@
+#/bin/bash
 if [ "$#" -ne 2 ]; then
   echo 'Usage set-pref.sh <key> <value>'
   exit 1
