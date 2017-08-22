@@ -79,13 +79,14 @@ export default class ViewModel {
   selectIssue (issue) {
     this.issues.selected = issue
     issue.onSelected()
-    _onIssueSelected()
+    _onIssueSelected(issue.key)
   }
 
   deselectIssue () {
+    const prevKey = this.issues.selected.key
     this.issues.selected = null
+    _onIssueDeselected(prevKey)
     analytics('backToViewIssueList')
-    _onIssueDeselected()
   }
 
   async loadProfile () {

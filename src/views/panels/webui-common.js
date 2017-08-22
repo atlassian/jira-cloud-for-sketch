@@ -92,6 +92,7 @@ export function createWebUI (context, identifier, page, options) {
     onClose: () => {
       trace(`Panel closed: ${identifier}`)
       NSThread.mainThread().threadDictionary().removeObjectForKey(identifier)
+      options.onClose && options.onClose()
     }
   })
 

@@ -8,6 +8,7 @@ import { titlebarHeight } from './ui-constants'
 import JIRA from '../../jira'
 import openConnectPanel from './connect'
 import exportButton from '../controls/export-button'
+import pluginState, { keys } from '../../plugin-state'
 
 const issueListDimensions = [
   akGridSizeUnitless * 64,
@@ -23,6 +24,10 @@ export default function (context) {
   const webUI = createWebUI(context, IssuePanelId, 'issues.html', {
     width: issueListDimensions[0],
     height: issueListDimensions[1],
+    onClose: function () {
+      pluginState[keys.selectedIssue] = null
+      exportButton.remove(context)
+    },
     handlers: {
       async loadFilters () {
         return filters.loadFilters()
@@ -45,10 +50,12 @@ export default function (context) {
       onIssueSelected (issueKey) {
         webUI.resizePanel(...issueViewDimensions)
         exportButton.add(context)
+        pluginState[keys.selectedIssue] = issueKey
       },
       onIssueDeselected (issueKey) {
         webUI.resizePanel(...issueListDimensions)
         exportButton.remove(context)
+        pluginState[keys.selectedIssue] = null
       },
       getWatchers (issueKey) {
         return jira.getWatchers(issueKey)
