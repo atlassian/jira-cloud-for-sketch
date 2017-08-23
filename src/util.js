@@ -1,14 +1,6 @@
 import { trace } from './logger'
 import { readFile } from 'sketch-module-fs'
 
-export function setIconForAlert (context, alert) {
-  alert.setIcon(
-    NSImage.alloc().initWithContentsOfFile(
-      context.plugin.urlForResourceNamed('jira.png').path()
-    )
-  )
-}
-
 export function executeSafely (context, func) {
   try {
     func(context)
@@ -25,19 +17,19 @@ export async function executeSafelyAsync (context, func) {
   }
 }
 
-export function createFailAlert (context, title, error) {
-  console.log(error)
-  var alert = NSAlert.alloc().init()
-  alert.informativeText = '' + error
+export function createFailAlert (context, title, e) {
+  trace(e)
+  const alert = NSAlert.alloc().init()
+  alert.informativeText = '' + e
   alert.messageText = title
   alert.addButtonWithTitle('OK')
-  setIconForAlert(context, alert)
-
-  var responseCode = alert.runModal()
-
-  return {
-    responseCode
-  }
+  alert.setIcon(
+    NSImage.alloc().initWithContentsOfFile(
+      context.plugin.urlForResourceNamed('jira.png').path()
+    )
+  )
+  const responseCode = alert.runModal()
+  return {responseCode}
 }
 
 export function openInBrowser (urlString) {
@@ -195,4 +187,8 @@ export function localPathToNSURLString (localPath) {
 
 export function documentFromContext (context) {
   return context.document || (context.actionContext && context.actionContext.document) || null
+}
+
+export function pluralize (n, singular, plural) {
+  return n == 1 ? singular : plural
 }

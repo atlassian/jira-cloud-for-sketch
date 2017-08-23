@@ -23,6 +23,7 @@ globals:
   Mocha: false
   NSASCIIStringEncoding: false
   NSAlertFirstButtonReturn: false
+  NSAlertSecondButtonReturn: false
   NSClassFromString: false
   NSClosableWindowMask: false
   NSDownloadsDirectory: false
@@ -31,6 +32,7 @@ globals:
   NSFileManager: false
   NSFileSize: false
   NSInputStream: false
+  NSModalResponseCancel: false
   NSMutableURLRequest: false
   NSNotificationCenter: false
   NSOperationQueue: false
