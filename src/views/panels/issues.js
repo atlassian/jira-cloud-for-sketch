@@ -8,6 +8,7 @@ import { titlebarHeight } from './ui-constants'
 import JIRA from '../../jira'
 import openConnectPanel from './connect'
 import exportButton from '../controls/export-button'
+import keepOrReplaceAlert from '../alerts/keep-or-replace'
 import pluginState, { keys } from '../../plugin-state'
 
 const issueListDimensions = [
@@ -44,6 +45,9 @@ export default function (context) {
       },
       uploadAttachment (issueKey, attachment, progress) {
         return uploads.uploadAttachment(issueKey, attachment, progress)
+      },
+      promptKeepOrReplace (issueKey, matchingImages) {
+        return keepOrReplaceAlert(context, issueKey, matchingImages)
       },
       getIssue (issueKey, updateHistory) {
         return attachments.getIssue(issueKey, updateHistory)

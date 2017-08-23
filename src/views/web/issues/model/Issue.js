@@ -8,6 +8,7 @@ import { analytics } from '../../util'
 const _getIssue = bridgedFunctionCall('getIssue', IssueMapper)
 const _getDroppedFiles = bridgedFunctionCall('getDroppedFiles', AttachmentsMapper)
 const _openInBrowser = bridgedFunctionCall('openInBrowser')
+const _promptKeepOrReplace = bridgedFunctionCall('promptKeepOrReplace')
 
 export default class Issue {
   @observable attachments = []
@@ -113,10 +114,27 @@ export default class Issue {
   }
 
   async uploadExportedSelection (files) {
+    this.keepOrReplaceMatchingAttachments(files)
     files.map(AttachmentMapper).forEach(attachment => {
       attachment.upload(this.key)
       this.attachments.splice(0, 0, attachment)
     })
+  }
+
+  async keepOrReplaceMatchingAttachments (files) {
+    const attachments = this.attachments.slice().filter(
+      attachment => { return !(attachment.uploading || attachment.deleting) }
+    )
+    const matching = intersectionBy(attachments, files, 'filename')
+    if (matching.length > 0) {
+      const choice = await _promptKeepOrReplace(
+        this.key,
+        matching.map(file => file.filename)
+      )
+      if (choice === 'replace') {
+        matching.forEach(attachment => attachment.delete())
+      }
+    }
   }
 
   @computed get browseUrl () {
