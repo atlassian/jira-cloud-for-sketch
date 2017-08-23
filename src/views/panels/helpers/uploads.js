@@ -5,11 +5,11 @@ import {
   fileAttributes
 } from '../../../util'
 import { getDraggedFiles } from '../../../pasteboard'
-import { isTraceEnabled, trace } from '../../../logger'
+import { isTraceEnabled, trace, error } from '../../../logger'
 import { jiraDateMomentFormat, attachmentUploadConcurrency } from '../../../config'
 import { postMultiple, event } from '../../../analytics'
 import { documentFromContext, executeSafelyAsync } from '../../../util'
-import pluginState, { keys } from '../../../plugin-state'
+import { getSelectedIssueKey } from '../../../plugin-state'
 import { exportSelection } from '../../../export'
 import { attachmentFromRest } from '../../../entity-mappers'
 import Queue from 'promise-queue'
@@ -31,9 +31,9 @@ export default class Uploads {
 
   async exportSelectedLayersToSelectedIssue () {
     executeSafelyAsync(this.context, async () => {
-      const issueKey = pluginState[keys.selectedIssue] + ''
+      const issueKey = getSelectedIssueKey()
       if (!issueKey) {
-        trace('No issue selected, ignoring export request')
+        error('No issue selected, ignoring export request')
         return
       }
       const document = documentFromContext(this.context)

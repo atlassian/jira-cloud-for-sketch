@@ -1,6 +1,6 @@
 import { error, trace } from '../../logger'
 import buttonDelegate, { onClickSelector } from './button-delegate'
-import pluginState, { keys } from '../../plugin-state'
+import { triggerExportSelectedLayers } from '../../plugin-state'
 
 export default { add, remove }
 
@@ -45,12 +45,9 @@ async function add (context) {
     )
     const jiraButtonDelegate = buttonDelegate({
       onClick: function () {
-        const uploads = pluginState[keys.uploads]
-        if (!uploads) {
-          error(`No ${keys.uploads} in pluginState`)
-          return
+        if (!triggerExportSelectedLayers()) {
+          error('Failed to trigger export of selected layers')
         }
-        uploads()
       }
     })
     const jiraButton = NSButton.buttonWithImage_target_action(uploadIcon, jiraButtonDelegate, onClickSelector)

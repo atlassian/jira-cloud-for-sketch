@@ -9,7 +9,7 @@ import JIRA from '../../jira'
 import openConnectPanel from './connect'
 import exportButton from '../controls/export-button'
 import keepOrReplaceAlert from '../alerts/keep-or-replace'
-import pluginState, { keys } from '../../plugin-state'
+import { setSelectedIssueKey, setExportSelectedLayersFn } from '../../plugin-state'
 
 const issueListDimensions = [
   akGridSizeUnitless * 64,
@@ -26,8 +26,8 @@ export default function (context) {
     width: issueListDimensions[0],
     height: issueListDimensions[1],
     onClose: function () {
-      pluginState[keys.selectedIssue] = null
-      pluginState[keys.uploads] = null
+      setSelectedIssueKey(null)
+      setExportSelectedLayersFn(null)
       exportButton.remove(context)
     },
     handlers: {
@@ -55,12 +55,12 @@ export default function (context) {
       onIssueSelected (issueKey) {
         webUI.resizePanel(...issueViewDimensions)
         exportButton.add(context)
-        pluginState[keys.selectedIssue] = issueKey
+        setSelectedIssueKey(issueKey)
       },
       onIssueDeselected (issueKey) {
         webUI.resizePanel(...issueListDimensions)
         exportButton.remove(context)
-        pluginState[keys.selectedIssue] = null
+        setSelectedIssueKey(null)
       },
       getWatchers (issueKey) {
         return jira.getWatchers(issueKey)
@@ -100,9 +100,9 @@ export default function (context) {
   var attachments = new Attachments(context, webUI, jira)
   var uploads = new Uploads(context, webUI, jira, attachments)
 
-  pluginState[keys.uploads] = function () {
+  setExportSelectedLayersFn(function () {
     uploads.exportSelectedLayersToSelectedIssue()
-  }
+  })
 
   analytics.viewIssueListPanelOpen()
 
