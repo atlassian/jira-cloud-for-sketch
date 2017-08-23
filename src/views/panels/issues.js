@@ -26,6 +26,7 @@ export default function (context) {
     height: issueListDimensions[1],
     onClose: function () {
       pluginState[keys.selectedIssue] = null
+      pluginState[keys.uploads] = null
       exportButton.remove(context)
     },
     handlers: {
@@ -94,6 +95,10 @@ export default function (context) {
   var filters = new Filters(context, webUI, jira)
   var attachments = new Attachments(context, webUI, jira)
   var uploads = new Uploads(context, webUI, jira, attachments)
+
+  pluginState[keys.uploads] = function () {
+    uploads.exportSelectedLayersToSelectedIssue()
+  }
 
   analytics.viewIssueListPanelOpen()
 

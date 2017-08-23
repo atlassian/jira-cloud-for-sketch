@@ -8,6 +8,9 @@ import { getDraggedFiles } from '../../../pasteboard'
 import { isTraceEnabled, trace } from '../../../logger'
 import { jiraDateMomentFormat, attachmentUploadConcurrency } from '../../../config'
 import { postMultiple, event } from '../../../analytics'
+import { documentFromContext, executeSafelyAsync } from '../../../util'
+import pluginState, { keys } from '../../../plugin-state'
+import { exportSelection } from '../../../export'
 import { attachmentFromRest } from '../../../entity-mappers'
 import Queue from 'promise-queue'
 
@@ -24,6 +27,29 @@ export default class Uploads {
     const droppedFiles = getDraggedFiles().map(fileUrlToUploadInfo)
     postAnalytics(droppedFiles, this.uploadQueue.getPendingLength() > 0)
     return droppedFiles
+  }
+
+  async exportSelectedLayersToSelectedIssue () {
+    executeSafelyAsync(this.context, async () => {
+      const issueKey = pluginState[keys.selectedIssue] + ''
+      if (!issueKey) {
+        trace('No issue selected, ignoring export request')
+        return
+      }
+      const document = documentFromContext(this.context)
+      if (!document) {
+        trace('Couldn\'t resolve document from context')
+        return
+      }
+      const paths = await exportSelection(document)
+      trace(`Exported paths from selection: ["${paths.join('", "')}"]`)
+      this.webUI.dispatchWindowEvent(
+        'jira.export.selection.to.issue', {
+          issueKey,
+          files: paths.map(fileUrlToUploadInfo)
+        }
+      )
+    })
   }
 
   async uploadAttachment (issueKey, attachment, progress) {

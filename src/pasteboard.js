@@ -1,3 +1,5 @@
+import { trace } from './logger'
+
 export function getDraggedFiles () {
   var pboard = NSPasteboard.pasteboardWithName(NSDragPboard)
   var items = pboard.pasteboardItems()
@@ -10,5 +12,6 @@ export function getDraggedFiles () {
       files.push(fileUrl)
     }
   }
+  trace(`File urls from pasteboard: ["${files.join('", "')}"]`)
   return files
 }

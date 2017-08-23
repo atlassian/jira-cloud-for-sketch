@@ -1,5 +1,6 @@
 export const keys = {
-  selectedIssue: 'selectedIssue'
+  selectedIssue: 'selectedIssue',
+  uploads: 'uploads'
 }
 
 const dictionaryKey = 'atlassian-sketch-plugin-state'

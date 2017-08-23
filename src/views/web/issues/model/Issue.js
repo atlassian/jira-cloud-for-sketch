@@ -1,7 +1,7 @@
 import { observable, computed, reaction } from 'mobx'
 import { assign, concat, partition, omit, filter, includes, differenceBy, intersectionBy } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
-import { IssueMapper, AttachmentsMapper } from './mapper'
+import { IssueMapper, AttachmentsMapper, AttachmentMapper } from './mapper'
 import CommentEditor from './CommentEditor'
 import { analytics } from '../../util'
 
@@ -109,6 +109,13 @@ export default class Issue {
     droppedFiles.forEach(file => {
       file.upload(this.key)
       this.attachments.splice(insertAt, 0, file)
+    })
+  }
+
+  async uploadExportedSelection (files) {
+    files.map(AttachmentMapper).forEach(attachment => {
+      attachment.upload(this.key)
+      this.attachments.splice(0, 0, attachment)
     })
   }
 

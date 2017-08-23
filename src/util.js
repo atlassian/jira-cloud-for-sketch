@@ -188,3 +188,11 @@ function basePath () {
 export function readFileAsJson (path) {
   return JSON.parse(readFile(path, NSUTF8StringEncoding) + '')
 }
+
+export function localPathToNSURLString (localPath) {
+  return encodeURI(NSURL.fileURLWithPath(localPath).path() + '')
+}
+
+export function documentFromContext (context) {
+  return context.document || (context.actionContext && context.actionContext.document) || null
+}

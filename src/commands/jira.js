@@ -7,6 +7,7 @@ import issuesPanel from '../views/panels/issues'
 import { closeAllPluginPanels } from '../views/panels/webui-common'
 
 export default async function (context) {
+  COScript.currentCOScript().setShouldKeepAround(true)
   executeSafelyAsync(context, async function () {
     closeAllPluginPanels()
     if (isAuthorized()) {

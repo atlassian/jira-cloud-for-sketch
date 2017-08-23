@@ -34,6 +34,7 @@ export default class ViewModel {
     this.loadFilters()
     this.loadProfile()
     this.registerGlobalErrorHandler()
+    this.registerExportEventHandler()
   }
 
   async loadFilters () {
@@ -117,6 +118,16 @@ export default class ViewModel {
       }
       // indicate that this error handler will facilitate retries
       return true
+    })
+  }
+
+  registerExportEventHandler () {
+    window.addEventListener('jira.export.selection.to.issue', event => {
+      const { issueKey, files } = event.detail
+      const issue = find(this.issues.list, issue => {
+        return issue.key === issueKey
+      })
+      issue && issue.uploadExportedSelection(files)
     })
   }
 }

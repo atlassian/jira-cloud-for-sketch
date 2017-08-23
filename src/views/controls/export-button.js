@@ -1,6 +1,6 @@
-import { createFailAlert } from '../../util'
 import { error, trace } from '../../logger'
 import buttonDelegate, { onClickSelector } from './button-delegate'
+import pluginState, { keys } from '../../plugin-state'
 
 export default { add, remove }
 
@@ -45,8 +45,12 @@ async function add (context) {
     )
     const jiraButtonDelegate = buttonDelegate({
       onClick: function () {
-        trace('JIRA button pressed!')
-        createFailAlert(context, 'It worked', 'Sweet as')
+        const uploads = pluginState[keys.uploads]
+        if (!uploads) {
+          error(`No ${keys.uploads} in pluginState`)
+          return
+        }
+        uploads()
       }
     })
     const jiraButton = NSButton.buttonWithImage_target_action(uploadIcon, jiraButtonDelegate, onClickSelector)
@@ -99,8 +103,12 @@ async function remove (context) {
   })
 }
 
+function documentFromContext (context) {
+  return context.document || (context.actionContext && context.actionContext.document)
+}
+
 function withExportButtonBar (context, callback) {
-  const document = context.document || (context.actionContext && context.actionContext.document)
+  const document = documentFromContext(context)
   if (!document) {
     return
   }
