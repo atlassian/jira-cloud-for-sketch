@@ -26,9 +26,9 @@ export default function (context) {
     width: issueListDimensions[0],
     height: issueListDimensions[1],
     onClose: function () {
-      setSelectedIssueKey(null)
-      setExportSelectedLayersFn(null)
       exportButton.remove(context)
+      setExportSelectedLayersFn(null)
+      setSelectedIssueKey(null)
     },
     handlers: {
       async loadFilters () {

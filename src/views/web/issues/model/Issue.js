@@ -123,6 +123,7 @@ export default class Issue {
 
   async keepOrReplaceMatchingAttachments (files) {
     const attachments = this.attachments.slice().filter(
+      // don't replace attachments that are uploading or deleting
       attachment => { return !(attachment.uploading || attachment.deleting) }
     )
     const matching = intersectionBy(attachments, files, 'filename')

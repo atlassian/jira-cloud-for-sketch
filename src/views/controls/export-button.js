@@ -1,4 +1,5 @@
 import { error, trace } from '../../logger'
+import { documentFromContext } from '../../util'
 import buttonDelegate, { onClickSelector } from './button-delegate'
 import { triggerExportSelectedLayers } from '../../plugin-state'
 
@@ -82,7 +83,7 @@ async function remove (context) {
     const jiraButton = exportButtons[2]
     const toolTip = jiraButton.toolTip && jiraButton.toolTip()
     if (toolTip != jiraButtonToolTip) {
-      error(`'Export to JIRA' button wasn't where it should be`)
+      error(`'${jiraButtonToolTip}' button wasn't where it should be`)
       return
     }
 
@@ -100,10 +101,6 @@ async function remove (context) {
   })
 }
 
-function documentFromContext (context) {
-  return context.document || (context.actionContext && context.actionContext.document)
-}
-
 function withExportButtonBar (context, callback) {
   const document = documentFromContext(context)
   if (!document) {
@@ -117,7 +114,7 @@ function withExportButtonBar (context, callback) {
   // Assumption: the NSView subclass for exports is named 'MSExportStackView'
   const exportStackView = findSubviewWithClass(contentView, 'MSExportStackView')
   if (!exportStackView) {
-    error('Couldn\'t find MSExportStackView')
+    trace('Couldn\'t find MSExportStackView')
     return
   }
 

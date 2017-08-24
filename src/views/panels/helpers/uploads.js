@@ -38,7 +38,7 @@ export default class Uploads {
       }
       const document = documentFromContext(this.context)
       if (!document) {
-        trace('Couldn\'t resolve document from context')
+        error('Couldn\'t resolve document from context')
         return
       }
       const paths = await exportSelection(document)

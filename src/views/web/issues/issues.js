@@ -28,7 +28,6 @@ class ViewIssuesPanel extends Component {
     this.handleFilterSelected = this.handleFilterSelected.bind(this)
     this.handleSettingsClick = this.handleSettingsClick.bind(this)
     this.handleIssueSelected = this.handleIssueSelected.bind(this)
-    this.handleIssueDeselected = this.handleIssueDeselected.bind(this)
     this.handleErrorRetry = this.handleErrorRetry.bind(this)
     this.handleReauthorize = this.handleReauthorize.bind(this)
     this.preventDefault = this.preventDefault.bind(this)
@@ -112,9 +111,6 @@ class ViewIssuesPanel extends Component {
   }
   handleIssueSelected (issue) {
     this.props.viewmodel.selectIssue(issue)
-  }
-  handleIssueDeselected (issueKey) {
-    this.props.viewmodel.deselectIssue(issueKey)
   }
   handleErrorRetry () {
     this.props.viewmodel.retry()

@@ -4,9 +4,9 @@ import { trace } from './logger'
 const badFilenameChars = new RegExp('/', 'g')
 
 export async function exportSelection (document) {
-  const dir = tempDir('export-' + Date.now())
+  const dir = tempDir(`export-${Date.now()}`)
   const selectedLayers = document.selectedLayers().layers()
-  trace('Exporting ' + selectedLayers.count() + ' assets to ' + dir)
+  trace(`Exporting ${selectedLayers.count()} assets to ${dir}`)
   let exportedPaths = []
   for (let i = 0; i < selectedLayers.count(); i++) {
     exportedPaths.push(...exportLayer(document, selectedLayers[i], dir))

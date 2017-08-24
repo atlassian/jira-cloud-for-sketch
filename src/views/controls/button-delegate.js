@@ -3,7 +3,7 @@ import ObjCClass from 'cocoascript-class'
 export const onClickSelector = NSSelectorFromString('onClick:')
 
 const DelegateClass = ObjCClass({
-  classname: 'AtlassianNButtonDelegate',
+  classname: 'AtlassianNSButtonDelegate',
   callbacks: null,
   'onClick:': function (sender) {
     this.callbacks.onClick()
