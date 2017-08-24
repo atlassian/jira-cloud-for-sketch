@@ -6,6 +6,17 @@
     <description>Share from Sketch to JIRA, without losing focus</description>
     <language>en</language>
       <item>
+        <title>v0.0.9</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Export multiple resolutions via the Sketch Export panel</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-0.0.9.zip" sparkle:version="0.0.9" />
+      </item>
+      <item>
         <title>v0.0.8</title>
         <description>
           <![CDATA[
