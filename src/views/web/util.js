@@ -11,3 +11,9 @@ export function truncateWithEllipsis (string, maxLength) {
     return string
   }
 }
+
+export function sleep (delay) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, delay)
+  })
+}

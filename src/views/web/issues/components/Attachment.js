@@ -18,8 +18,15 @@ export default class Attachment extends Component {
   }
   render () {
     var attachment = this.props.attachment
+    const style = {}
+    if (attachment.animatingDelete) {
+      style.transition = `all ${attachment.deleteAnimationDelay}s ease-in`
+      style.transform = 'scale(0,0)'
+    }
     return (
-      <AttachmentWrapper className='issue-attachment'
+      <AttachmentWrapper
+        className='issue-attachment'
+        style={style}
         onDragEnter={this.dragEnter}
         onDragLeave={this.dragLeave}
         onDragOver={(event) => { event.preventDefault() }}

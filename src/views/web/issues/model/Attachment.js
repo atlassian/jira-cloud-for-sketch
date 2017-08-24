@@ -2,7 +2,7 @@ import { observable, computed } from 'mobx'
 import { assign } from 'lodash'
 import bridgedFunctionCall from '../../../bridge/client'
 import getThumbnail from './thumbnails'
-import { analytics } from '../../util'
+import { analytics, sleep } from '../../util'
 
 const _uploadAttachment = bridgedFunctionCall('uploadAttachment')
 const _openAttachment = bridgedFunctionCall('openAttachment')
@@ -11,6 +11,8 @@ const _deleteAttachment = bridgedFunctionCall('deleteAttachment')
 export default class Attachment {
   @observable uploading = false
   @observable downloading = false
+  @observable animatingDelete = false
+  @observable deleteAnimationDelay = 0.4 // seconds
   @observable deleting = false
   @observable progress = 0
   @observable thumbnailDataUri = null
@@ -48,7 +50,7 @@ export default class Attachment {
   }
 
   @computed get readyForAction () {
-    return !(this.deleting || this.uploading || this.downloading)
+    return !(this.animatingDelete || this.deleting || this.uploading || this.downloading)
   }
 
   async open () {
@@ -64,15 +66,22 @@ export default class Attachment {
 
   async delete () {
     if (this.readyForAction) {
+      this.animatingDelete = true
+      await sleep(this.deleteAnimationDelayMs)
       try {
         this.deleting = true
         await _deleteAttachment(this.id)
         analytics('viewIssueAttachmentDelete')
       } catch (e) {
+        this.animatingDelete = false
         this.deleting = false
         throw e
       }
     }
+  }
+
+  @computed get deleteAnimationDelayMs () {
+    return this.deleteAnimationDelay * 1000
   }
 
   @computed get visible () {
