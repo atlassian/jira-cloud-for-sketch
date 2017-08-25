@@ -12,7 +12,7 @@ export default class Attachment {
   @observable uploading = false
   @observable downloading = false
   @observable animatingDelete = false
-  @observable deleteAnimationDelay = 0.4 // seconds
+  @observable deleteAnimationDelay = 0.2 // seconds
   @observable deleting = false
   @observable progress = 0
   @observable thumbnailDataUri = null
