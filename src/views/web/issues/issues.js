@@ -30,6 +30,7 @@ class ViewIssuesPanel extends Component {
     this.handleIssueSelected = this.handleIssueSelected.bind(this)
     this.handleErrorRetry = this.handleErrorRetry.bind(this)
     this.handleReauthorize = this.handleReauthorize.bind(this)
+    this.handleMoreInfoClick = this.handleMoreInfoClick.bind(this)
     this.preventDefault = this.preventDefault.bind(this)
   }
   render () {
@@ -98,6 +99,9 @@ class ViewIssuesPanel extends Component {
             {reauthorize && (
               <ClickableSpan onClick={this.handleReauthorize}>Reauthorize</ClickableSpan>
             )}
+            {error && error.faqTopic && (
+              <ClickableSpan onClick={this.handleMoreInfoClick}>More info</ClickableSpan>
+            )}
           </Banner>
         </BannerWrapper>
       </div>
@@ -117,6 +121,9 @@ class ViewIssuesPanel extends Component {
   }
   handleReauthorize () {
     this.props.viewmodel.reauthorize()
+  }
+  handleMoreInfoClick () {
+    this.props.viewmodel.moreInfo()
   }
   preventDefault (event) {
     event.preventDefault()

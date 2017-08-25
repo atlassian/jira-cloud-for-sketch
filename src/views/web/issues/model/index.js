@@ -11,6 +11,7 @@ const _viewSettings = bridgedFunctionCall('viewSettings')
 const _reauthorize = bridgedFunctionCall('reauthorize')
 const _onIssueSelected = bridgedFunctionCall('onIssueSelected')
 const _onIssueDeselected = bridgedFunctionCall('onIssueDeselected')
+const _openFaqPage = bridgedFunctionCall('openFaqPage')
 
 const maxErrorMessageLength = 55
 
@@ -101,6 +102,12 @@ export default class ViewModel {
 
   @computed get errorMessage () {
     return this.error && (this.error.message || this.error.name)
+  }
+
+  async moreInfo () {
+    if (this.error && this.error.faqTopic) {
+      _openFaqPage(this.error.faqTopic)
+    }
   }
 
   registerGlobalErrorHandler () {

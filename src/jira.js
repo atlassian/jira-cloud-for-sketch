@@ -6,6 +6,8 @@ import jqlFilters from './jql-filters'
 import { issueFromRest } from './entity-mappers'
 import { standardIssueFields, maxMentionPickerResults } from './config'
 import { trace, isTraceEnabled } from './logger'
+import FaqError, {faqTopics} from './error/FaqError'
+import AuthorizationError from './error/AuthorizationError'
 
 export default class JIRA {
   constructor () {
@@ -130,7 +132,14 @@ async function jiraFetch (url, opts) {
   const res = await fetch(url, opts)
   trace(`${res.status} from ${opts.method || 'GET'} ${url}`)
   if (!res.ok) {
-    throw new Error(`JIRA responded with ${res.status} ${res.statusText}`)
+    switch (res.status) {
+      case 401:
+        throw new AuthorizationError('Authentication failed.')
+      case 403:
+        throw new FaqError('You\'re not allowed to do that.', faqTopics.NO_PERMISSION)
+      default:
+        throw new Error(`JIRA responded with ${res.status} ${res.statusText}`)
+    }
   }
   if (res.status != 204) {
     try {

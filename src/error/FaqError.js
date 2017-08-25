@@ -9,5 +9,6 @@ export default class FaqError {
 
 export const faqTopics = {
   CAN_NOT_CONNECT: 'can-not-connect',
-  CONTACT_SUPPORT: 'contact-support'
+  CONTACT_SUPPORT: 'contact-support',
+  NO_PERMISSION: 'no-permission'
 }
