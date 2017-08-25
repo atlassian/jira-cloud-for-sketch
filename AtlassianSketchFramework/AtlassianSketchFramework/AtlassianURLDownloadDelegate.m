@@ -13,7 +13,7 @@
 - (void)download:(NSURLDownload __unused *)download
     didReceiveResponse:(NSURLResponse *)response
 {
-    self.response = response;
+    self.response = (NSHTTPURLResponse*) response;
     self.progress.totalUnitCount = response.expectedContentLength;
 }
 

@@ -23,7 +23,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 - (void)connection:(NSURLConnection __unused *)connection
 didReceiveResponse:(NSURLResponse *)response
 {
-    self.response = response;
+    self.response = (NSHTTPURLResponse*) response;
     self.data = [[ NSMutableData alloc ] init ];
 }
 

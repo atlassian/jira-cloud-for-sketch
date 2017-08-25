@@ -73,7 +73,11 @@ export default class JIRA {
         Authorization: await authHeader()
       }
     }
-    return download(url, opts, progress)
+    try {
+      return await download(url, opts, progress)
+    } catch (e) {
+      handleHttpError(e)
+    }
   }
 
   async uploadAttachment (issueKey, filePath, progress) {
@@ -85,7 +89,11 @@ export default class JIRA {
         'X-Atlassian-Token': 'no-check'
       }
     }
-    return upload(uploadUrl, opts, progress)
+    try {
+      return await upload(uploadUrl, opts, progress)
+    } catch (e) {
+      handleHttpError(e)
+    }
   }
 
   async deleteAttachment (id) {
@@ -136,7 +144,7 @@ async function jiraFetch (url, opts) {
       case 401:
         throw new AuthorizationError('Authentication failed.')
       case 403:
-        throw new FaqError('You\'re not allowed to do that.', faqTopics.NO_PERMISSION)
+        return throwPermissionsError()
       default:
         throw new Error(`JIRA responded with ${res.status} ${res.statusText}`)
     }
@@ -168,4 +176,16 @@ function commentPermalink (issueKey, commentJson) {
                 '&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel'
   const fragment = `#comment-${commentId}`
   return `${path}${query}${fragment}`
+}
+
+function handleHttpError (e) {
+  if (e.statusCode == 403) {
+    throwPermissionsError()
+  } else {
+    throw e
+  }
+}
+
+function throwPermissionsError () {
+  throw new FaqError('You\'re not allowed to do that.', faqTopics.NO_PERMISSION)
 }

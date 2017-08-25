@@ -12,7 +12,7 @@
 
 @property (readwrite, atomic, strong) NSProgress * progress;
 @property (readwrite, atomic, strong) NSError * error;
-@property (readwrite, atomic, strong) NSURLResponse * response;
+@property (readwrite, atomic, strong) NSHTTPURLResponse * response;
 @property (readwrite, atomic) bool completed;
 @property (readwrite, atomic) bool failed;
 

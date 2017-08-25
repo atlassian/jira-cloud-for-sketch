@@ -108,7 +108,12 @@ async function pollDelegateUntilComplete (delegate, onProgress) {
         reject(delegate.error())
       } else if (delegate.completed()) {
         clearInterval(id)
-        resolve(delegate)
+        const statusCode = delegate.response().statusCode()
+        if ((statusCode / 200 | 0) == 1) { // <= 399
+          resolve(delegate)
+        } else {
+          reject(new HttpError(statusCode, extractErrorMessage(delegate)))
+        }
       } else {
         const progress = delegate.progress()
         if (isTraceEnabled()) {
@@ -123,6 +128,27 @@ async function pollDelegateUntilComplete (delegate, onProgress) {
       }
     }, cocoaDelegatePollInterval)
   })
+}
+
+function extractErrorMessage (delegate) {
+  let errorMessage
+  try {
+    const json = dataParserWrapper(delegate.data()).json()
+    errorMessage = json.errorMessages && json.errorMessages[0]
+  } catch (e) {
+    // ignore
+  }
+  if (!errorMessage) {
+    try {
+      errorMessage = dataParserWrapper(delegate.data()).text()
+    } catch (e) {
+      // ignore
+    }
+  }
+  if (!errorMessage) {
+    errorMessage = `Received ${delegate.response().statusCode()}`
+  }
+  return errorMessage
 }
 
 // based on the excellent sketch-module-fetch-polyfill
@@ -153,5 +179,14 @@ function dataParserWrapper (data) {
     blob: function () {
       return Promise.resolve(data)
     }
+  }
+}
+
+export class HttpError {
+  constructor (statusCode, message) {
+    this.name = 'HttpError'
+    this.statusCode = statusCode
+    this.message = message
+    this.stack = new Error().stack
   }
 }
