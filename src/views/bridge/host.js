@@ -6,7 +6,7 @@ import {
   SketchBridgeFunctionCallback
 } from './common'
 import { isTraceEnabled, trace } from '../../logger'
-import { assign } from 'lodash'
+import { assignIn } from 'lodash'
 
 export default function createBridgedWebUI (context, htmlName, options) {
   let webUI
@@ -40,7 +40,12 @@ export default function createBridgedWebUI (context, htmlName, options) {
         }
       } else {
         // the default string representation of the error omits most fields
-        error = assign({error: String.valueOf(e)}, e)
+        error = assignIn({
+          error: String.valueOf(e),
+          // for some reason, these properties are not copied by assignIn
+          name: e.name,
+          message: e.message
+        }, e)
       }
       trace(error)
     }

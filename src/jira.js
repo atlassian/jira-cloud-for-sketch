@@ -140,13 +140,18 @@ async function jiraFetch (url, opts) {
   const res = await fetch(url, opts)
   trace(`${res.status} from ${opts.method || 'GET'} ${url}`)
   if (!res.ok) {
+    try {
+      trace(`Response text: ${await res.text()}`)
+    } catch (e) {
+      trace('Failed to parse response body as text')
+    }
     switch (res.status) {
       case 401:
         throw new AuthorizationError('Authentication failed.')
       case 403:
         return throwPermissionsError()
       default:
-        throw new Error(`JIRA responded with ${res.status} ${res.statusText}`)
+        throw new Error(`JIRA responded with: ${res.status} ${res.statusText}`)
     }
   }
   if (res.status != 204) {
