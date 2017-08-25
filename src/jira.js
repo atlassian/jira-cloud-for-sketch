@@ -146,13 +146,17 @@ async function jiraFetch (url, opts) {
       trace('Failed to parse response body as text')
     }
     switch (res.status) {
+      case 400:
+        if (await doesItLooksLikeAPermissionProblem(res)) {
+          return throwPermissionsError()
+        }
+        break
       case 401:
         throw new AuthorizationError('Authentication failed.')
       case 403:
         return throwPermissionsError()
-      default:
-        throw new Error(`JIRA responded with: ${res.status} ${res.statusText}`)
     }
+    throw new Error(`JIRA responded with: ${res.status} ${res.statusText}`)
   }
   if (res.status != 204) {
     try {
@@ -193,4 +197,17 @@ function handleHttpError (e) {
 
 function throwPermissionsError () {
   throw new FaqError('You\'re not allowed to do that.', faqTopics.NO_PERMISSION)
+}
+
+async function doesItLooksLikeAPermissionProblem (response) {
+  try {
+    const responseText = await response.text()
+    // Some Jira APIs return 400 responses for insufficient permissions (JCE-1379)
+    if (response.status == 400 && responseText.toLowerCase().indexOf('permission') > -1) {
+      return true
+    }
+  } catch (e) {
+    trace(e)
+  }
+  return false
 }
