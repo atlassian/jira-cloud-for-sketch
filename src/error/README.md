@@ -1,0 +1,3 @@
+# /error
+
+Common error classes.
