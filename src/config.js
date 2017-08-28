@@ -3,7 +3,7 @@ import { resourcesPath, scriptsPath, readFileAsJson } from './util'
 
 const defaults = {
   logLevel: 10,
-  jiraSketchIntegrationBaseUrl: 'https://sketch.prod.atl-paas.net',
+  jiraSketchIntegrationBaseUrl: 'https://sketch.atlassian.com',
   analyticsApiBaseUrl: 'https://mgas.prod.public.atl-paas.net/v1',
   bearerTokenExpirySafetyMargin: 60, // seconds
   bearerTokenRefreshInterval: 1000 * 60 * 10, // milliseconds

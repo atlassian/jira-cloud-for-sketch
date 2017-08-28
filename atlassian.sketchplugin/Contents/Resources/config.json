@@ -1,6 +1,6 @@
 {
   "logLevel": 10,
-  "jiraSketchIntegrationBaseUrl": "https://sketch.prod.atl-paas.net",
+  "jiraSketchIntegrationBaseUrl": "https://sketch.atlassian.com",
   "analyticsApiBaseUrl": "https://mgas.prod.public.atl-paas.net/v1",
   "bearerTokenExpirySafetyMargin": 60,
   "bearerTokenRefreshInterval": 600000,
