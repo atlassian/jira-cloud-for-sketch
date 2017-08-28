@@ -91,7 +91,8 @@ The plugin uses a companion [Atlassian Connect] add-on to integrate with Jira.
 The add-on allows a user to securely link a plugin instance to their JIRA Cloud
 account via an OAuth-like 'dance' and subsequently providing [bearer tokens] for
 plugin instances to authenticate directly with the Jira REST API (see `src/auth.js`
-and `src/jira.js` for details).
+and `src/jira.js` for details). The companion add-on is a system add-on, and will
+be automatically installed in any given Jira Cloud instance.
 
 ### Logging
 
