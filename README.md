@@ -1,6 +1,8 @@
 # Atlassian Sketch Plugin
 
-A Sketch plugin that provides integration with JIRA Cloud.
+A [Sketch](https://sketchapp.com/) plugin that provides integration with JIRA Cloud.
+
+The plugin is available for download from [sketch.atlassian.com](https://sketch.atlassian.com).
 
 # Developing
 
