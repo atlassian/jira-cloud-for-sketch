@@ -31,10 +31,10 @@ Builds are continuously built by Bitbucket Pipelines. See
 `bitbucket-pipelines.yml` and `bitbucket-pipelines.sh` for details. Builds are
 automatically uploaded to S3:
 
-- [https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-latest.zip] is the tip of `master`
-- [https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-release.zip] is the latest tag
-- [https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-{TAG}.zip] is a particular tag
-- [https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-{SHA}.zip] is a particular commit
+- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-latest.zip is the tip of `master`
+- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-release.zip is the latest tag
+- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-{TAG}.zip is a particular tag
+- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-{SHA}.zip is a particular commit
 
 The build environment is defined by the `Dockerfile` in the repository root.
 
