@@ -64,10 +64,12 @@ export default class Attachment {
     }
   }
 
-  async delete () {
+  async delete (animate) {
     if (this.readyForAction) {
-      this.animatingDelete = true
-      await sleep(this.deleteAnimationDelayMs)
+      if (animate) {
+        this.animatingDelete = true
+        await sleep(this.deleteAnimationDelayMs)
+      }
       try {
         this.deleting = true
         await _deleteAttachment(this.id)
