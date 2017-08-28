@@ -165,6 +165,8 @@ export default class CommentEditor {
 
   async postComment () {
     if (!this.isPosting && this.text.trim()) {
+      this.href = null
+      this.isFocused = false
       this.isPosting = true
       this.href = await _addComment(this.issueKey, this.text)
       this.text = ''

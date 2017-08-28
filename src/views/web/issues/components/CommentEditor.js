@@ -4,7 +4,9 @@ import { observer } from 'mobx-react'
 import styled from 'styled-components'
 import FieldBase from '@atlaskit/field-base'
 import { MentionList } from '@atlaskit/mention'
+import { akColorN20, akColorN20A, akColorN60 } from '@atlaskit/util-shared-styles'
 import TextArea from 'react-textarea-autosize'
+import { assign } from 'lodash'
 
 @observer
 export default class CommentEditor extends Component {
@@ -27,6 +29,15 @@ export default class CommentEditor extends Component {
       padding: '6px 6px 4px 6px',
       width: '410px',
       height: '22px'
+    }
+    if (isPosting) {
+      assign(style, {
+        cursor: 'not-allowed',
+        pointerEvents: 'none',
+        background: akColorN20,
+        border: akColorN20A,
+        text: akColorN60
+      })
     }
     return (
       <RelativeDiv>
