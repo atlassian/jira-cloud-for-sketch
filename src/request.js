@@ -112,7 +112,9 @@ async function pollDelegateUntilComplete (delegate, onProgress) {
         if ((statusCode / 200 | 0) == 1) { // <= 399
           resolve(delegate)
         } else {
-          reject(new HttpError(statusCode, extractErrorMessage(delegate)))
+          (async function () {
+            reject(new HttpError(statusCode, await extractErrorMessage(delegate)))
+          })()
         }
       } else {
         const progress = delegate.progress()
@@ -130,17 +132,17 @@ async function pollDelegateUntilComplete (delegate, onProgress) {
   })
 }
 
-function extractErrorMessage (delegate) {
+async function extractErrorMessage (delegate) {
   let errorMessage
   try {
-    const json = dataParserWrapper(delegate.data()).json()
+    const json = await dataParserWrapper(delegate.data()).json()
     errorMessage = json.errorMessages && json.errorMessages[0]
   } catch (e) {
     // ignore
   }
   if (!errorMessage) {
     try {
-      errorMessage = dataParserWrapper(delegate.data()).text()
+      errorMessage = await dataParserWrapper(delegate.data()).text()
     } catch (e) {
       // ignore
     }
@@ -158,7 +160,7 @@ function dataParserWrapper (data) {
       return new Promise(function (resolve, reject) {
         const str = NSString.alloc().initWithData_encoding(data, NSASCIIStringEncoding)
         if (str) {
-          resolve(str)
+          resolve(str + '')
         } else {
           reject(new Error("Couldn't parse body"))
         }

@@ -145,16 +145,9 @@ async function jiraFetch (url, opts) {
     } catch (e) {
       trace('Failed to parse response body as text')
     }
-    switch (res.status) {
-      case 400:
-        if (await doesItLooksLikeAPermissionProblem(res)) {
-          return throwPermissionsError()
-        }
-        break
-      case 401:
-        throw new AuthorizationError('Authentication failed.')
-      case 403:
-        return throwPermissionsError()
+    tryHandleHttpStatus(res.status)
+    if (res.status == 400 && await doesItLooksLikeAPermissionProblem(res)) {
+      throwPermissionsError()
     }
     throw new Error(`JIRA responded with: ${res.status} ${res.statusText}`)
   }
@@ -187,16 +180,28 @@ function commentPermalink (issueKey, commentJson) {
   return `${path}${query}${fragment}`
 }
 
-function handleHttpError (e) {
-  if (e.statusCode == 403) {
-    throwPermissionsError()
-  } else {
-    throw e
+function tryHandleHttpStatus (statusCode) {
+  switch (statusCode) {
+    case 401:
+      throw new AuthorizationError('Authentication failed.')
+    case 403:
+      return throwPermissionsError()
+    case 413:
+      return throwRequestSizeError()
   }
+}
+
+function handleHttpError (e) {
+  e.statusCode && tryHandleHttpStatus(e.statusCode)
+  throw e
 }
 
 function throwPermissionsError () {
   throw new FaqError('You\'re not allowed to do that.', faqTopics.NO_PERMISSION)
+}
+
+function throwRequestSizeError () {
+  throw new FaqError('That\'s too big.', faqTopics.FILE_TOO_LARGE)
 }
 
 async function doesItLooksLikeAPermissionProblem (response) {
