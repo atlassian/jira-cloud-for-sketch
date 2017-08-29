@@ -3,7 +3,7 @@ const keys = {
   exportSelectedLayersFn: 'exportSelectedLayersFn'
 }
 
-const dictionaryKey = 'atlassian-sketch-plugin-state'
+const dictionaryKey = 'jira-sketch-plugin-state'
 
 const pluginState = (function () {
   let _state = NSThread.mainThread().threadDictionary()[dictionaryKey]

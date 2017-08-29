@@ -1,6 +1,6 @@
-# Atlassian Sketch Plugin
+# JIRA Cloud for Sketch
 
-A [Sketch] plugin that provides integration with Jira Cloud.
+A [Sketch] plugin that provides integration with JIRA Cloud.
 
 The plugin is available for download from [sketch.atlassian.com].
 
@@ -12,7 +12,7 @@ The plugin is available for download from [sketch.atlassian.com].
 - `skpm build` to transpile and package the plugin
 - `skpm link .` to symlink the plugin to the Sketch plugins directory
 
-When you next start Sketch, there should be a **Jira** option in the
+When you next start Sketch, there should be a **JIRA** option in the
 **Plugins** menu.
 
 To subsequently update the plugin, simply run `skpm build` and restart Sketch.
@@ -31,23 +31,23 @@ Builds are continuously built by Bitbucket Pipelines. See
 `bitbucket-pipelines.yml` and `bitbucket-pipelines.sh` for details. Builds are
 automatically uploaded to S3:
 
-- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-latest.zip is the tip of `master`
-- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-release.zip is the latest tag
-- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-{TAG}.zip is a particular tag
-- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-{SHA}.zip is a particular commit
+- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-latest.zip is the tip of `master`
+- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-release.zip is the latest tag
+- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-{TAG}.zip is a particular tag
+- https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-{SHA}.zip is a particular commit
 
 The build environment is defined by the `Dockerfile` in the repository root.
 
 If you want to cut your own build to send to a friend, simply run `skpm build`
 (or `./build.sh` if you've modified any Objective-C files) and then zip the
-`atlassian.sketchplugin` directory.
+`jira.sketchplugin` directory.
 
 ## Architecture
 
 ### Frontend/Backend
 
 The plugin 'backend' uses [CocoaScript] to implement Sketch commands, store
-user preferences, make requests to Jira, add controls to the Sketch UI, and
+user preferences, make requests to JIRA, add controls to the Sketch UI, and
 spawn Cocoa `NSPanel`s and `WebView`s that render the 'frontend'. The frontend
 is client-side JavaScript that runs in a `WebView` (that is, Safari) context.
 'Backend' and 'frontend' are in quotes because they aren't a traditional
@@ -77,7 +77,7 @@ frontend context.
 ### Persistence
 
 Most configuration is stored in user modifiable file at
-`atlassian.sketchplugin/Contents/Resource/config.json`. This file is read once
+`jira.sketchplugin/Contents/Resource/config.json`. This file is read once
 at startup (see `src/config.js`), so Sketch will need to be restarted to pick
 up any modifications.
 
@@ -85,14 +85,15 @@ Properties and settings that are modified at runtime are stored in a macOS
 `plist` that lives at `~/Library/Preferences/plugin.sketch.jira-sketch-plugin`
 (see `src/prefs.js`).
 
-### Jira authentication and integration
+### JIRA authentication and integration
 
-The plugin uses a companion [Atlassian Connect] add-on to integrate with Jira.
-The add-on allows a user to securely link a plugin instance to their JIRA Cloud
-account via an OAuth-like 'dance' and subsequently providing [bearer tokens] for
-plugin instances to authenticate directly with the Jira REST API (see `src/auth.js`
-and `src/jira.js` for details). The companion add-on is a system add-on, and will
-be automatically installed in any given Jira Cloud instance.
+The plugin uses a companion [Atlassian Connect] add-on to integrate with JIRA
+Cloud. The add-on allows a user to securely link a plugin instance to their
+JIRA Cloud account via an OAuth-like 'dance' and subsequently providing
+[bearer tokens] for plugin instances to authenticate directly with the JIRA
+REST API (see `src/auth.js` and `src/jira.js` for details). The companion
+add-on is a system add-on, and will be automatically installed in any given
+JIRA Cloud instance.
 
 ### Logging
 

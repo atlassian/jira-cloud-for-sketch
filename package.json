@@ -1,8 +1,8 @@
 {
-  "name": "atlassian-sketch-plugin",
+  "name": "jira-cloud-for-sketch",
   "version": "0.0.9",
   "description": "Share designs, assets, and feedback with your team",
-  "main": "atlassian.sketchplugin",
+  "main": "jira.sketchplugin",
   "manifest": "src/manifest.json",
   "resources": [
     "src/views/web/connect/connect.js",
@@ -32,7 +32,7 @@
     "jira"
   ],
   "author": "Tim Pettersen <tim@atlassian.com>",
-  "license": "BSD-2-Clause",
+  "license": "Apache-2.0",
   "homepage": "https://bitbucket.org/atlassian/jira-sketch-plugin#readme",
   "engines": {
     "sketch": ">=3.0"

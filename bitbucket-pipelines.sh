@@ -14,7 +14,7 @@ skpm build
 # run the tests
 npm test
 
-export PLUGIN_NAME="atlassian.sketchplugin"
+export PLUGIN_NAME="jira.sketchplugin"
 export PLUGIN_ZIP="${PLUGIN_NAME}-${BITBUCKET_COMMIT}.zip"
 export S3_BUCKET="atlassian-sketch-plugin"
 export S3_BUCKET_URL="https://s3-us-west-2.amazonaws.com/${S3_BUCKET}"

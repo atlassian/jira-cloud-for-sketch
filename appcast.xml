@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Atlassian Sketch Plugin</title>
+    <title>JIRA Cloud for Sketch</title>
     <link>https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/appcast.xml</link>
     <description>Share from Sketch to JIRA, without losing focus</description>
     <language>en</language>
@@ -14,7 +14,7 @@
             </ul>
           ]]>
         </description>
-        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-0.0.9.zip" sparkle:version="0.0.9" />
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-0.0.9.zip" sparkle:version="0.0.9" />
       </item>
       <item>
         <title>v0.0.8</title>
@@ -29,7 +29,7 @@
             </ul>
           ]]>
         </description>
-        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-0.0.8.zip" sparkle:version="0.0.8" />
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/atlassian.sketchplugin-0.0.8.zip" sparkle:version="0.0.8" />
       </item>
       <item>
         <title>v0.0.7</title>

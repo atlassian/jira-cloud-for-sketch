@@ -12,7 +12,7 @@ import { issueFromRest } from '../../src/entity-mappers'
 const issues = require('./issues.json').issues.map(issueFromRest)
 const profile = require('./profile.json')
 
-const root = path.join(__dirname, '/../../atlassian.sketchplugin/Contents/Resources')
+const root = path.join(__dirname, '/../../jira.sketchplugin/Contents/Resources')
 new HttpServer({root}).listen(8080)
 
 let driver
