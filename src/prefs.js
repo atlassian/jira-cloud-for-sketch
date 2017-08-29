@@ -21,7 +21,11 @@ export const keys = {
 
   // cached auth token
   authToken: 'authToken',
-  authTokenExpiry: 'authTokenExpiry'
+  authTokenExpiry: 'authTokenExpiry',
+
+  // the index of the next upgrade task to run. If an upgrade task
+  // with this index doesn't exist, then we're up to date.
+  nextUpgradeIndex: 'nextUpgradeIndex'
 }
 
 function getUserPrefs () {
