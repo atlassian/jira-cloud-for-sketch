@@ -33,7 +33,7 @@
   ],
   "author": "Tim Pettersen <tim@atlassian.com>",
   "license": "Apache-2.0",
-  "homepage": "https://bitbucket.org/atlassian/jira-sketch-plugin#readme",
+  "homepage": "https://sketch.atlassian.com",
   "engines": {
     "sketch": ">=3.0"
   },

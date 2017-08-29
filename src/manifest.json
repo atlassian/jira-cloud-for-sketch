@@ -2,6 +2,7 @@
 	"name": "JIRA Cloud for Sketch",
 	"author": "Atlassian",
 	"email": "tim@atlassian.com",
+	"identifier": "com.atlassian.sketch.jira-plugin",
 	"appcast": "https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/appcast.xml",
 	"compatibleVersion": 3,
 	"bundleVersion": 1,
