@@ -1,3 +1,6 @@
+/*
+ * Loads the bundled AtlassianSketchFramework, if not already loaded.
+ */
 import { trace } from '../logger'
 import { resourcesPath } from '../util'
 

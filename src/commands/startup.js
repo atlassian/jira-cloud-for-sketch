@@ -3,6 +3,10 @@ import { trace, error } from '../logger'
 import { isAuthorized, getBearerToken } from '../auth'
 import { bearerTokenRefreshInterval } from '../config'
 
+/**
+ * Triggered on plugin startup (when the plugin is installed and on subsequent
+ * Sketch restarts). Periodically warms the user's auth token token cache.
+ */
 export default function () {
   trace('Registering auth token cache freshener...')
   COScript.currentCOScript().setShouldKeepAround(true)

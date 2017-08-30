@@ -4,6 +4,13 @@ export const Replace = 'replace'
 export const Keep = 'keep'
 export const Cancel = 'cancel'
 
+/**
+ * Displays an alert prompting the user to Keep or Replace pre-existing JIRA
+ * attachments with names identical to the exported layers.
+ * @param {Object} context provided by Sketch
+ * @param {string} issueKey the issue being exported to
+ * @param {string[]} matchingImages the identical image filenames
+ */
 export default function (context, issueKey, matchingImages) {
   const matches = matchingImages.length
   const alert = NSAlert.alloc().init()

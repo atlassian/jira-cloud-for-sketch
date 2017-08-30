@@ -10,6 +10,12 @@ const DelegateClass = ObjCClass({
   }
 })
 
+/**
+ * @param {Object} callbacks callbacks supported by this delegate
+ * @param {function} callbacks.onClick invoked when the delegate's onClick:
+ * selector is invoked
+ * @return a delegate suitable for using as the target of an NSButton
+ */
 export default function (callbacks) {
   const delegate = DelegateClass.new()
   delegate.callbacks = NSDictionary.dictionaryWithDictionary(callbacks)

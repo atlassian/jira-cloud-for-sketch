@@ -1,3 +1,8 @@
+/*
+ * The client-side (JavaScript) of the CocoaScript-WebView bridge. To be
+ * included client-side on the page rendered within the WebView.
+ */
+
 import pluginCall from 'sketch-module-web-view/client'
 import uuid from 'uuid/v4'
 import { forOwn, assign } from 'lodash'
@@ -9,10 +14,102 @@ import {
   invocationKeyForTests
 } from './common'
 
+/**
+ * Pending bridged function invocations that have yet to be rejected or
+ * resolved. Invocation entries are keyed by a UUID and have the following
+ * properties:
+ *  {
+ *    resolve:      A Promise `resolve` function that will be invoked if the
+ *                  bridged invocation completes normally.
+ *    reject:       A Promise `reject` function that will be invoked if the
+ *                  bridged invocation throws an error AND no global error
+ *                  handler can handle it.
+ *    callbacks:    An array of callback functions passed to the bridged
+ *                  function. Callbacks are indexed by their original position
+ *                  in the argument array.
+ *    retry:        A function used by global error handlers to retry the
+ *                  bridged function invocation without rejecting the original
+ *                  promise.
+ *    functionName: The name of the bridge function. Used for tests, logging,
+ *                  and debugging.
+ *    args:         The arguments passed to the bridge function. Used for
+ *                  tests, logging, and debugging.
+ *  }
+ */
 const invocations = window.__bridgeFunctionInvocations = window.__bridgeFunctionInvocations || {}
+
+/**
+ * Global error handlers. These handlers will first be given a chance to handle
+ * any errors coming from the CocoaScript side of the bridge. If no handler can
+ * handle a particular error, the invocation that triggered the error will be
+ * rejected.
+ */
 const globalErrorHandlers = []
 
+export function addGlobalErrorHandler (handler) {
+  globalErrorHandlers.push(handler)
+}
+
+export function removeGlobalErrorHandler (handler) {
+  const index = globalErrorHandlers.indexOf(handler)
+  globalErrorHandlers.splice(index, 1)
+}
+
+/**
+ * Creates a re-usable JavaScript function that invokes a named CocoaScript
+ * handler function attached to the parent NSPanel. Any arguments passed to the
+ * JavaScript function will be passed on to the CocoaScript handler. The
+ * function returns a Promise that will be resolved or rejected when the
+ * corresponding CocoaScript handler function returns or throws. Callbacks are
+ * also supported, and work as expected.
+ *
+ * @param {string} functionName the name of the CocoaScript handler. Must
+ * match a handler function registered on the parent NSPanel
+ * @param {functin} [resultMapper] an optional function that will be used
+ * to map the returned value before resolving the promise
+ * @return {function} returns a re-usable function that passes its arguments
+ * through to the named CocoaScript handler, and returns a Promise that will
+ * be resolved or rejected when the handler completes or throws
+ */
+export default function bridgedFunctionCall (functionName, resultMapper) {
+  return function () {
+    const callbacks = []
+    const args = [].slice.call(arguments).map((arg, index) => {
+      if (typeof arg === 'function') {
+        callbacks[index] = arg
+        return SketchBridgeFunctionCallback
+      } else {
+        return arg
+      }
+    })
+    const invocationId = uuid()
+    return new Promise(function (resolve, reject) {
+      const retry = () => {
+        pluginCall(SketchBridgeFunctionName, invocationId, functionName, ...args)
+      }
+      invocations[invocationId] = {resolve, reject, callbacks, retry, functionName, args}
+      retry()
+    })
+    .then(resultMapper || (x => x))
+  }
+}
+
 if (window.__bridgeFunctionResultEventListener === undefined) {
+  /**
+   * Translates bridged function result events sent by the CocoaScript side of
+   * the bridge into resolved or rejected invocations. The pending invocation
+   * is removed after being resolved or rejected, or if a global error handler
+   * handles the returned error.
+   *
+   * @param {CustomEvent} event sent when a CocoaScript handler function
+   * completes
+   * @param {string} event.detail.invocationId the id of the pending invocation
+   * @param {Object} event.detail.error a serialized error object will be
+   * handled by a global error handler, or used to reject the pending
+   * invocation promise
+   * @param {Object} event.detail.result a result object to be used to resolve
+   * the pending invocation promise
+   */
   window.__bridgeFunctionResultEventListener = function (event) {
     const { invocationId, error, result } = event.detail
     var invocation = invocations[invocationId]
@@ -41,6 +138,19 @@ if (window.__bridgeFunctionResultEventListener === undefined) {
 }
 
 if (window.__bridgeFunctionCallbackEventListener === undefined) {
+  /**
+   * Translates bridged function callback events sent by the CocoaScript side
+   * of the bridge into invocations of the callbacks passed into the bridged
+   * JavaScript function.
+   *
+   * @param {CustomEvent} event sent when a CocoaScript handler function
+   * completes
+   * @param {string} event.detail.invocationId the id of the pending invocation
+   * @param {number} event.detail.callbackIndex the index of the callback
+   * function in the original array passed to the bridged JavaScript function
+   * @param {Object[]} event.detail.args an array of arguments to pass to the
+   * callback function
+   */
   window.__bridgeFunctionCallbackEventListener = function (event) {
     const { invocationId, callbackIndex, args } = event.detail
     var invocation = invocations[invocationId]
@@ -64,33 +174,17 @@ if (window.__bridgeFunctionCallbackEventListener === undefined) {
   )
 }
 
-export default function bridgedFunctionCall (functionName, resultMapper) {
-  // console.log(`creating bridge function ${functionName} with id ${promiseId}`)
-  return function () {
-    const callbacks = []
-    const args = [].slice.call(arguments).map((arg, index) => {
-      if (typeof arg === 'function') {
-        callbacks[index] = arg
-        return SketchBridgeFunctionCallback
-      } else {
-        return arg
-      }
-    })
-    const invocationId = uuid()
-    return new Promise(function (resolve, reject) {
-      const retry = () => {
-        pluginCall(SketchBridgeFunctionName, invocationId, functionName, ...args)
-      }
-      invocations[invocationId] = {resolve, reject, callbacks, retry, functionName, args}
-      retry()
-    })
-    .then(resultMapper || (x => x))
-  }
-}
-
-// for interactive testing
+// Add a handle on the window for interactive testing of bridged function calls
 window.__invokeBridgedFunction = window.__invokeBridgedFunction || bridgedFunctionCall
 
+/**
+ * Invoked when a CocoaScript handler function throws an error, before
+ * rejecting the invocation that triggered the error.
+ *
+ * @param {Object} error an error from the CocoaScript side of the bridge
+ * @param {function} retry a function that will retry the original operation
+ * @return {boolean} true if a handler handled the error, false otherwise
+ */
 function invokeGlobalErrorHandlers (error, retry) {
   for (var i = 0; i < globalErrorHandlers.length; i++) {
     const handler = globalErrorHandlers[i]
@@ -103,15 +197,6 @@ function invokeGlobalErrorHandlers (error, retry) {
     }
   }
   return false
-}
-
-export function addGlobalErrorHandler (handler) {
-  globalErrorHandlers.push(handler)
-}
-
-export function removeGlobalErrorHandler (handler) {
-  const index = globalErrorHandlers.indexOf(handler)
-  globalErrorHandlers.splice(index, 1)
 }
 
 /** Test utilities **/

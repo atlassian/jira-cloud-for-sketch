@@ -63,7 +63,7 @@ export function createWebUI (context, identifier, page, options) {
     options.handlers
   )
 
-  const webUI = createBridgedWebUI(context, options.page, options)
+  const webUI = createBridgedWebUI(context, options)
 
   webUI.resizePanel = function (width, height, animate) {
     // resize WebView
