@@ -21,6 +21,12 @@ const issueViewDimensions = [
   akGridSizeUnitless * 50
 ]
 
+/**
+ * Spawns the 'JIRA' panel for browsing and interacting with JIRA issues.
+ *
+ * @param {Object} context provided by Sketch
+ * @return {Object} a WebUI for the launched panel
+ */
 export default function (context) {
   const webUI = createWebUI(context, IssuePanelId, 'issues.html', {
     width: issueListDimensions[0],

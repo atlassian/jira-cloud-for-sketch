@@ -14,6 +14,9 @@ import { exportSelection } from '../../../export'
 import { attachmentFromRest } from '../../../entity-mappers'
 import Queue from 'promise-queue'
 
+/**
+ * Handles uploading files to JIRA as attachments.
+ */
 export default class Uploads {
   constructor (context, webUI, jira, attachments) {
     this.context = context
@@ -23,12 +26,21 @@ export default class Uploads {
     this.uploadQueue = new Queue(attachmentUploadConcurrency, Infinity)
   }
 
+  /**
+   * @return {Object[]} an array of file objects from the system drag
+   * pasteboard. See `fileUrlToUploadInfo` for documentation regarding the
+   * object's properties.
+   */
   getDroppedFiles () {
     const droppedFiles = getDraggedFiles().map(fileUrlToUploadInfo)
     postAnalytics(droppedFiles, this.uploadQueue.getPendingLength() > 0)
     return droppedFiles
   }
 
+  /**
+   * Export the currently selected layers the currently selected issue using
+   * the layers' configured export options.
+   */
   async exportSelectedLayersToSelectedIssue () {
     executeSafelyAsync(this.context, async () => {
       const issueKey = getSelectedIssueKey()
@@ -52,6 +64,14 @@ export default class Uploads {
     })
   }
 
+  /**
+   * @param {string} issueKey identifies the issue to upload the attachment to
+   * @param {Object} attachment the attachment to upload
+   * @param {string} attachment.path the file path to the attachment
+   * @param {function} progress a callback function periodically invoked with
+   * the percentage of upload complete (a Number between 0 and 1).
+   * @return {Promise<object>} the uploaded attachment object
+   */
   async uploadAttachment (issueKey, attachment, progress) {
     return this.uploadQueue.add(async () => {
       trace(`attaching ${attachment.path} to ${issueKey}`)
@@ -71,6 +91,10 @@ export default class Uploads {
   }
 }
 
+/**
+ * @param {string} fileUrlString a local file url
+ * @return {Object} an attachment object representing the file being uploaded
+ */
 function fileUrlToUploadInfo (fileUrlString) {
   const fileUrl = NSURL.URLWithString(fileUrlString)
   const extension = fileUrl.pathExtension() + ''
@@ -87,6 +111,12 @@ function fileUrlToUploadInfo (fileUrlString) {
   }
 }
 
+/**
+ * Transmits analytics about the number of files, the file extension, and
+ * whether multiple uploads are occurring concurrently.
+ * @param {Object[]} files the files being uploaded
+ * @param {boolean} alreadyUploading whether an upload is already in progress
+ */
 async function postAnalytics (files, alreadyUploading) {
   var events = files.map(file => {
     return event(

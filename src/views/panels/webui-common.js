@@ -8,6 +8,8 @@ import { titlebarHeight } from './ui-constants'
 import panelDelegate from './panel-delegate'
 
 /**
+ * Encapsulates common options used by the plugin's panels.
+ *
  * Important to note:
  *
  * stringByEvaluatingJavaScriptFromString (used by WebUI.eval) has limits:
@@ -19,6 +21,25 @@ import panelDelegate from './panel-delegate'
  * well fail 'silently'.
  *
  * via https://stackoverflow.com/a/7389032
+ *
+ * @param {Object} context provided by Sketch
+ * @param {string} identifier a unique identifier for the WebUI. Note:
+ * `sketch-module-web-view` stores active NSPanel objects under this ID in the
+ * main thread's threadDictionary
+ * @param {string} page the name of the HTML file in the `Resources` directory
+ * to be rendered as the content of the WebView.
+ * @param {Object} options used to configure the WebUI. Some options are
+ * documented here, some are passed through to `createBridgedWebUI` (which
+ * also passes some on to `sketch-module-web-view`). Sorry for the multiple
+ * levels of abstraction here - hopefully we'll be able to incorporate some of
+ * this into `sketch-module-web-view`
+ * @param {string} options.backgroundColor a hex color string (e.g. '#abadab')
+ * @param {boolean} options.hideTitleBar whether the panel's title bar should
+ * be hidden
+ * @param {number} options.width the width of the panel in pixels
+ * @param {number} options.height the height of the panel in pixels
+ * @param {function} [options.onClose] invoked when the panel is closed
+ * @return a WebUI initialized with the provided options
  */
 export function createWebUI (context, identifier, page, options) {
   // default options
@@ -65,6 +86,12 @@ export function createWebUI (context, identifier, page, options) {
 
   const webUI = createBridgedWebUI(context, options)
 
+  /**
+   * @param {number} width the new panel width in pixels
+   * @param {number} height the new panel height in pixels
+   * @param {boolean} [animate] animate the resize (generally doesn't look good
+   * unless you've specifically built the client-side to support it)
+   */
   webUI.resizePanel = function (width, height, animate) {
     // resize WebView
     const webViewFrame = webUI.webView.frame()
@@ -99,10 +126,22 @@ export function createWebUI (context, identifier, page, options) {
   return webUI
 }
 
+/**
+ * `sketch-module-web-view` stores active NSPanel objects under this ID in the
+ * main thread's threadDictionary. This function retrieves them again.
+ *
+ * @param {string} id the identifier used to create an NSPanel
+ * @return {Object} the NSPanel
+ */
 export function findPanel (id) {
   return NSThread.mainThread().threadDictionary()[id]
 }
 
+/**
+ * Look up an NSPanel by id, then close it if it exists.
+ *
+ * @param {string} id the identifier used to create an NSPanel
+ */
 export function closePanel (id) {
   const panel = findPanel(id)
   if (panel) {
@@ -114,11 +153,21 @@ export function closePanel (id) {
   }
 }
 
+/**
+ * Close all known plugin panels.
+ */
 export function closeAllPluginPanels () {
   closePanel(IssuePanelId)
   closePanel(ConnectPanelId)
 }
 
 const panelPrefix = 'atlassian-sketch-plugin'
+
+/**
+ * The identifier for the 'JIRA' panel
+ */
 export const IssuePanelId = `${panelPrefix}-issues`
+/**
+ * The identifier for the 'Connect' panel
+ */
 export const ConnectPanelId = `${panelPrefix}-connect`

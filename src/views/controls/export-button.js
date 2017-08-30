@@ -161,7 +161,7 @@ function withExportButtonBar (context, callback) {
  * particular class. Subviews are walked in reverse order, since this is more
  * efficient in the current version of Sketch at time of writing.
  *
- * @param {NSView} view the parent NSView to search
+ * @param {Object} view the parent NSView to search
  * @param {string} clazz the name of the class to be found
  */
 function findSubviewWithClass (view, clazz) {

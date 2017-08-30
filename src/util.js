@@ -1,3 +1,7 @@
+/*
+ * CocoaScript utility functions.
+ */
+
 import { trace } from './logger'
 import { readFile } from 'sketch-module-fs'
 

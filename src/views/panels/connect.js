@@ -13,6 +13,12 @@ import { titlebarHeight } from './ui-constants'
 import openIssuesPanel from './issues'
 import { trace } from '../../logger'
 
+/**
+ * Spawns the 'Connect' panel for authorizing the user with JIRA.
+ *
+ * @param {Object} context provided by Sketch
+ * @return {Object} a WebUI for the launched panel
+ */
 export default function (context) {
   const webUI = createWebUI(context, ConnectPanelId, 'connect.html', {
     width: 44 * akGridSizeUnitless,

@@ -78,6 +78,13 @@ export default function createBridgedWebUI (context, options) {
   }
 
   webUI = new WebUI(context, options.page, options)
+
+  /**
+   * Trigger a new CustomEvent on the `window` object of the WebView.
+   * @param {string} eventName the event name
+   * @param {Object} eventDetail the event payload, used as the `detail`
+   * property of the event
+   */
   webUI.dispatchWindowEvent = function (eventName, eventDetail) {
     var eventJson = JSON.stringify({ detail: eventDetail })
     isTraceEnabled() && trace(`window event: ${eventName} ${eventJson}`)
