@@ -9,6 +9,9 @@ import { trace, isTraceEnabled } from './logger'
 import FaqError, {faqTopics} from './error/FaqError'
 import AuthorizationError from './error/AuthorizationError'
 
+/**
+ * Handles interaction with JIRA's REST API.
+ */
 export default class JIRA {
   constructor () {
     this.baseUrl = `https://${getJiraHost()}`
@@ -16,7 +19,14 @@ export default class JIRA {
   }
 
   /**
-   * Retrieves issues using JIRA's search API.
+   * @param {string} filterKey the key of a `jql-filter` to use to search for
+   * issues
+   * @param {Object} opts search options
+   * @param {string[]} [opts.fields] issue fields to return
+   * @param {number} [opts.startAt] paging, index to start at
+   * @param {number} [opts.maxResults] paging, max number of results to return
+   * @return {Promise<object[]>} an array of JIRA issues (see `entity-mappers`)
+   * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/search
    */
   async getFilteredIssues (filterKey, opts) {
     const filter = jqlFilters[filterKey]
@@ -36,7 +46,13 @@ export default class JIRA {
   }
 
   /**
-   * Retrieve a JIRA issue using the issue API.
+   * @param {string} issueKey identifies the issue to retrieve
+   * @param {Object} opts request options
+   * @param {string[]} [opts.fields] issue fields to return
+   * @param {boolean} [opts.updateHistory] whether to update JIRA's 'recent issues'
+   * list based on this request
+   * @return {Promise<object>} a JIRA issue (see `entity-mappers`)
+   * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/issue-getIssue
    */
   async getIssue (issueKey, opts) {
     opts = assign({ fields: standardIssueFields }, opts)
@@ -47,10 +63,26 @@ export default class JIRA {
     return issueFromRest(await jiraFetch(issueUrl))
   }
 
+  /**
+   * @param {string} issueKey identifies the issue to retrieve
+   * @return {Promise<object[]>} an array of watchers. Note, if the user does
+   * not have permission to view watchers, users other than themselves will be
+   * omitted from the array.
+   * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/issue-getIssueWatchers
+   */
   async getWatchers (issueKey) {
     return (await jiraFetch(`${this.apiRoot}/issue/${issueKey}/watchers`)).watchers
   }
 
+  /**
+   * Note: this buffers the image into memory, so should only be used for
+   * small images like icons and thumbnails. The request will be authenticated
+   * only if the supplied URL matches the base url of the connected JIRA
+   * instance.
+   *
+   * @param {string} url the url of an image
+   * @param {string} mimeType the expected mime type of the image
+   */
   async getImageAsDataUri (url, mimeType) {
     const opts = {}
     // only authenticate requests to JIRA
@@ -66,6 +98,15 @@ export default class JIRA {
     return `data:${mimeType};base64,${data}`
   }
 
+  /**
+   * Downloads an attachment to the user's configured Downloads directory.
+   *
+   * @param {string} url the URL of an attachment to download
+   * @param {string} filename a the filename to save the attachment as
+   * @param {function} progress a callback for reporting progress. It is
+   * periodically invoked with two parameters: (downloadedBytes, totalBytes)
+   * @return {Promise<string>} the path to the downloaded file
+   */
   async downloadAttachment (url, filename, progress) {
     const opts = {
       filename,
@@ -80,6 +121,14 @@ export default class JIRA {
     }
   }
 
+  /**
+   * @param {string} issueKey identifies the issue to attach the file to
+   * @param {string} filePath the file to upload
+   * @param {function} progress a callback for reporting progress. It is
+   * periodically invoked with two parameters: (uploadedBytes, totalBytes)
+   * @return {Promise<object>} a JSON representation of the uploaded attachment
+   * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/issue/{issueIdOrKey}/attachments-addAttachment
+   */
   async uploadAttachment (issueKey, filePath, progress) {
     const uploadUrl = `${this.apiRoot}/issue/${issueKey}/attachments`
     const opts = {
@@ -96,10 +145,20 @@ export default class JIRA {
     }
   }
 
+  /**
+   * @param {string} id identifies the attachment to delete
+   * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/attachment-removeAttachment
+   */
   async deleteAttachment (id) {
     return jiraFetch(`${this.apiRoot}/attachment/${id}`, {method: 'DELETE'})
   }
 
+  /**
+   * @param {string} issueKey identifies the issue to comment on
+   * @param {string} comment the comment text
+   * @return {Promise<string>} a permalink to the comment
+   * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/issue/{issueIdOrKey}/comment-addComment
+   */
   async addComment (issueKey, comment) {
     const commentUrl = `${this.apiRoot}/issue/${issueKey}/comment`
     const body = JSON.stringify({body: comment})
@@ -107,10 +166,22 @@ export default class JIRA {
     return commentPermalink(issueKey, commentJson)
   }
 
+  /**
+   * @return {Promise<object>} the user's profile
+   * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/myself-getUser
+   */
   async getProfile () {
     return jiraFetch(`${this.apiRoot}/myself`)
   }
 
+  /**
+   * @param {string} query a search string matching user meta data
+   * @param {Object} opts search options
+   * @param {number} [opts.maxResults] paging, max number of results to return
+   * @param {boolean} [opts.showAvatar] whether user avatars should be returned
+   * @return {Promise<object>} user picker results matching the search criteria
+   * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/user-findUsersForPicker
+   */
   async findUsersForPicker (query, opts) {
     opts = assign({
       maxResults: maxMentionPickerResults,
@@ -127,6 +198,20 @@ export default class JIRA {
   }
 }
 
+/**
+ * Make a REST request to JIRA.
+ *
+ * @param {string} url the absolute URL to the REST resource
+ * @param {Object} [opts] request options. Some are documented here, some are
+ * passed through to `sketch-module-fetch-polyfill`
+ * @param {string} [opts.method] request method (defaults to GET)
+ * @param {Object} [opts.headers] request headers
+ * @param {string} [opts.body] the request body
+ * @throws specialized exceptions depending on the error case. A `FaqError`
+ * will be thrown with a suitable `faqTopic` for anticipated errors. An
+ * `AuthorizationError` will be thrown for authentication or authorization
+ * errors. Other errors may be thrown for other error cases.
+ */
 async function jiraFetch (url, opts) {
   opts = opts || {}
   const headers = assign({
@@ -166,10 +251,19 @@ async function jiraFetch (url, opts) {
   }
 }
 
+/**
+ * @return {Promise<string>} a bearer token for the connected JIRA instance, formatted
+ * for use in an Authorization HTTP header.
+ */
 async function authHeader () {
   return 'Bearer ' + (await getBearerToken())
 }
 
+/**
+ * @param {string} issueKey identifies the issue containing the comment
+ * @param {string} commentJson a REST JSON representation of a comment
+ * @return {string} a permalink to the comment
+ */
 function commentPermalink (issueKey, commentJson) {
   const baseUrl = commentJson.self.substring(0, commentJson.self.indexOf('/rest/'))
   const commentId = commentJson.id
@@ -180,6 +274,14 @@ function commentPermalink (issueKey, commentJson) {
   return `${path}${query}${fragment}`
 }
 
+/**
+ * Extracted to implement common error status handling across
+ * upload/download/fetch request mechanisms.
+ *
+ * @param {number} statusCode an HTTP status code
+ * @throws an AuthorizationError or FaqError if the status code requires
+ * special handling, otherwise returns normally.
+ */
 function tryHandleHttpStatus (statusCode) {
   switch (statusCode) {
     case 401:

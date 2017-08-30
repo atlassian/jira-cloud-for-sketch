@@ -4,17 +4,28 @@ import analytics from './analytics'
 import { bearerTokenExpirySafetyMargin } from './config'
 
 /**
- * This cache reads and writes to user preferences, so it can be safely used
- * across plugin commands (which run in separate contexts).
+ * Retrieves and caches auth tokens, to avoid making the user wait for an auth
+ * token each time they start interacting with the plugin.
  *
  * Note: Add-ons are allowed 500 access token requests every 5 minutes for each
- * host product the add-on is installed on.
- * https://developer.atlassian.com/cloud/jira/software/oauth-2-jwt-bearer-token-authorization-grant-type/#rate-limiting
+ * host product the add-on is installed on. Eagerly fetching tokens may become
+ * problematic for companies with one JIRA Cloudsite and >500 concurrent Sketch
+ * users.
+ *
+ * @see https://developer.atlassian.com/cloud/jira/software/oauth-2-jwt-bearer-token-authorization-grant-type/#rate-limiting
  */
 export default class TokenCache {
+  /**
+   * @param {function} getNewToken a reentrant function that can be used to
+   * retrieve a new auth token
+   */
   constructor (getNewToken) {
     this.getNewToken = getNewToken
   }
+  /**
+   * @param {boolean} force skip & ovewrite the cache
+   * @return {string} an auth token
+   */
   async get (force) {
     const now = moment.utc().unix()
     if (force) {
@@ -35,6 +46,9 @@ export default class TokenCache {
     setString(keys.authTokenExpiry, now + newToken[1] - bearerTokenExpirySafetyMargin)
     return newToken[0]
   }
+  /**
+   * Clear the token cache
+   */
   flush () {
     analytics.bearerTokenCacheFlush()
     unset(keys.authToken, keys.authTokenExpiry)

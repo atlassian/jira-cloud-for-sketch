@@ -3,6 +3,21 @@ import { cocoaDelegatePollInterval } from './config'
 import { userDownloadsDirectory, withErrorPointer } from './util'
 import { trace, isTraceEnabled } from './logger'
 
+/**
+ * Download a file to the user's configured Downloads directory or a specified
+ * path, with progress reporting.
+ *
+ * @param {string} url the url to download
+ * @param {object} opts request options
+ * @param {string} opts.filename a suggested name for the file (using this
+ * option will download the file to the user's Downloads directory)
+ * @param {string} opts.filePath a path for the file. Required if opts.filename
+ * is not set. If both are set, opts.filePath is ignored.
+ * @param {string} [opts.method] request method (defaults to GET)
+ * @param {Object} [opts.headers] request headers
+ * @param {function} onProgress a callback for reporting progress. It is
+ * periodically invoked with two parameters: (downloadedBytes, totalBytes)
+ */
 export async function download (url, opts, onProgress) {
   opts = assign({}, { method: 'GET' }, opts)
   if (opts.filename) {
@@ -18,6 +33,19 @@ export async function download (url, opts, onProgress) {
   return delegate.filePath()
 }
 
+/**
+ * Upload a file as a multipart request, with progress reporting.
+ *
+ * @param {string} url the url to upload the file to
+ * @param {object} opts request options
+ * @param {string} opts.parameterName the name field of the file upload part
+ * of the multpart request
+ * @param {string} opts.filePath path to the file to upload
+ * @param {string} [opts.method] request method (defaults to POST)
+ * @param {Object} [opts.headers] request headers
+ * @param {function} onProgress a callback for reporting progress. It is
+ * periodically invoked with two parameters: (uploadedBytes, totalBytes)
+ */
 export async function upload (url, opts, onProgress) {
   if (!opts.filePath) {
     throw new Error('opts.filePath is required')
@@ -153,7 +181,7 @@ async function extractErrorMessage (delegate) {
   return errorMessage
 }
 
-// based on the excellent sketch-module-fetch-polyfill
+// based on the excellent `sketch-module-fetch-polyfill`
 function dataParserWrapper (data) {
   return {
     text: function () {

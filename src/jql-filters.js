@@ -1,3 +1,7 @@
+/*
+ * The JQL search strings that power the Filters dropdown.
+ */
+
 import { forOwn, assign } from 'lodash'
 
 const jqlFilters = {

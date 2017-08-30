@@ -1,5 +1,10 @@
 import { trace } from './logger'
 
+/**
+ * Get paths for exported layers or other files that the user has just dragged.
+ *
+ * @return {string[]} an array of file urls from the system drag pasteboard.
+ */
 export function getDraggedFiles () {
   var pboard = NSPasteboard.pasteboardWithName(NSDragPboard)
   var items = pboard.pasteboardItems()

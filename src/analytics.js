@@ -52,6 +52,15 @@ if (!analyticsId || analyticsId == 'null') {
 // convert to js string
 analyticsId = analyticsId + ''
 
+/**
+ * Create an analytics event payload.
+ *
+ * @param {string} event the event name
+ * @param {Object} properties additional properties to send with the event (see
+ * https://extranet.atlassian.com/display/MOD/Public+Analytics+aka+GAS for
+ * restrictions regarding these properties). Do NOT send user content or
+ * personally identifying information in events.
+ */
 export function event (eventName, properties) {
   // https://extranet.atlassian.com/display/MOD/Public+Analytics+aka+GAS
   const payload = {
@@ -69,10 +78,16 @@ export function event (eventName, properties) {
   return payload
 }
 
+/**
+ * Send a single analytics event.
+ */
 export async function postSingle (eventName, properties) {
   return _postToAnalyticsApi(analyticsApiSingleEvent, event(eventName, properties))
 }
 
+/**
+ * Send an array of analytics events.
+ */
 export async function postMultiple (events) {
   return _postToAnalyticsApi(analyticsApiMultipleEvents, {events: events})
 }

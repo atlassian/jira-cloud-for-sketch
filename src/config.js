@@ -1,3 +1,11 @@
+/*
+ * Plugin configuration & constants. Some properties are hardcoded, but most
+ * are user hackable via a `config.json` file in the plugin's `Resource`
+ * directory. Defaults are also defined in this file in case the user deletes
+ * a property from `config.json`. If you add a new property to `config.json`, make
+ * sure you add it here too!
+ */
+
 import { assign, isNumber } from 'lodash'
 import { resourcesPath, scriptsPath, readFileAsJson } from './util'
 
