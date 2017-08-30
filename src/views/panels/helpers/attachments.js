@@ -84,7 +84,8 @@ export default class Attachments {
 
 /**
  * Send analytics about the attachments' mime type, size, and whether it had a
- * thumbnail.
+ * thumbnail. DO NOT send any sensitive information such as the image's name,
+ * thumbnail, content, or the user that uploaded it.
  * @param {Object[]} attachments an issue's attachments
  */
 async function postAnalytics (attachments) {
