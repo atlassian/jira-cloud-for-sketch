@@ -2,9 +2,13 @@
 
 A [Sketch] plugin that provides integration with JIRA Cloud.
 
-The plugin is available for download from [sketch.atlassian.com].
+This README.md is primarily for developers. The latest plugin version,
+documentation, FAQ, etc. are hosted at [sketch.atlassian.com].
 
-# Developing
+This plugin's canonical repository is [on Bitbucket], but is also
+[mirrored on GitHub]. Contributions are accepted via either service.
+
+## Developing
 
 - Uninstall any previous versions of the Atlassian Sketch plugin from Sketch
 - `npm install` to install dependencies
@@ -17,7 +21,7 @@ When you next start Sketch, there should be a **JIRA** option in the
 
 To subsequently update the plugin, simply run `skpm build` and restart Sketch.
 
-## AtlassianSketchFramework (Objective-C)
+### AtlassianSketchFramework (Objective-C)
 
 If you change files under the Objective-C `AtlassianSketchFramework` package,
 you'll need to rebuild the project using the `./build.sh` script instead of
@@ -25,7 +29,7 @@ you'll need to rebuild the project using the `./build.sh` script instead of
 `AtlassianSketchFramework` binaries alongside their corresponding source
 changes.
 
-## Builds
+### Builds
 
 Builds are continuously built by Bitbucket Pipelines. See
 `bitbucket-pipelines.yml` and `bitbucket-pipelines.sh` for details. Builds are
@@ -42,9 +46,9 @@ If you want to cut your own build to send to a friend, simply run `skpm build`
 (or `./build.sh` if you've modified any Objective-C files) and then zip the
 `jira.sketchplugin` directory.
 
-## Architecture
+### Architecture
 
-### Frontend/Backend
+#### Frontend/Backend
 
 The plugin 'backend' uses [CocoaScript] to implement Sketch commands, store
 user preferences, make requests to JIRA, add controls to the Sketch UI, and
@@ -74,7 +78,7 @@ must be stubbed out for tests. Care should be taken not to include CocoaScript
 dependencies in frontend code, as the Cocoa classes will be missing from the
 frontend context.
 
-### Persistence
+#### Persistence
 
 Most configuration is stored in user modifiable file at
 `jira.sketchplugin/Contents/Resource/config.json`. This file is read once
@@ -85,7 +89,7 @@ Properties and settings that are modified at runtime are stored in a macOS
 `plist` that lives at `~/Library/Preferences/plugin.sketch.jira-sketch-plugin`
 (see `src/prefs.js`).
 
-### JIRA authentication and integration
+#### JIRA authentication and integration
 
 The plugin uses a companion [Atlassian Connect] add-on to integrate with JIRA
 Cloud. The add-on allows a user to securely link a plugin instance to their
@@ -95,7 +99,7 @@ REST API (see `src/auth.js` and `src/jira.js` for details). The companion
 add-on is a system add-on, and will be automatically installed in any given
 JIRA Cloud instance.
 
-### Logging
+#### Logging
 
 Logs are sent to the Sketch provided `log` function, which writes to
 `~/Library/Logs/com.bohemiancoding.sketch3/Plugin Output.log`. This file is
@@ -104,8 +108,38 @@ cleared automatically by Sketch on startup. I recommend browsing logs using
 is logged at `trace` or `error` level. The current log level can be configured
 via `config.json` (see *Persistance* above).
 
+## Contributing
+
+Pull requests, issues and comments are welcomed. For pull requests:
+
+* Follow the existing style
+* Separate unrelated changes into multiple pull requests
+
+For bigger changes, make sure you start a discussion first by creating
+an issue and explaining the intended change.
+
+Atlassian requires contributors to sign a Contributor License Agreement,
+known as a CLA. This serves as a record stating that the contributor is
+entitled to contribute the code/documentation/translation to the project
+and is willing to have it used in distributions and derivative works
+(or is willing to transfer ownership).
+
+Prior to accepting your contributions we ask that you please follow the appropriate
+link below to digitally sign the CLA. The Corporate CLA is for those who are
+contributing as a member of an organization and the individual CLA is for
+those contributing as an individual.
+
+* [CLA for corporate contributors](https://na2.docusign.net/Member/PowerFormSigning.aspx?PowerFormId=e1c17c66-ca4d-4aab-a953-2c231af4a20b)
+* [CLA for individuals](https://na2.docusign.net/Member/PowerFormSigning.aspx?PowerFormId=3f94fbdc-2fbe-46ac-b14c-5d152700ae5d)
+
+## Code of conduct
+
+This project is bound by a [code of conduct].
+
 [Sketch]: https://sketchapp.com/
 [sketch.atlassian.com]: https://sketch.atlassian.com
+[on Bitbucket]: https://bitbucket.org/atlassian/jira-cloud-for-sketch
+[mirrored on GitHub]: https://github.com/atlassian/jira-cloud-for-sketch
 [Sketch plugin manager]: https://www.npmjs.com/package/skpm
 [CocoaScript]: http://developer.sketchapp.com/introduction/cocoascript/
 [React]: https://facebook.github.io/react/
@@ -115,3 +149,4 @@ via `config.json` (see *Persistance* above).
 [Babel]: https://babeljs.io/
 [Atlassian Connect]: https://developer.atlassian.com/cloud/jira/platform/integrating-with-jira-cloud/
 [bearer tokens]: https://developer.atlassian.com/cloud/jira/platform/oauth-2-jwt-bearer-token-authorization-grant-type/
+[code of conduct]: ./CODE_OF_CONDUCT.md
