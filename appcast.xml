@@ -6,6 +6,19 @@
     <description>Share from Sketch to JIRA, without losing focus</description>
     <language>en</language>
       <item>
+        <title>v0.10.0</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Rename to JIRA Cloud plugin</li>
+              <li>Significantly better error handling</li>
+              <li>Various UX fixes</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-0.0.10.zip" sparkle:version="0.0.10" />
+      </item>
+      <item>
         <title>v0.0.9</title>
         <description>
           <![CDATA[
