@@ -1,6 +1,6 @@
 # JIRA Cloud for Sketch
 
-A [Sketch] plugin that provides integration with JIRA Cloud. Get it @ [sketch.atlassian.com].
+A [Sketch] plugin that provides integration with JIRA Cloud. Get it @ [sketch.atlassian.com]
 
 <img src='./screenshots.png' alt='Screenshot'>
 
