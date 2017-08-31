@@ -9,6 +9,7 @@ const _getIssue = bridgedFunctionCall('getIssue', IssueMapper)
 const _getDroppedFiles = bridgedFunctionCall('getDroppedFiles', AttachmentsMapper)
 const _openInBrowser = bridgedFunctionCall('openInBrowser')
 const _promptKeepOrReplace = bridgedFunctionCall('promptKeepOrReplace')
+const _exportSelectedLayers = bridgedFunctionCall('exportSelectedLayers')
 
 export default class Issue {
   @observable attachments = []
@@ -111,6 +112,10 @@ export default class Issue {
       file.upload(this.key)
       this.attachments.splice(insertAt, 0, file)
     })
+  }
+
+  async exportSelectedLayers () {
+    _exportSelectedLayers()
   }
 
   async uploadExportedSelection (files) {

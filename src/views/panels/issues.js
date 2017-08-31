@@ -49,6 +49,9 @@ export default function (context) {
       getDroppedFiles () {
         return uploads.getDroppedFiles()
       },
+      exportSelectedLayers () {
+        uploads.exportSelectedLayersToSelectedIssue()
+      },
       uploadAttachment (issueKey, attachment, progress) {
         return uploads.uploadAttachment(issueKey, attachment, progress)
       },

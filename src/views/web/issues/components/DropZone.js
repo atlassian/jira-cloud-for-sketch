@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
+import Button from '@atlaskit/button'
 import styled from 'styled-components'
 import '@atlaskit/css-reset'
 
@@ -12,6 +13,7 @@ export default class DropZone extends Component {
     this.dragLeave = this.dragLeave.bind(this)
     this.dragStart = this.dragStart.bind(this)
     this.drop = this.drop.bind(this)
+    this.handleExportSelected = this.handleExportSelected.bind(this)
     this.state = {
       /*
       Tracks whether the user is currently dragging an item over the DropZone.
@@ -45,6 +47,9 @@ export default class DropZone extends Component {
     */
     this.props.issue.uploadDroppedFiles()
   }
+  handleExportSelected () {
+    this.props.issue.exportSelectedLayers()
+  }
   render (props) {
     var style = {}
     if (this.state.dragHover > 0) {
@@ -62,7 +67,18 @@ export default class DropZone extends Component {
         onDropCapture={this.drop}
       >
         <DocumentsImg src='upload.png' alt='Upload' />
-        <TextDiv>Drag your <strong>artboards</strong> and <strong>layers</strong> here</TextDiv>
+        <TextDiv>
+          Drag your <strong>artboards</strong> and <strong>layers</strong> here or
+        </TextDiv>
+        <ButtonWrapper>
+          <Button
+            appearance='default'
+            type='button'
+            onClick={this.handleExportSelected}
+          >
+            Export selected
+          </Button>
+        </ButtonWrapper>
       </DropZoneDiv>
     )
   }
@@ -95,4 +111,9 @@ const TextDiv = styled.div`
   color: #7a869a;
   font-size: 12px;
   font-weight: 500;
+`
+
+const ButtonWrapper = styled.div`
+  margin-left: 8px;
+  font-size: 12px;
 `
