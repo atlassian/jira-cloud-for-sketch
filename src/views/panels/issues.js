@@ -7,7 +7,6 @@ import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import { titlebarHeight } from './ui-constants'
 import JIRA from '../../jira'
 import openConnectPanel from './connect'
-import exportButton from '../controls/export-button'
 import keepOrReplaceAlert from '../alerts/keep-or-replace'
 import { setSelectedIssueKey, setExportSelectedLayersFn } from '../../plugin-state'
 
@@ -32,7 +31,6 @@ export default function (context) {
     width: issueListDimensions[0],
     height: issueListDimensions[1],
     onClose: function () {
-      exportButton.remove(context)
       setExportSelectedLayersFn(null)
       setSelectedIssueKey(null)
     },
@@ -63,12 +61,10 @@ export default function (context) {
       },
       onIssueSelected (issueKey) {
         webUI.resizePanel(...issueViewDimensions)
-        exportButton.add(context)
         setSelectedIssueKey(issueKey)
       },
       onIssueDeselected (issueKey) {
         webUI.resizePanel(...issueListDimensions)
-        exportButton.remove(context)
         setSelectedIssueKey(null)
       },
       getWatchers (issueKey) {

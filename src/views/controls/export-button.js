@@ -1,7 +1,8 @@
 import { error, trace } from '../../logger'
 import { documentFromContext } from '../../util'
 import buttonDelegate, { onClickSelector } from './button-delegate'
-import { triggerExportSelectedLayers } from '../../plugin-state'
+import { triggerExportSelectedLayers, getSelectedIssueKey } from '../../plugin-state'
+import launchPanel from '../panels/launch'
 
 export default { add, remove }
 
@@ -55,8 +56,12 @@ async function add (context) {
     )
     const jiraButtonDelegate = buttonDelegate({
       onClick: function () {
-        if (!triggerExportSelectedLayers()) {
-          error('Failed to trigger export of selected layers')
+        if (getSelectedIssueKey()) {
+          if (!triggerExportSelectedLayers()) {
+            error('Failed to trigger export of selected layers (none selected)')
+          }
+        } else {
+          launchPanel(context)
         }
       }
     })

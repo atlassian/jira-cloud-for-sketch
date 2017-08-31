@@ -20,6 +20,7 @@ import { trace } from '../../logger'
  * @return {Object} a WebUI for the launched panel
  */
 export default function (context) {
+  trace(context)
   const webUI = createWebUI(context, ConnectPanelId, 'connect.html', {
     width: 44 * akGridSizeUnitless,
     // +2 == fudge (lineheights don't quite add up to a multiple of akGridSize)
