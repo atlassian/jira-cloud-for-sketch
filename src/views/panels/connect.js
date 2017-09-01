@@ -19,7 +19,7 @@ import { trace } from '../../logger'
  * @param {Object} context provided by Sketch
  * @return {Object} a WebUI for the launched panel
  */
-export default function (context) {
+export default async function (context) {
   trace(context)
   const webUI = createWebUI(context, ConnectPanelId, 'connect.html', {
     width: 44 * akGridSizeUnitless,
@@ -54,6 +54,8 @@ export default function (context) {
     }
   })
   analytics.jiraConnectPanelOpen()
+
+  await webUI.waitUntilBridgeInitialized()
 
   return webUI
 }

@@ -1,15 +1,15 @@
 import { observable, computed, reaction } from 'mobx'
 import { assign, concat, partition, omit, filter, includes, differenceBy, intersectionBy } from 'lodash'
-import bridgedFunctionCall from '../../../bridge/client'
+import { bridgedFunction } from '../../../bridge/client'
 import { IssueMapper, AttachmentsMapper, AttachmentMapper } from './mapper'
 import CommentEditor from './CommentEditor'
 import { analytics } from '../../util'
 
-const _getIssue = bridgedFunctionCall('getIssue', IssueMapper)
-const _getDroppedFiles = bridgedFunctionCall('getDroppedFiles', AttachmentsMapper)
-const _openInBrowser = bridgedFunctionCall('openInBrowser')
-const _promptKeepOrReplace = bridgedFunctionCall('promptKeepOrReplace')
-const _exportSelectedLayers = bridgedFunctionCall('exportSelectedLayers')
+const _getIssue = bridgedFunction('getIssue', IssueMapper)
+const _getDroppedFiles = bridgedFunction('getDroppedFiles', AttachmentsMapper)
+const _openInBrowser = bridgedFunction('openInBrowser')
+const _promptKeepOrReplace = bridgedFunction('promptKeepOrReplace')
+const _exportSelectedLayers = bridgedFunction('exportSelectedLayers')
 
 export default class Issue {
   @observable attachments = []

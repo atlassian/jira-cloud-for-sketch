@@ -1,17 +1,17 @@
 import { observable, computed } from 'mobx'
 import { find } from 'lodash'
-import bridgedFunctionCall, { addGlobalErrorHandler } from '../../../bridge/client'
+import { bridgedFunction, addGlobalErrorHandler, exposeFunction, markBridgeAsInitialized } from '../../../bridge/client'
 import { analytics, truncateWithEllipsis } from '../../util'
 import { FiltersMapper, IssuesMapper, ProfileMapper } from './mapper'
 
-const _loadFilters = bridgedFunctionCall('loadFilters', FiltersMapper)
-const _loadIssuesForFilter = bridgedFunctionCall('loadIssuesForFilter', IssuesMapper)
-const _loadProfile = bridgedFunctionCall('loadProfile', ProfileMapper)
-const _viewSettings = bridgedFunctionCall('viewSettings')
-const _reauthorize = bridgedFunctionCall('reauthorize')
-const _onIssueSelected = bridgedFunctionCall('onIssueSelected')
-const _onIssueDeselected = bridgedFunctionCall('onIssueDeselected')
-const _openFaqPage = bridgedFunctionCall('openFaqPage')
+const _loadFilters = bridgedFunction('loadFilters', FiltersMapper)
+const _loadIssuesForFilter = bridgedFunction('loadIssuesForFilter', IssuesMapper)
+const _loadProfile = bridgedFunction('loadProfile', ProfileMapper)
+const _viewSettings = bridgedFunction('viewSettings')
+const _reauthorize = bridgedFunction('reauthorize')
+const _onIssueSelected = bridgedFunction('onIssueSelected')
+const _onIssueDeselected = bridgedFunction('onIssueDeselected')
+const _openFaqPage = bridgedFunction('openFaqPage')
 
 const maxErrorMessageLength = 55
 
@@ -32,10 +32,20 @@ export default class ViewModel {
   @observable reauthorize = null
 
   constructor () {
+    this.initializeExposedFunctions()
     this.loadFilters()
     this.loadProfile()
     this.registerGlobalErrorHandler()
-    this.registerExportEventHandler()
+  }
+
+  initializeExposedFunctions () {
+    exposeFunction('exportSelectionToSelectedIssue', (issueKey, files) => {
+      const issue = find(this.issues.list, issue => {
+        return issue.key === issueKey
+      })
+      issue && issue.uploadExportedSelection(files)
+    })
+    markBridgeAsInitialized()
   }
 
   async loadFilters () {
@@ -125,16 +135,6 @@ export default class ViewModel {
       }
       // indicate that this error handler will facilitate retries
       return true
-    })
-  }
-
-  registerExportEventHandler () {
-    window.addEventListener('jira.export.selection.to.issue', event => {
-      const { issueKey, files } = event.detail
-      const issue = find(this.issues.list, issue => {
-        return issue.key === issueKey
-      })
-      issue && issue.uploadExportedSelection(files)
     })
   }
 }

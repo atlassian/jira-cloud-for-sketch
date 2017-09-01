@@ -11,6 +11,9 @@ import {
   SketchBridgeFunctionCallbackEvent,
   SketchBridgeFunctionName,
   SketchBridgeFunctionCallback,
+  SketchExposedFunctionTriggerEvent,
+  SketchExposedFunctionCallback,
+  SketchBridgeClientInitializedFlag,
   invocationKeyForTests
 } from './common'
 
@@ -39,23 +42,6 @@ import {
 const invocations = window.__bridgeFunctionInvocations = window.__bridgeFunctionInvocations || {}
 
 /**
- * Global error handlers. These handlers will first be given a chance to handle
- * any errors coming from the CocoaScript side of the bridge. If no handler can
- * handle a particular error, the invocation that triggered the error will be
- * rejected.
- */
-const globalErrorHandlers = []
-
-export function addGlobalErrorHandler (handler) {
-  globalErrorHandlers.push(handler)
-}
-
-export function removeGlobalErrorHandler (handler) {
-  const index = globalErrorHandlers.indexOf(handler)
-  globalErrorHandlers.splice(index, 1)
-}
-
-/**
  * Creates a re-usable JavaScript function that invokes a named CocoaScript
  * handler function attached to the parent NSPanel. Any arguments passed to the
  * JavaScript function will be passed on to the CocoaScript handler. The
@@ -71,7 +57,7 @@ export function removeGlobalErrorHandler (handler) {
  * through to the named CocoaScript handler, and returns a Promise that will
  * be resolved or rejected when the handler completes or throws
  */
-export default function bridgedFunctionCall (functionName, resultMapper) {
+export function bridgedFunction (functionName, resultMapper) {
   return function () {
     const callbacks = []
     const args = [].slice.call(arguments).map((arg, index) => {
@@ -112,7 +98,7 @@ if (window.__bridgeFunctionResultEventListener === undefined) {
    */
   window.__bridgeFunctionResultEventListener = function (event) {
     const { invocationId, error, result } = event.detail
-    var invocation = invocations[invocationId]
+    const invocation = invocations[invocationId]
     if (!invocation) {
       console.error(`No __bridgeFunctionInvocation found for id '${invocationId}'`)
       return
@@ -153,7 +139,7 @@ if (window.__bridgeFunctionCallbackEventListener === undefined) {
    */
   window.__bridgeFunctionCallbackEventListener = function (event) {
     const { invocationId, callbackIndex, args } = event.detail
-    var invocation = invocations[invocationId]
+    const invocation = invocations[invocationId]
     if (!invocation) {
       console.error(`No __bridgeFunctionInvocation found for id '${invocationId}'`)
       return
@@ -174,8 +160,22 @@ if (window.__bridgeFunctionCallbackEventListener === undefined) {
   )
 }
 
-// Add a handle on the window for interactive testing of bridged function calls
-window.__invokeBridgedFunction = window.__invokeBridgedFunction || bridgedFunctionCall
+/**
+ * Global error handlers. These handlers will first be given a chance to handle
+ * any errors coming from the CocoaScript side of the bridge. If no handler can
+ * handle a particular error, the invocation that triggered the error will be
+ * rejected.
+ */
+const globalErrorHandlers = []
+
+export function addGlobalErrorHandler (handler) {
+  globalErrorHandlers.push(handler)
+}
+
+export function removeGlobalErrorHandler (handler) {
+  const index = globalErrorHandlers.indexOf(handler)
+  globalErrorHandlers.splice(index, 1)
+}
 
 /**
  * Invoked when a CocoaScript handler function throws an error, before
@@ -186,7 +186,7 @@ window.__invokeBridgedFunction = window.__invokeBridgedFunction || bridgedFuncti
  * @return {boolean} true if a handler handled the error, false otherwise
  */
 function invokeGlobalErrorHandlers (error, retry) {
-  for (var i = 0; i < globalErrorHandlers.length; i++) {
+  for (let i = 0; i < globalErrorHandlers.length; i++) {
     const handler = globalErrorHandlers[i]
     try {
       if (handler(error, retry)) {
@@ -199,7 +199,72 @@ function invokeGlobalErrorHandlers (error, retry) {
   return false
 }
 
+const exposedFunctions = {}
+
+/**
+ * Expose a function to CocoaScript, allowing a JavaScript function to be
+ * invoked by WebUI#invokeExposedFunction (see host.js).
+ *
+ * @param {string} name the name the function will be exposed as in the host
+ * @param {function} fn the function being exposed
+ * @param {boolean} replace an error is logged if this flag is false and a
+ * function of this name is already registered
+ */
+export function exposeFunction (name, fn, replace) {
+  if (!replace && exposedFunctions[name]) {
+    console.error(`Function already registered with name (${name})!`)
+  }
+  exposedFunctions[name] = fn
+}
+
+/**
+ * Marks the bridge as initialized on the client side. This should be invoked
+ * after all the necessary functions have been exposed via `exposeFunction`.
+ */
+export function markBridgeAsInitialized () {
+  window[SketchBridgeClientInitializedFlag] = true
+}
+
+if (window.__exposedFunctionTriggerEventListener === undefined) {
+  /**
+   * Listens for exposed function invocation events sent by the CocoaScript
+   * side of the bridge, invokes the corresponding function, and passed the
+   * result back over the CocoaScript bridge.
+   *
+   * @param {CustomEvent} event sent when CocoaScript invokes an exposed
+   * JavaScript function
+   * @param {string} event.detail.functionName the name of the exposed function
+   * @param {string} event.detail.id an identifier for the invocation
+   * @param {*[]} event.detail.args an array of arguments to pass to the
+   * exposed function
+   */
+  window.__exposedFunctionTriggerEventListener = async function (event) {
+    const { functionName, id, args } = event.detail
+    const fn = exposedFunctions[functionName]
+    if (!fn) {
+      console.error(`No exposedFunction found for name '${functionName}'`)
+      return
+    }
+    const returnValue = {functionName, id}
+    try {
+      returnValue.result = await fn(...args)
+    } catch (e) {
+      returnValue.error = e
+    }
+    pluginCall(SketchExposedFunctionCallback, returnValue)
+  }
+  window.addEventListener(
+    SketchExposedFunctionTriggerEvent,
+    window.__exposedFunctionTriggerEventListener
+  )
+}
+
 /** Test utilities **/
+
+// Add a handle on the window for interactive testing of bridged function calls
+window.__invokeBridgedFunction = window.__invokeBridgedFunction || function (functionName) {
+  bridgedFunction(functionName)(arguments.slice(1))
+}
 
 window.__addBridgeResponsesForTests = window.__addBridgeResponsesForTests || function (responses) {
   console.log('Bridge responses for tests', responses)

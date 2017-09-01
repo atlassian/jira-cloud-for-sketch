@@ -1,15 +1,15 @@
 import { observable } from 'mobx'
-import bridgedFunctionCall from '../../../bridge/client'
+import { bridgedFunction } from '../../../bridge/client'
 import { analytics } from '../../util'
 import { uniqBy, without, debounce } from 'lodash'
 
 const atMentionRegex = /(@\w*( \w*){0,2})$/
 const atMentionDebounceDelay = 250 // sticks finger in mouth, raises to wind
 
-const _openInBrowser = bridgedFunctionCall('openInBrowser')
-const _findUsersForPicker = bridgedFunctionCall('findUsersForPicker')
-const _addComment = bridgedFunctionCall('addComment')
-const _getWatchers = bridgedFunctionCall('getWatchers')
+const _openInBrowser = bridgedFunction('openInBrowser')
+const _findUsersForPicker = bridgedFunction('findUsersForPicker')
+const _addComment = bridgedFunction('addComment')
+const _getWatchers = bridgedFunction('getWatchers')
 
 export default class CommentEditor {
   @observable text = ''

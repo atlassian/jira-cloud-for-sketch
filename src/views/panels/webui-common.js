@@ -39,7 +39,7 @@ import panelDelegate from './panel-delegate'
  * @param {number} options.width the width of the panel in pixels
  * @param {number} options.height the height of the panel in pixels
  * @param {function} [options.onClose] invoked when the panel is closed
- * @return a WebUI initialized with the provided options
+ * @return {Promise<WebUI>} a WebUI initialized with the provided options
  */
 export function createWebUI (context, identifier, page, options) {
   // default options

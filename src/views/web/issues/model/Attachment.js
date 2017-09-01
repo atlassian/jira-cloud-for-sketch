@@ -1,12 +1,12 @@
 import { observable, computed } from 'mobx'
 import { assign } from 'lodash'
-import bridgedFunctionCall from '../../../bridge/client'
+import { bridgedFunction } from '../../../bridge/client'
 import getThumbnail from './thumbnails'
 import { analytics, sleep } from '../../util'
 
-const _uploadAttachment = bridgedFunctionCall('uploadAttachment')
-const _openAttachment = bridgedFunctionCall('openAttachment')
-const _deleteAttachment = bridgedFunctionCall('deleteAttachment')
+const _uploadAttachment = bridgedFunction('uploadAttachment')
+const _openAttachment = bridgedFunction('openAttachment')
+const _deleteAttachment = bridgedFunction('deleteAttachment')
 
 export default class Attachment {
   @observable uploading = false

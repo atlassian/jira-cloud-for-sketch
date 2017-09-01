@@ -6,8 +6,11 @@
 
 export const SketchBridgeFunctionResultEvent = 'sketch.bridge.function.result'
 export const SketchBridgeFunctionCallbackEvent = 'sketch.bridge.function.callback'
-export const SketchBridgeFunctionName = '__bridgedFunctionCall'
+export const SketchBridgeFunctionName = '__bridgedFunction'
 export const SketchBridgeFunctionCallback = '__bridgedFunctionCallback'
+export const SketchExposedFunctionTriggerEvent = 'sketch.bridge.exposed.function.trigger'
+export const SketchExposedFunctionCallback = '__exposedFunctionCallback'
+export const SketchBridgeClientInitializedFlag = '__SketchBridgeClientInitialized'
 
 export function invocationKeyForTests (functionName, arg0, arg1, etc) {
   return `${JSON.stringify([].slice.call(arguments))}`

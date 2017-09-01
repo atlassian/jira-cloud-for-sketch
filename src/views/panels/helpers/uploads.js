@@ -55,11 +55,8 @@ export default class Uploads {
       }
       const paths = await exportSelection(document)
       trace(`Exported paths from selection: ["${paths.join('", "')}"]`)
-      this.webUI.dispatchWindowEvent(
-        'jira.export.selection.to.issue', {
-          issueKey,
-          files: paths.map(fileUrlToUploadInfo)
-        }
+      this.webUI.invokeExposedFunction(
+        'exportSelectionToSelectedIssue', issueKey, paths.map(fileUrlToUploadInfo)
       )
     })
   }

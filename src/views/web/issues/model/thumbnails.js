@@ -1,6 +1,6 @@
-import bridgedFunctionCall from '../../../bridge/client'
+import { bridgedFunction } from '../../../bridge/client'
 
-const _getThumbnail = bridgedFunctionCall('getThumbnail')
+const _getThumbnail = bridgedFunction('getThumbnail')
 
 // TODO -> LRU cache?
 const thumbnails = {}

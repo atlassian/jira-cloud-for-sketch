@@ -26,7 +26,7 @@ const issueViewDimensions = [
  * @param {Object} context provided by Sketch
  * @return {Object} a WebUI for the launched panel
  */
-export default function (context) {
+export default async function (context) {
   const webUI = createWebUI(context, IssuePanelId, 'issues.html', {
     width: issueListDimensions[0],
     height: issueListDimensions[1],
@@ -100,16 +100,18 @@ export default function (context) {
     }
   })
 
-  var jira = new JIRA()
-  var filters = new Filters(context, webUI, jira)
-  var attachments = new Attachments(context, webUI, jira)
-  var uploads = new Uploads(context, webUI, jira, attachments)
+  const jira = new JIRA()
+  const filters = new Filters(context, webUI, jira)
+  const attachments = new Attachments(context, webUI, jira)
+  const uploads = new Uploads(context, webUI, jira, attachments)
 
   setExportSelectedLayersFn(function () {
     uploads.exportSelectedLayersToSelectedIssue()
   })
 
   analytics.viewIssueListPanelOpen()
+
+  await webUI.waitUntilBridgeInitialized()
 
   return webUI
 }
