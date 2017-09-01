@@ -6,6 +6,7 @@ import { FiltersMapper, IssuesMapper, ProfileMapper } from './mapper'
 
 const _loadFilters = bridgedFunction('loadFilters', FiltersMapper)
 const _loadIssuesForFilter = bridgedFunction('loadIssuesForFilter', IssuesMapper)
+const _getSuggestedPreselectedIssueKey = bridgedFunction('getSuggestedPreselectedIssueKey')
 const _loadProfile = bridgedFunction('loadProfile', ProfileMapper)
 const _viewSettings = bridgedFunction('viewSettings')
 const _reauthorize = bridgedFunction('reauthorize')
@@ -83,7 +84,21 @@ export default class ViewModel {
       const issues = await _loadIssuesForFilter(selectedKey)
       if (this.filters.selected.key === selectedKey) {
         this.issues.list.replace(issues)
+        await this.setSuggestedIssueIfPresent()
         this.issues.loading = false
+      }
+    }
+  }
+
+  async setSuggestedIssueIfPresent () {
+    const suggestedIssueKey = await _getSuggestedPreselectedIssueKey()
+    if (suggestedIssueKey) {
+      const suggestedIssue = find(
+        this.issues.list,
+        issue => issue.key === suggestedIssueKey
+      )
+      if (suggestedIssue) {
+        this.selectIssue(suggestedIssue)
       }
     }
   }

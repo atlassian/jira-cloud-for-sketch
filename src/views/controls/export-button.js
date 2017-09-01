@@ -56,13 +56,7 @@ async function add (context) {
     )
     const jiraButtonDelegate = buttonDelegate({
       onClick: function () {
-        if (getSelectedIssueKey()) {
-          if (!triggerExportSelectedLayers()) {
-            error('Failed to trigger export of selected layers (none selected)')
-          }
-        } else {
-          launchPanel(context)
-        }
+        launchPanel(context)
       }
     })
     const jiraButton = NSButton.buttonWithImage_target_action(

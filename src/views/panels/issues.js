@@ -9,6 +9,11 @@ import JIRA from '../../jira'
 import openConnectPanel from './connect'
 import keepOrReplaceAlert from '../alerts/keep-or-replace'
 import { setSelectedIssueKey, setExportSelectedLayersFn } from '../../plugin-state'
+import {
+  getLastViewedIssueForDocument,
+  setLastViewedIssueForDocument,
+  getLastExportedIssueForSelectedLayers
+} from '../../export'
 
 const issueListDimensions = [
   akGridSizeUnitless * 64,
@@ -44,6 +49,15 @@ export default async function (context) {
       loadIssuesForFilter (filterKey) {
         return filters.onFilterChanged(filterKey)
       },
+      /**
+       * Determines an appropriate issue to preselect in the issue panel, based
+       * on the user's past exports for the current selection or document.
+       *
+       * @return {string} an issue key identifying the issue to preselect
+       */
+      getSuggestedPreselectedIssueKey () {
+        return getLastExportedIssueForSelectedLayers(context) || getLastViewedIssueForDocument(context)
+      },
       getDroppedFiles () {
         return uploads.getDroppedFiles()
       },
@@ -62,10 +76,12 @@ export default async function (context) {
       onIssueSelected (issueKey) {
         webUI.resizePanel(...issueViewDimensions)
         setSelectedIssueKey(issueKey)
+        setLastViewedIssueForDocument(context, issueKey)
       },
       onIssueDeselected (issueKey) {
         webUI.resizePanel(...issueListDimensions)
         setSelectedIssueKey(null)
+        setLastViewedIssueForDocument(context, null)
       },
       getWatchers (issueKey) {
         return jira.getWatchers(issueKey)

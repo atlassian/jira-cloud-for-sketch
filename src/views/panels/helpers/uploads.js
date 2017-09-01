@@ -8,7 +8,7 @@ import { getDraggedFiles } from '../../../pasteboard'
 import { isTraceEnabled, trace, error } from '../../../logger'
 import { jiraDateMomentFormat, attachmentUploadConcurrency } from '../../../config'
 import { postMultiple, event } from '../../../analytics'
-import { documentFromContext, executeSafelyAsync } from '../../../util'
+import { executeSafelyAsync } from '../../../util'
 import { getSelectedIssueKey } from '../../../plugin-state'
 import { exportSelection } from '../../../export'
 import { attachmentFromRest } from '../../../entity-mappers'
@@ -48,12 +48,7 @@ export default class Uploads {
         error('No issue selected, ignoring export request')
         return
       }
-      const document = documentFromContext(this.context)
-      if (!document) {
-        error('Couldn\'t resolve document from context')
-        return
-      }
-      const paths = await exportSelection(document)
+      const paths = await exportSelection(this.context, issueKey)
       trace(`Exported paths from selection: ["${paths.join('", "')}"]`)
       this.webUI.invokeExposedFunction(
         'exportSelectionToSelectedIssue', issueKey, paths.map(fileUrlToUploadInfo)
