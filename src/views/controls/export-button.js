@@ -52,7 +52,7 @@ async function add (context) {
 
     // Add the JIRA button
     const uploadIcon = NSImage.alloc().initWithContentsOfFile(
-      context.plugin.urlForResourceNamed('upload-icon.png').path()
+      context.plugin.urlForResourceNamed('jira-icon.png').path()
     )
     const jiraButtonDelegate = buttonDelegate({
       onClick: function () {
