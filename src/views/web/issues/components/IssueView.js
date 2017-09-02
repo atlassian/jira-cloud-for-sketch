@@ -9,16 +9,16 @@ import '@atlaskit/css-reset'
 @observer
 export default class IssueView extends Component {
   render () {
-    const { issue, profile } = this.props
+    const { issue, viewmodel } = this.props
     return (
       <div>
         <MinHeight>
           <IssueSummary issue={issue} />
-          <Attachments issue={issue} />
+          <Attachments issue={issue} viewmodel={viewmodel} />
         </MinHeight>
         <Comments
           issue={issue}
-          profile={profile}
+          profile={viewmodel.profile}
         />
       </div>
     )
@@ -26,8 +26,8 @@ export default class IssueView extends Component {
 }
 
 IssueView.propTypes = {
-  issue: PropTypes.object.isRequired,
-  profile: PropTypes.object
+  viewmodel: PropTypes.object.isRequired,
+  issue: PropTypes.object.isRequired
 }
 
 /** ensures the comment input box is at the bottom of the frame */

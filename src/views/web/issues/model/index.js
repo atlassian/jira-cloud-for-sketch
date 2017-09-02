@@ -13,6 +13,7 @@ const _reauthorize = bridgedFunction('reauthorize')
 const _onIssueSelected = bridgedFunction('onIssueSelected')
 const _onIssueDeselected = bridgedFunction('onIssueDeselected')
 const _openFaqPage = bridgedFunction('openFaqPage')
+const _areLayersSelected = bridgedFunction('areLayersSelected')
 
 const maxErrorMessageLength = 55
 
@@ -31,9 +32,11 @@ export default class ViewModel {
   @observable error = null
   @observable retry = null
   @observable reauthorize = null
+  @observable hasSelection = false
 
   constructor () {
     this.initializeExposedFunctions()
+    this.checkIfHasSelection()
     this.loadFilters()
     this.loadProfile()
     this.registerGlobalErrorHandler()
@@ -46,7 +49,14 @@ export default class ViewModel {
       })
       issue && issue.uploadExportedSelection(files)
     })
+    exposeFunction('setHasSelection', hasSelection => {
+      this.hasSelection = hasSelection
+    })
     markBridgeAsInitialized()
+  }
+
+  async checkIfHasSelection () {
+    this.hasSelection = await _areLayersSelected()
   }
 
   async loadFilters () {

@@ -35,9 +35,9 @@
 			"shortcut": "cmd alt b"
 		},
 		{
-			"name": "Add Export Button",
-			"identifier": "add-export-button",
-			"script": "./commands/add-export-button.js",
+			"name": "On Selection or Export Change",
+			"identifier": "on-selection-or-export-change",
+			"script": "./commands/on-selection-or-export-change.js",
 			"handlers": {
 				"actions": {
 					"AddExportFormat": "onRun",

@@ -8,11 +8,16 @@ import { titlebarHeight } from './ui-constants'
 import JIRA from '../../jira'
 import openConnectPanel from './connect'
 import keepOrReplaceAlert from '../alerts/keep-or-replace'
-import { setSelectedIssueKey, setExportSelectedLayersFn } from '../../plugin-state'
+import {
+  setSelectedIssueKey,
+  setExportSelectedLayersFn,
+  setOnSelectionChangedFn
+} from '../../plugin-state'
 import {
   getLastViewedIssueForDocument,
   setLastViewedIssueForDocument,
-  getLastExportedIssueForSelectedLayers
+  getLastExportedIssueForSelectedLayers,
+  areLayersSelected
 } from '../../export'
 
 const issueListDimensions = [
@@ -83,6 +88,9 @@ export default async function (context) {
         setSelectedIssueKey(null)
         setLastViewedIssueForDocument(context, null)
       },
+      areLayersSelected () {
+        return areLayersSelected(context)
+      },
       getWatchers (issueKey) {
         return jira.getWatchers(issueKey)
       },
@@ -124,10 +132,11 @@ export default async function (context) {
   setExportSelectedLayersFn(function () {
     uploads.exportSelectedLayersToSelectedIssue()
   })
-
-  analytics.viewIssueListPanelOpen()
-
+  function updateHasSelection () {
+    webUI.invokeExposedFunction('setHasSelection', areLayersSelected(context))
+  }
+  setOnSelectionChangedFn(updateHasSelection)
   await webUI.waitUntilBridgeInitialized()
-
+  analytics.viewIssueListPanelOpen()
   return webUI
 }

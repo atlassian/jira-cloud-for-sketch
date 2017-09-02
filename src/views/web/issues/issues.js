@@ -37,7 +37,6 @@ class ViewIssuesPanel extends Component {
     const {
       issues,
       filters,
-      profile,
       error,
       errorMessage,
       truncatedErrorMessage,
@@ -48,7 +47,7 @@ class ViewIssuesPanel extends Component {
       <div>
         <PanelWrapper onDrop={this.preventDefault} onDragOver={this.preventDefault}>
           <HeaderDiv>
-            <JiraIssueHeader>JIRA issues</JiraIssueHeader>
+            <JiraIssueHeader>Export to JIRA Cloud</JiraIssueHeader>
             <FilterWrapper>
               {!filters.loading &&
                 <IssueFilter
@@ -82,7 +81,7 @@ class ViewIssuesPanel extends Component {
           {issues.selected &&
             <ModalPanel>
               <Breadcrumbs viewmodel={this.props.viewmodel} />
-              <IssueView issue={issues.selected} profile={profile} />
+              <IssueView viewmodel={this.props.viewmodel} issue={issues.selected} />
             </ModalPanel>}
         </PanelWrapper>
         <BannerWrapper>

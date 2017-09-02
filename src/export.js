@@ -141,3 +141,13 @@ function forEachSelectedLayer (context, fn) {
     }
   })
 }
+
+/**
+ * @param {Object} context provided by Sketch
+ * @return {boolean} whether at least one layer is selected
+ */
+export function areLayersSelected (context) {
+  let isSelected = false
+  forEachSelectedLayer(context, () => { isSelected = true })
+  return isSelected
+}
