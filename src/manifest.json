@@ -14,11 +14,6 @@
 			"shortcut": "cmd alt j"
 		},
 		{
-			"name": "Feedback...",
-			"identifier": "feedback",
-			"script": "./commands/feedback.js"
-		},
-		{
 			"name": "StartUp",
 			"identifier": "startup",
 			"script": "./commands/startup.js",
@@ -47,10 +42,9 @@
 		}
 	],
 	"menu": {
-		"title": "JIRA",
+		"isRoot": true,
 		"items": [
-			"jira",
-			"feedback"
+			"jira"
 		]
 	}
 }

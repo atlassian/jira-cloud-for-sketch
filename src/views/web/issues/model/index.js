@@ -10,6 +10,7 @@ const _getSuggestedPreselectedIssueKey = bridgedFunction('getSuggestedPreselecte
 const _loadProfile = bridgedFunction('loadProfile', ProfileMapper)
 const _viewSettings = bridgedFunction('viewSettings')
 const _reauthorize = bridgedFunction('reauthorize')
+const _feedback = bridgedFunction('feedback')
 const _onIssueSelected = bridgedFunction('onIssueSelected')
 const _onIssueDeselected = bridgedFunction('onIssueDeselected')
 const _openFaqPage = bridgedFunction('openFaqPage')
@@ -143,6 +144,18 @@ export default class ViewModel {
     if (this.error && this.error.faqTopic) {
       _openFaqPage(this.error.faqTopic)
     }
+  }
+
+  @computed get settings () {
+    return [{
+      id: 'switch-site',
+      label: 'Switch JIRA Cloud site',
+      onClick: () => { _reauthorize() }
+    }, {
+      id: 'feedback',
+      label: 'Feedback',
+      onClick: () => { _feedback() }
+    }]
   }
 
   registerGlobalErrorHandler () {

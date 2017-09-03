@@ -3,6 +3,8 @@ import Filters from './helpers/filters'
 import Uploads from './helpers/uploads'
 import Attachments from './helpers/attachments'
 import analytics from '../../analytics'
+import { feedbackUrl } from '../../config'
+import { openInBrowser } from '../../util'
 import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import { titlebarHeight } from './ui-constants'
 import JIRA from '../../jira'
@@ -120,6 +122,10 @@ export default async function (context) {
       reauthorize () {
         webUI.panel.close()
         openConnectPanel(context)
+      },
+      feedback () {
+        openInBrowser(feedbackUrl)
+        analytics.feedbackOpenInBrowser()
       }
     }
   })

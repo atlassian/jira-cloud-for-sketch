@@ -8,6 +8,7 @@ import exportButton from '../views/controls/export-button'
  * an issue is currently selected. This should be invoked any time the export
  * dialog may appear or disappear, e.g. when the selected layer changes, or a
  * new export option is added.
+ *
  * @param {Object} context provided by Sketch
  */
 export default async function (context) {

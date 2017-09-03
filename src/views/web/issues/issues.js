@@ -6,16 +6,15 @@ import { observer } from 'mobx-react'
 import styled from 'styled-components'
 import Spinner from '@atlaskit/spinner'
 import ErrorIcon from '@atlaskit/icon/glyph/error'
-import SettingsIcon from '@atlaskit/icon/glyph/settings'
 import Banner from '@atlaskit/banner'
 import IssueFilter from './components/IssueFilter'
+import SettingsMenu from './components/SettingsMenu'
 import IssueList from './components/IssueList'
 import Breadcrumbs from './components/Breadcrumbs'
 import IssueView from './components/IssueView'
 import {
   akGridSizeUnitless,
   akColorN800,
-  akColorN90,
   akFontFamily
 } from '@atlaskit/util-shared-styles'
 import '@atlaskit/css-reset'
@@ -56,16 +55,7 @@ class ViewIssuesPanel extends Component {
                   onFilterSelected={this.handleFilterSelected}
                 />
               }
-              <SettingsIcon
-                label='Settings'
-                size='medium'
-                style={{
-                  cursor: 'pointer',
-                  marginLeft: `${akGridSizeUnitless}px`
-                }}
-                primaryColor={akColorN90}
-                onClick={this.handleSettingsClick}
-              />
+              <SettingsMenu viewmodel={this.props.viewmodel} />
             </FilterWrapper>
           </HeaderDiv>
           {issues.loading ? (
