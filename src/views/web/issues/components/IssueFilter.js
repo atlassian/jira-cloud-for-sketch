@@ -1,29 +1,45 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import DropdownMenu from '@atlaskit/dropdown-menu'
+import DropdownMenu, {
+  DropdownItemGroup,
+  DropdownItem
+} from '@atlaskit/dropdown-menu'
 import '@atlaskit/css-reset'
 
 @observer
 export default class IssueFilter extends Component {
+  constructor (props) {
+    super()
+    this.state = { isOpen: false }
+  }
   render () {
-    var filterItems = this.props.filters.map(filter => {
-      return {
-        filterKey: filter.key,
-        content: filter.displayName
-      }
-    })
+    const { filters, selected } = this.props
     return (
       <DropdownMenu
-        items={[{ items: filterItems }]}
+        isOpen={this.state.isOpen}
+        onOpenChange={({isOpen}) => {
+          this.setState({isOpen})
+        }}
+        trigger={selected.displayName}
         triggerType='button'
         position='bottom right'
         shouldFlip={false}
-        onItemActivated={(event) => {
-          this.props.onFilterSelected(event.item.filterKey)
-        }}
       >
-        { this.props.selected.displayName }
+        <DropdownItemGroup>
+          {filters.map(filter => {
+            return (
+              <DropdownItem
+                key={filter.key}
+                onClick={() => {
+                  filter.select()
+                  this.setState({isOpen: false})
+                }}>
+                {filter.displayName}
+              </DropdownItem>
+            )
+          })}
+        </DropdownItemGroup>
       </DropdownMenu>
     )
   }
@@ -31,6 +47,5 @@ export default class IssueFilter extends Component {
 
 IssueFilter.propTypes = {
   filters: PropTypes.object.isRequired,
-  selected: PropTypes.object.isRequired,
-  onFilterSelected: PropTypes.func.isRequired
+  selected: PropTypes.object.isRequired
 }

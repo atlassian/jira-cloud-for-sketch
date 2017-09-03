@@ -15,11 +15,19 @@ import '@atlaskit/css-reset'
 
 @observer
 export default class SettingsMenu extends Component {
+  constructor (props) {
+    super()
+    this.state = { isOpen: false }
+  }
   render () {
     const { viewmodel } = this.props
     return (
       <SettingsMenuWrapper>
         <DropdownMenu
+          isOpen={this.state.isOpen}
+          onOpenChange={({isOpen}) => {
+            this.setState({isOpen})
+          }}
           trigger={(
             <SettingsIcon
               label='Settings'
@@ -35,8 +43,10 @@ export default class SettingsMenu extends Component {
               return (
                 <DropdownItem
                   key={setting.id}
-                  id={setting.id}
-                  onClick={setting.onClick}>
+                  onClick={() => {
+                    setting.select()
+                    this.setState({isOpen: false})
+                  }}>
                   {setting.label}
                 </DropdownItem>
               )

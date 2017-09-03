@@ -63,23 +63,27 @@ export default class ViewModel {
   async loadFilters () {
     this.filters.loading = true
     const filters = await _loadFilters()
+    filters.forEach(filter => {
+      filter.select = () => {
+        this.selectFilter(filter)
+      }
+    })
     this.filters.list.replace(filters)
     if (!this.filters.selected && filters.length) {
-      this.selectFilter(filters[0].key)
+      this.selectFilter(filters[0])
     }
     this.filters.loading = false
   }
 
-  selectFilter (filterKey) {
+  selectFilter (filter) {
     if (this.filters.selected) {
-      analytics('viewIssueListFilterChangeTo' + filterKey, { previous: this.filters.selected })
+      analytics('viewIssueListFilterChangeTo' + filter.key, {
+        previous: this.filters.selected.key
+      })
     } else {
-      analytics('viewIssueListDefaultFilter' + filterKey)
+      analytics('viewIssueListDefaultFilter' + filter.key)
     }
-    this.filters.selected = find(
-      this.filters.list,
-      filter => filter.key === filterKey
-    )
+    this.filters.selected = filter
     this.loadIssues()
   }
 
@@ -150,11 +154,11 @@ export default class ViewModel {
     return [{
       id: 'switch-site',
       label: 'Switch JIRA Cloud site',
-      onClick: () => { _reauthorize() }
+      select: () => { _reauthorize() }
     }, {
       id: 'feedback',
       label: 'Feedback',
-      onClick: () => { _feedback() }
+      select: () => { _feedback() }
     }]
   }
 
