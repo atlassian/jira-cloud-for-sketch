@@ -54,19 +54,11 @@ export default class ViewModel {
 
     await this.loadFilters()
     // Select the RecentlyViewed filter first. This is important, as if there
-    // is a 'Suggested issue' in the context, it will have been retrieved using
-    // the updateHistory flag at this point, pushing it to the top of the
-    // RecentlyViewed list. Otherwise, the issue may not be visible when they
-    // browse back to the list.
-    await this.selectFilter(
-      find(this.filters.list, filter => {
-        return filter.key === 'RecentlyViewed'
-      })
-    )
-    // select suggested issue (if suggestion and issue are present)
-    this.withIssue(await this.getSuggestedIssueKey(), issue => {
-      this.selectIssue(issue, false)
-    })
+    // is a 'Suggested issue' in the context, it will be inserted as the first
+    // entry in the list (see selectSuggestedIssue())
+    await this.selectFilterByKey('RecentlyViewed')
+    await this.selectSuggestedIssue()
+
     this.initialized = true
   }
 
@@ -98,6 +90,14 @@ export default class ViewModel {
     this.filters.loading = false
   }
 
+  async selectFilterByKey (filterKey) {
+    return this.selectFilter(
+      find(this.filters.list, filter => {
+        return filter.key === filterKey
+      })
+    )
+  }
+
   async selectFilter (filter) {
     if (this.filters.selected) {
       analytics('viewIssueListFilterChangeTo' + filter.key, {
@@ -127,16 +127,19 @@ export default class ViewModel {
     }
   }
 
-  async getSuggestedIssueKey () {
+  async selectSuggestedIssue () {
     const suggestedIssueKey = await _getSuggestedPreselectedIssueKey()
-    try {
-      if (suggestedIssueKey && _getIssue(suggestedIssueKey, true, true)) {
-        return suggestedIssueKey
-      }
-    } catch (e) {
-      console.log(`Couldn't load suggested issue ${suggestedIssueKey}.`, e)
+    const suggestedIssue = suggestedIssueKey && await _getIssue(suggestedIssueKey, true, true)
+    if (!suggestedIssue) {
+      return
     }
-    return null
+    // remove the suggested issue from the current issue list, if present
+    this.withIssue(suggestedIssueKey, issue => {
+      this.issues.list.remove(issue)
+    })
+    // add the suggested issue as the first entry of the issue list
+    this.issues.list.unshift(suggestedIssue)
+    this.selectIssue(suggestedIssue, false)
   }
 
   selectIssue (issue, refresh) {
