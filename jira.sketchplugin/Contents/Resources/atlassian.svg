@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>atlassian</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="99.6882572%" y1="15.804243%" x2="39.8433612%" y2="97.4410089%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" stop-opacity="0.4" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="92%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-130.000000, -151.000000)" fill-rule="nonzero">
+            <g id="atlassian" transform="translate(130.000000, 151.000000)">
+                <path d="M11.7565217,18.5108696 C11.1652174,17.8782609 10.2347826,17.9130435 9.83913043,18.7282609 L0.123913043,38.1478261 C-0.056274572,38.5078467 -0.0370642427,38.9355211 0.174675496,39.277937 C0.386415236,39.620353 0.760449059,39.8286152 1.16304348,39.8282609 L14.6913043,39.8282609 C15.1365635,39.8368921 15.5445986,39.5808031 15.7304348,39.176087 C18.6478261,33.1565217 16.8804348,23.9847826 11.7565217,18.5108696 Z" id="Shape" fill="url(#linearGradient-1)"></path>
+                <path d="M18.8847826,0.839130435 C13.45,9.44782609 13.8086957,18.9826087 17.3891304,26.1391304 L23.9108696,39.1826087 C24.1047028,39.5802232 24.5076587,39.8331244 24.95,39.8347826 L38.4782609,39.8347826 C38.8808553,39.835137 39.2548891,39.6268747 39.4666289,39.2844588 C39.6783686,38.9420428 39.6975789,38.5143684 39.5173913,38.1543478 C39.5173913,38.1543478 21.3173913,1.73913043 20.8695652,0.832608696 C20.45,0.0173913043 19.4108696,-9.43689571e-16 18.8847826,0.839130435 Z" id="Shape" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

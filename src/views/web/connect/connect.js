@@ -42,7 +42,7 @@ class Connect extends Component {
       <div>
         <ConnectPanel>
           <CharlieBanner>
-            <img src='charlie.svg' alt='Atlassian logo' />
+            <img src='atlassian.svg' alt='Atlassian logo' />
           </CharlieBanner>
           {initializing || (
             <ConnectForm onSubmit={this.handleSubmit}>
