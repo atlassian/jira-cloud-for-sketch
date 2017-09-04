@@ -91,6 +91,7 @@ export default class CommentEditor {
       // mention list is open, steal relevant keys
       switch (event.keyCode) {
         case 13: // enter
+        case 9: // tab
           event.preventDefault()
           this.mentionListRef.chooseCurrentSelection()
           break
