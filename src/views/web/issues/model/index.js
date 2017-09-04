@@ -130,7 +130,7 @@ export default class ViewModel {
   async getSuggestedIssueKey () {
     const suggestedIssueKey = await _getSuggestedPreselectedIssueKey()
     try {
-      if (suggestedIssueKey && _getIssue(suggestedIssueKey, true)) {
+      if (suggestedIssueKey && _getIssue(suggestedIssueKey, true, true)) {
         return suggestedIssueKey
       }
     } catch (e) {

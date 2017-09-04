@@ -24,12 +24,22 @@ export default class Attachments {
    * @param {string} issueKey identifies the issue to retrieve
    * @param {boolean} updateHistory whether to update JIRA's 'recent issues'
    * list (which is used by the plugin's Recently Viewed filter)
+   * @param {boolean} suppressError if true, silently ignore any thrown errors
+   * and return `null`
    * @return {Promise<object>} the issue
    */
-  async getIssue (issueKey, updateHistory) {
-    const issue = await this.jira.getIssue(issueKey, { updateHistory })
-    postAnalytics(issue.attachments)
-    return issue
+  async getIssue (issueKey, updateHistory, suppressError) {
+    try {
+      const issue = await this.jira.getIssue(issueKey, { updateHistory })
+      postAnalytics(issue.attachments)
+      return issue
+    } catch (e) {
+      if (suppressError) {
+        return null
+      } else {
+        throw e
+      }
+    }
   }
 
   /**

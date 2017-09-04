@@ -77,8 +77,8 @@ export default async function (context) {
       promptKeepOrReplace (issueKey, matchingImages) {
         return keepOrReplaceAlert(context, issueKey, matchingImages)
       },
-      getIssue (issueKey, updateHistory) {
-        return attachments.getIssue(issueKey, updateHistory)
+      getIssue (issueKey, updateHistory, suppressError) {
+        return attachments.getIssue(issueKey, updateHistory, suppressError)
       },
       onIssueSelected (issueKey) {
         webUI.resizePanel(...issueViewDimensions)
