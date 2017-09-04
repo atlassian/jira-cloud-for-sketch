@@ -118,6 +118,6 @@ const TextDiv = styled.div`
 `
 
 const ButtonWrapper = styled.div`
-  margin-left: 8px;
+  margin-left: 4px;
   font-size: 12px;
 `
