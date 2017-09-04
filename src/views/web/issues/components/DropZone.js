@@ -78,7 +78,7 @@ export default class DropZone extends Component {
               type='button'
               onClick={this.handleExportSelected}
             >
-              Export selected
+              Export selection
             </Button>
           </ButtonWrapper>
         )}
