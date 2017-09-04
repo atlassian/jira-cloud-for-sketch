@@ -63,7 +63,9 @@ export default async function (context) {
        * @return {string} an issue key identifying the issue to preselect
        */
       getSuggestedPreselectedIssueKey () {
-        return getLastExportedIssueForSelectedLayers(context) || getLastViewedIssueForDocument(context)
+        return getLastExportedIssueForSelectedLayers(context)
+        /* Only suggest issues when layers are selected, for now */
+        /* || getLastViewedIssueForDocument(context) */
       },
       getDroppedFiles () {
         return uploads.getDroppedFiles()
