@@ -6,6 +6,21 @@
     <description>Share from Sketch to JIRA, without losing focus</description>
     <language>en</language>
       <item>
+        <title>v0.11.0</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>'Export selected' button in drop zone</li>
+              <li>Remember last issue each layer was exported to</li>
+              <li>'Export to JIRA' button is always present in export panel</li>
+              <li>'Settings' cog is now a menu</li>
+              <li>Pressing tab in user picker now selects user</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-0.0.11.zip" sparkle:version="0.0.11" />
+      </item>
+      <item>
         <title>v0.10.0</title>
         <description>
           <![CDATA[
