@@ -2,11 +2,17 @@ import { observable, computed } from 'mobx'
 import { find } from 'lodash'
 import { bridgedFunction, addGlobalErrorHandler, exposeFunction, markBridgeAsInitialized } from '../../../bridge/client'
 import { analytics, truncateWithEllipsis } from '../../util'
-import { FiltersMapper, IssuesMapper, ProfileMapper } from './mapper'
+import {
+  FiltersMapper,
+  IssuesMapper,
+  IssueMapper,
+  ProfileMapper
+} from './mapper'
 
 const _loadFilters = bridgedFunction('loadFilters', FiltersMapper)
 const _loadIssuesForFilter = bridgedFunction('loadIssuesForFilter', IssuesMapper)
 const _getSuggestedPreselectedIssueKey = bridgedFunction('getSuggestedPreselectedIssueKey')
+const _getIssue = bridgedFunction('getIssue', IssueMapper)
 const _loadProfile = bridgedFunction('loadProfile', ProfileMapper)
 const _viewSettings = bridgedFunction('viewSettings')
 const _reauthorize = bridgedFunction('reauthorize')
@@ -19,6 +25,7 @@ const _areLayersSelected = bridgedFunction('areLayersSelected')
 const maxErrorMessageLength = 55
 
 export default class ViewModel {
+  @observable initialized = false
   @observable filters = {
     list: [],
     selected: null,
@@ -36,19 +43,38 @@ export default class ViewModel {
   @observable hasSelection = false
 
   constructor () {
-    this.initializeExposedFunctions()
-    this.checkIfHasSelection()
-    this.loadFilters()
-    this.loadProfile()
+    this.init()
+  }
+
+  async init () {
     this.registerGlobalErrorHandler()
+    this.initializeExposedFunctions()
+    this.loadProfile()
+    this.checkIfHasSelection()
+
+    await this.loadFilters()
+    // Select the RecentlyViewed filter first. This is important, as if there
+    // is a 'Suggested issue' in the context, it will have been retrieved using
+    // the updateHistory flag at this point, pushing it to the top of the
+    // RecentlyViewed list. Otherwise, the issue may not be visible when they
+    // browse back to the list.
+    await this.selectFilter(
+      find(this.filters.list, filter => {
+        return filter.key === 'RecentlyViewed'
+      })
+    )
+    // select suggested issue (if suggestion and issue are present)
+    this.withIssue(await this.getSuggestedIssueKey(), issue => {
+      this.selectIssue(issue, false)
+    })
+    this.initialized = true
   }
 
   initializeExposedFunctions () {
     exposeFunction('exportSelectionToSelectedIssue', (issueKey, files) => {
-      const issue = find(this.issues.list, issue => {
-        return issue.key === issueKey
+      this.withIssue(issueKey, issue => {
+        issue.uploadExportedSelection(files)
       })
-      issue && issue.uploadExportedSelection(files)
     })
     exposeFunction('setHasSelection', hasSelection => {
       this.hasSelection = hasSelection
@@ -69,13 +95,10 @@ export default class ViewModel {
       }
     })
     this.filters.list.replace(filters)
-    if (!this.filters.selected && filters.length) {
-      this.selectFilter(filters[0])
-    }
     this.filters.loading = false
   }
 
-  selectFilter (filter) {
+  async selectFilter (filter) {
     if (this.filters.selected) {
       analytics('viewIssueListFilterChangeTo' + filter.key, {
         previous: this.filters.selected.key
@@ -84,7 +107,7 @@ export default class ViewModel {
       analytics('viewIssueListDefaultFilter' + filter.key)
     }
     this.filters.selected = filter
-    this.loadIssues()
+    return this.loadIssues()
   }
 
   async viewSettings () {
@@ -99,28 +122,26 @@ export default class ViewModel {
       const issues = await _loadIssuesForFilter(selectedKey)
       if (this.filters.selected.key === selectedKey) {
         this.issues.list.replace(issues)
-        await this.setSuggestedIssueIfPresent()
         this.issues.loading = false
       }
     }
   }
 
-  async setSuggestedIssueIfPresent () {
+  async getSuggestedIssueKey () {
     const suggestedIssueKey = await _getSuggestedPreselectedIssueKey()
-    if (suggestedIssueKey) {
-      const suggestedIssue = find(
-        this.issues.list,
-        issue => issue.key === suggestedIssueKey
-      )
-      if (suggestedIssue) {
-        this.selectIssue(suggestedIssue)
+    try {
+      if (suggestedIssueKey && _getIssue(suggestedIssueKey, true)) {
+        return suggestedIssueKey
       }
+    } catch (e) {
+      console.log(`Couldn't load suggested issue ${suggestedIssueKey}.`, e)
     }
+    return null
   }
 
-  selectIssue (issue) {
+  selectIssue (issue, refresh) {
     this.issues.selected = issue
-    issue.onSelected()
+    issue.onSelected(refresh)
     _onIssueSelected(issue.key)
   }
 
@@ -129,6 +150,17 @@ export default class ViewModel {
     this.issues.selected = null
     _onIssueDeselected(prevKey)
     analytics('backToViewIssueList')
+  }
+
+  withIssue (issueKey, fn) {
+    if (issueKey && fn) {
+      const issue = find(this.issues.list, issue => {
+        return issue.key === issueKey
+      })
+      if (issue) {
+        return fn(issue)
+      }
+    }
   }
 
   async loadProfile () {

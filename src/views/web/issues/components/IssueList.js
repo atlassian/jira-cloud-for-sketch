@@ -13,19 +13,20 @@ export default class IssueList extends Component {
     this.calculateMaxKeyLength = this.calculateMaxKeyLength.bind(this)
   }
   render () {
-    var list
-    if (this.props.issues.length === 0) {
+    const { issues, viewmodel } = this.props
+    let list
+    if (issues.length === 0) {
       list = <span>No issues found.</span>
     } else {
       const maxKeyLength = this.calculateMaxKeyLength()
       list = (
         <div>
-          {this.props.issues.map(issue => (
+          {issues.map(issue => (
             <Issue
               key={issue.key}
               maxKeyLength={maxKeyLength}
               issue={issue}
-              onSelectIssue={this.props.onSelectIssue}
+              viewmodel={viewmodel}
             />
           ))}
         </div>
@@ -51,8 +52,8 @@ export default class IssueList extends Component {
 }
 
 IssueList.propTypes = {
-  issues: PropTypes.object.isRequired, // array-ish
-  onSelectIssue: PropTypes.func.isRequired
+  issues: PropTypes.object.isRequired,
+  viewmodel: PropTypes.object.isRequired
 }
 
 const ScrollDiv = styled.div`
@@ -65,14 +66,14 @@ const ScrollDiv = styled.div`
 @observer
 class Issue extends Component {
   render () {
-    const { issue, maxKeyLength } = this.props
+    const { viewmodel, issue, maxKeyLength } = this.props
     const keyWidthPx = 3 + maxKeyLength * 8
     const summaryWidthPx = 386 - keyWidthPx
     return (
       <IssueDiv
         className='issue'
         onClick={() => {
-          this.props.onSelectIssue(issue)
+          viewmodel.selectIssue(issue, true)
         }}
       >
         <IssueTypeField type={issue.type} />
@@ -87,9 +88,9 @@ class Issue extends Component {
 }
 
 Issue.propTypes = {
-  maxKeyLength: PropTypes.number.isRequired,
+  viewmodel: PropTypes.object.isRequired,
   issue: PropTypes.object.isRequired,
-  onSelectIssue: PropTypes.func.isRequired
+  maxKeyLength: PropTypes.number.isRequired
 }
 
 const IssueDiv = styled.div`

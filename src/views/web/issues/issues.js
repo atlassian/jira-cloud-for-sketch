@@ -26,7 +26,6 @@ class ViewIssuesPanel extends Component {
     super(props)
     this.handleFilterSelected = this.handleFilterSelected.bind(this)
     this.handleSettingsClick = this.handleSettingsClick.bind(this)
-    this.handleIssueSelected = this.handleIssueSelected.bind(this)
     this.handleErrorRetry = this.handleErrorRetry.bind(this)
     this.handleReauthorize = this.handleReauthorize.bind(this)
     this.handleMoreInfoClick = this.handleMoreInfoClick.bind(this)
@@ -34,6 +33,7 @@ class ViewIssuesPanel extends Component {
   }
   render () {
     const {
+      initialized,
       issues,
       filters,
       error,
@@ -44,36 +44,42 @@ class ViewIssuesPanel extends Component {
     } = this.props.viewmodel
     return (
       <div>
-        <PanelWrapper onDrop={this.preventDefault} onDragOver={this.preventDefault}>
-          <HeaderDiv>
-            <JiraIssueHeader>Export to JIRA Cloud</JiraIssueHeader>
-            <FilterWrapper>
-              {!filters.loading &&
-                <IssueFilter
-                  filters={filters.list}
-                  selected={filters.selected}
-                  onFilterSelected={this.handleFilterSelected}
-                />
-              }
-              <SettingsMenu viewmodel={this.props.viewmodel} />
-            </FilterWrapper>
-          </HeaderDiv>
-          {issues.loading ? (
-            <SpinnerWrapper>
-              <Spinner size='large' />
-            </SpinnerWrapper>
-          ) : (
-            <IssueList
-              issues={issues.list}
-              onSelectIssue={this.handleIssueSelected}
-            />
-          )}
-          {issues.selected &&
-            <ModalPanel>
-              <Breadcrumbs viewmodel={this.props.viewmodel} />
-              <IssueView viewmodel={this.props.viewmodel} issue={issues.selected} />
-            </ModalPanel>}
-        </PanelWrapper>
+        {initialized ? (
+          <PanelWrapper onDrop={this.preventDefault} onDragOver={this.preventDefault}>
+            <HeaderDiv>
+              <JiraIssueHeader>Export to JIRA Cloud</JiraIssueHeader>
+              <FilterWrapper>
+                {!filters.loading &&
+                  <IssueFilter
+                    filters={filters.list}
+                    selected={filters.selected}
+                    onFilterSelected={this.handleFilterSelected}
+                  />
+                }
+                <SettingsMenu viewmodel={this.props.viewmodel} />
+              </FilterWrapper>
+            </HeaderDiv>
+            {issues.loading ? (
+              <FilterLoadingWrapper>
+                <Spinner size='large' />
+              </FilterLoadingWrapper>
+            ) : (
+              <IssueList
+                issues={issues.list}
+                viewmodel={this.props.viewmodel}
+              />
+            )}
+            {issues.selected &&
+              <ModalPanel>
+                <Breadcrumbs viewmodel={this.props.viewmodel} />
+                <IssueView viewmodel={this.props.viewmodel} issue={issues.selected} />
+              </ModalPanel>}
+          </PanelWrapper>
+        ) : (
+          <InitializingWrapper>
+            <Spinner size='large' />
+          </InitializingWrapper>
+        )}
         <BannerWrapper>
           <Banner
             icon={<ErrorIcon label='Error' />}
@@ -102,9 +108,6 @@ class ViewIssuesPanel extends Component {
   handleSettingsClick () {
     this.props.viewmodel.viewSettings()
   }
-  handleIssueSelected (issue) {
-    this.props.viewmodel.selectIssue(issue)
-  }
   handleErrorRetry () {
     this.props.viewmodel.retry()
   }
@@ -123,6 +126,12 @@ ViewIssuesPanel.propTypes = {
   viewmodel: PropTypes.object.isRequired
 }
 
+const InitializingWrapper = styled.div`
+  height: ${akGridSizeUnitless * 45}px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`
 const PanelWrapper = styled.div`
   padding:
     10px
@@ -149,7 +158,7 @@ const FilterWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-const SpinnerWrapper = styled.div`
+const FilterLoadingWrapper = styled.div`
   height: 283px;
   display: flex;
   justify-content: space-around;

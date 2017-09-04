@@ -43,12 +43,14 @@ export default class Issue {
     )
   }
 
-  async onSelected () {
+  async onSelected (refresh) {
     this.loadThumbnails()
-    const issue = await _getIssue(this.key, true)
-    this.updateIssueFields(issue)
-    this.updateAttachments(issue)
-    this.commentEditor.onIssueUpdated(issue)
+    if (refresh) {
+      const issue = await _getIssue(this.key, true)
+      this.updateIssueFields(issue)
+      this.updateAttachments(issue)
+      this.commentEditor.onIssueUpdated(issue)
+    }
     analytics('viewIssue')
   }
 
