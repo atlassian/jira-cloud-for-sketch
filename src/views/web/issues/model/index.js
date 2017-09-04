@@ -192,7 +192,7 @@ export default class ViewModel {
   @computed get settings () {
     return [{
       id: 'switch-site',
-      label: 'Switch JIRA Cloud site',
+      label: 'Switch Jira Cloud site',
       select: () => {
         analytics('switchJira')
         _reauthorize()

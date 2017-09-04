@@ -70,7 +70,7 @@ class CommentStatus extends Component {
           />
           <CommentLinkWrapper>
             Comment posted (<a href={href} onClick={this.handleLinkClick}>
-              View in JIRA
+              View in Jira
             </a>)
           </CommentLinkWrapper>
         </StatusTextWrapper>

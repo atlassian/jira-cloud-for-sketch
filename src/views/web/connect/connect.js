@@ -56,7 +56,7 @@ class Connect extends Component {
                     value={jiraUrl}
                     autofocus
                     placeholder='sketchfan.atlassian.net'
-                    label='JIRA cloud site'
+                    label='Jira Cloud site'
                     disabled={loading}
                     onChange={this.handleJiraUrlChange}
                     shouldFitContainer

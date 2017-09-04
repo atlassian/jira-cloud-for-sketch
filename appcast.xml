@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>JIRA Cloud for Sketch</title>
+    <title>Jira Cloud for Sketch</title>
     <link>https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/appcast.xml</link>
-    <description>Share from Sketch to JIRA, without losing focus</description>
+    <description>Share from Sketch to Jira, without losing focus</description>
     <language>en</language>
       <item>
         <title>v0.13.0</title>

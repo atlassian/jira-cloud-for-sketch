@@ -5,7 +5,7 @@ export const Keep = 'keep'
 export const Cancel = 'cancel'
 
 /**
- * Displays an alert prompting the user to Keep or Replace pre-existing JIRA
+ * Displays an alert prompting the user to Keep or Replace pre-existing Jira
  * attachments with names identical to the exported layers.
  * @param {Object} context provided by Sketch
  * @param {string} issueKey the issue being exported to

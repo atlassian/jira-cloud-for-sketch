@@ -26,7 +26,7 @@ const pluginState = (function () {
 })()
 
 /**
- * Determine if the JIRA panel is open and an issue is selected.
+ * Determine if the Jira panel is open and an issue is selected.
  *
  * @return {string} the currently selected issue, or null if no issue is selected
  */

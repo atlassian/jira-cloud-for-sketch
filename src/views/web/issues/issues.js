@@ -47,7 +47,7 @@ class ViewIssuesPanel extends Component {
         {initialized ? (
           <PanelWrapper onDrop={this.preventDefault} onDragOver={this.preventDefault}>
             <HeaderDiv>
-              <JiraIssueHeader>Export to JIRA Cloud</JiraIssueHeader>
+              <JiraIssueHeader>Export to Jira Cloud</JiraIssueHeader>
               <FilterWrapper>
                 {!filters.loading &&
                   <IssueFilter

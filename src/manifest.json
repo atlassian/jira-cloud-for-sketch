@@ -1,5 +1,5 @@
 {
-	"name": "JIRA Cloud for Sketch",
+	"name": "Jira Cloud for Sketch",
 	"author": "Atlassian",
 	"email": "tim@atlassian.com",
 	"identifier": "com.atlassian.sketch.jira-plugin",
@@ -8,7 +8,7 @@
 	"bundleVersion": 1,
 	"commands": [
 		{
-			"name": "JIRA",
+			"name": "Jira",
 			"identifier": "jira",
 			"script": "./commands/jira.js",
 			"shortcut": "cmd alt j"

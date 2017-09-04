@@ -1,9 +1,9 @@
 /*
- * The plugin authenticates with JIRA using an OAuth2 bearer token (see
+ * The plugin authenticates with Jira using an OAuth2 bearer token (see
  * https://developer.atlassian.com/cloud/jira/platform/oauth-2-jwt-bearer-token-authorization-grant-type/).
  * These bearer tokens are provided by a system Atlassian Connect add-on
- * installed in JIRA (jira-sketch-integration) which maps a Sketch plugin
- * instance to a JIRA Cloud user via an 'OAuth2-like' authorization dance
+ * installed in Jira (jira-sketch-integration) which maps a Sketch plugin
+ * instance to a Jira Cloud user via an 'OAuth2-like' authorization dance
  * by the plugin's 'Connect' panel.
  *
  * This file contains various functions for authorizing users and retrieving
@@ -51,15 +51,15 @@ function isAddonUrlChanged () {
 
 /**
  * @typedef {Object} ClientCredentials
- * @property {string} clientId the client ID provided by the JIRA-Sketch
+ * @property {string} clientId the client ID provided by the Jira-Sketch
  * integration add-on
  * @property {number} sharedSecret the shared secret associated with the client
- * ID, used to authenticate with the JIRA-Sketch integration add-on
+ * ID, used to authenticate with the Jira-Sketch integration add-on
  */
 
 /**
  * Create or retrieve stored credentials that the plugin uses to authenticate
- * with the JIRA-Sketch integration add-on
+ * with the Jira-Sketch integration add-on
  *
  * @return {Promise<ClientCredentials>} the stored (or newly created) client credentials
  */
@@ -85,7 +85,7 @@ export async function getSketchClientDetails () {
 }
 
 /**
- * @param {string} jiraUrl the hostName of the JIRA Cloud instance the plugin
+ * @param {string} jiraUrl the hostName of the Jira Cloud instance the plugin
  * is currently connected to.
  */
 export function setJiraUrl (jiraUrl) {
@@ -96,13 +96,13 @@ export function setJiraUrl (jiraUrl) {
 }
 
 /**
- * The first time the authorization URL is retrieved for a particular JIRA
+ * The first time the authorization URL is retrieved for a particular Jira
  * instance, the supporting Atlassian Cloud add-on will be automatically
  * installed. This can take some time, so this function will re-request the
  * authorization URL multiple times in case of error or timeout.
  *
  * @return {Promise<String>} the URL of a page where the user can authorize
- * Sketch to connect to JIRA on their behalf
+ * Sketch to connect to Jira on their behalf
  */
 export async function getAuthorizationUrl () {
   const jiraHost = getString(keys.jiraHost)
@@ -118,7 +118,7 @@ export async function getAuthorizationUrl () {
  * A helper function for `getAuthorizationUrl`
  *
  * @param {string} clientId the plugin's clientId, see `getSketchClientDetails`
- * @param {string} jiraHost the JIRA Cloud site's hostname
+ * @param {string} jiraHost the Jira Cloud site's hostname
  */
 async function _getAuthorizationUrl (clientId, jiraHost) {
   const qs = queryString.stringify({clientId, jiraHost})
@@ -137,7 +137,7 @@ async function _getAuthorizationUrl (clientId, jiraHost) {
 }
 
 /**
- * Test whether the user has authorized the plugin to connect to JIRA on their
+ * Test whether the user has authorized the plugin to connect to Jira on their
  * behalf by requesting an authorization token.
  *
  * @return {Promise<boolean>} true if the use is authorized, false otherwise
@@ -173,7 +173,7 @@ export function isAuthorized () {
 
 /**
  * @param {boolean} force skip & flush the cache
- * @return {Promise<string>} an OAuth2 bearer token for authenticating with JIRA
+ * @return {Promise<string>} an OAuth2 bearer token for authenticating with Jira
  */
 export async function getBearerToken (force) {
   checkAuthorized()
@@ -181,7 +181,7 @@ export async function getBearerToken (force) {
 }
 
 /**
- * Retrieve an OAuth2 bearer token from the JIRA-Sketch integration add-on.
+ * Retrieve an OAuth2 bearer token from the Jira-Sketch integration add-on.
  * @throws if there was an issue retrieving the OAuth2 token
  */
 async function _getBearerToken () {
@@ -199,7 +199,7 @@ async function _getBearerToken () {
       case 'WRONG_ID':
       case 'NOT_AUTHORIZED':
         unset(keys.authorized)
-        throw new AuthorizationError('JIRA requires the Sketch plugin to be reauthorized')
+        throw new AuthorizationError('Jira requires the Sketch plugin to be reauthorized')
       default:
         throw new Error(error.message)
     }
@@ -213,15 +213,15 @@ async function _getBearerToken () {
 }
 
 /**
- * @return {boolean} whether the JIRA host name is set
+ * @return {boolean} whether the Jira host name is set
  */
 export function isJiraHostSet () {
   return isSet(keys.jiraHost)
 }
 
 /**
- * @return {string} the JIRA host name
- * @throws if the JIRA host name is not set
+ * @return {string} the Jira host name
+ * @throws if the Jira host name is not set
  */
 export function getJiraHost () {
   return getString(keys.jiraHost)
@@ -232,13 +232,13 @@ export function getJiraHost () {
  */
 function checkAuthorized () {
   if (!isAuthorized()) {
-    throw new Error('Please connect Sketch to JIRA before proceeding')
+    throw new Error('Please connect Sketch to Jira before proceeding')
   }
 }
 
 /**
  * @return {Promise<string>} a JWT auth header for authenticating with the
- * JIRA-Sketch integration add-on
+ * Jira-Sketch integration add-on
  */
 async function jwtAuthHeader () {
   const clientDetails = await getSketchClientDetails()

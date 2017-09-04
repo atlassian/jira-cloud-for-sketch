@@ -9,7 +9,7 @@ import Queue from 'promise-queue'
 import blankThumbnailDataUri from '../../../blank-thumbnail-datauri.txt'
 
 /**
- * Handles operations on attachments that already exist in JIRA.
+ * Handles operations on attachments that already exist in Jira.
  */
 export default class Attachments {
   constructor (context, webUI, jira) {
@@ -21,7 +21,7 @@ export default class Attachments {
 
   /**
    * @param {string} issueKey identifies the issue to retrieve
-   * @param {boolean} updateHistory whether to update JIRA's 'recent issues'
+   * @param {boolean} updateHistory whether to update Jira's 'recent issues'
    * list (which is used by the plugin's Recently Viewed filter)
    * @param {boolean} suppressError if true, silently ignore any thrown errors
    * and return `null`
@@ -55,7 +55,7 @@ export default class Attachments {
       if (dataUri != blankThumbnailDataUri) {
         break
       }
-      // ASP-13 - JIRA often returns blank thumbnails for a short period
+      // ASP-13 - Jira often returns blank thumbnails for a short period
       // immediately after an attachment is uploaded
       trace(`Blank thumbnail! Retry in ${thumbnailRetryDelay} (${attempts} attempts left)`)
       await sleep(thumbnailRetryDelay)

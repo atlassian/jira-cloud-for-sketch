@@ -171,7 +171,7 @@ export function closeAllPluginPanels () {
 const panelPrefix = 'atlassian-sketch-plugin'
 
 /**
- * The identifier for the 'JIRA' panel
+ * The identifier for the 'Jira' panel
  */
 export const IssuePanelId = `${panelPrefix}-issues`
 /**

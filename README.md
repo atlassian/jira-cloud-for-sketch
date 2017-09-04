@@ -1,6 +1,6 @@
-# JIRA Cloud for Sketch
+# Jira Cloud for Sketch
 
-A [Sketch] plugin that provides integration with JIRA Cloud. Get it @ [sketch.atlassian.com]
+A [Sketch] plugin that provides integration with Jira Cloud. Get it @ [sketch.atlassian.com]
 
 <img src='./screenshots.png' alt='Screenshot'>
 
@@ -18,7 +18,7 @@ This plugin's canonical repository is [on Bitbucket], but is also
 - `skpm build` to transpile and package the plugin
 - `skpm link .` to symlink the plugin to the Sketch plugins directory
 
-When you next start Sketch, there should be a **JIRA** option in the
+When you next start Sketch, there should be a **Jira** option in the
 **Plugins** menu.
 
 To subsequently update the plugin, simply run `skpm build` and restart Sketch.
@@ -53,7 +53,7 @@ If you want to cut your own build to send to a friend, simply run `skpm build`
 #### Frontend/Backend
 
 The plugin 'backend' uses [CocoaScript] to implement Sketch commands, store
-user preferences, make requests to JIRA, add controls to the Sketch UI, and
+user preferences, make requests to Jira, add controls to the Sketch UI, and
 spawn Cocoa `NSPanel`s and `WebView`s that render the 'frontend'. The frontend
 is client-side JavaScript that runs in a `WebView` (that is, Safari) context.
 'Backend' and 'frontend' are in quotes because they aren't a traditional
@@ -91,15 +91,15 @@ Properties and settings that are modified at runtime are stored in a macOS
 `plist` that lives at `~/Library/Preferences/plugin.sketch.jira-sketch-plugin`
 (see `src/prefs.js`).
 
-#### JIRA authentication and integration
+#### Jira authentication and integration
 
-The plugin uses a companion [Atlassian Connect] add-on to integrate with JIRA
+The plugin uses a companion [Atlassian Connect] add-on to integrate with Jira
 Cloud. The add-on allows a user to securely link a plugin instance to their
-JIRA Cloud account via an OAuth-like 'dance' and subsequently providing
-[bearer tokens] for plugin instances to authenticate directly with the JIRA
+Jira Cloud account via an OAuth-like 'dance' and subsequently providing
+[bearer tokens] for plugin instances to authenticate directly with the Jira
 REST API (see `src/auth.js` and `src/jira.js` for details). The companion
 add-on is a system add-on, and will be automatically installed in any given
-JIRA Cloud instance.
+Jira Cloud instance.
 
 #### Logging
 

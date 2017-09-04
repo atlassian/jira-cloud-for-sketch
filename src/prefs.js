@@ -16,10 +16,10 @@ export const keys = {
   // location of addon server API (usually prod)
   addonUrl: 'addonUrl',
 
-  // location of JIRA cloud site that we're currently connected to
+  // location of Jira Cloud site that we're currently connected to
   jiraHost: 'jiraHost',
 
-  // indicates whether we're authorized for the current JIRA host
+  // indicates whether we're authorized for the current Jira host
   // (set if auth token has been successfully retrieved at least once)
   authorized: 'authorized',
 

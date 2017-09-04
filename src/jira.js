@@ -10,9 +10,9 @@ import FaqError, {faqTopics} from './error/FaqError'
 import AuthorizationError from './error/AuthorizationError'
 
 /**
- * Handles interaction with JIRA's REST API.
+ * Handles interaction with Jira's REST API.
  */
-export default class JIRA {
+export default class Jira {
   constructor () {
     this.baseUrl = `https://${getJiraHost()}`
     this.apiRoot = `${this.baseUrl}/rest/api/2`
@@ -25,7 +25,7 @@ export default class JIRA {
    * @param {string[]} [opts.fields] issue fields to return
    * @param {number} [opts.startAt] paging, index to start at
    * @param {number} [opts.maxResults] paging, max number of results to return
-   * @return {Promise<object[]>} an array of JIRA issues (see `entity-mappers`)
+   * @return {Promise<object[]>} an array of Jira issues (see `entity-mappers`)
    * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/search
    */
   async getFilteredIssues (filterKey, opts) {
@@ -49,9 +49,9 @@ export default class JIRA {
    * @param {string} issueKey identifies the issue to retrieve
    * @param {Object} opts request options
    * @param {string[]} [opts.fields] issue fields to return
-   * @param {boolean} [opts.updateHistory] whether to update JIRA's 'recent issues'
+   * @param {boolean} [opts.updateHistory] whether to update Jira's 'recent issues'
    * list based on this request
-   * @return {Promise<object>} a JIRA issue (see `entity-mappers`)
+   * @return {Promise<object>} a Jira issue (see `entity-mappers`)
    * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/issue-getIssue
    */
   async getIssue (issueKey, opts) {
@@ -77,7 +77,7 @@ export default class JIRA {
   /**
    * Note: this buffers the image into memory, so should only be used for
    * small images like icons and thumbnails. The request will be authenticated
-   * only if the supplied URL matches the base url of the connected JIRA
+   * only if the supplied URL matches the base url of the connected Jira
    * instance.
    *
    * @param {string} url the url of an image
@@ -85,7 +85,7 @@ export default class JIRA {
    */
   async getImageAsDataUri (url, mimeType) {
     const opts = {}
-    // only authenticate requests to JIRA
+    // only authenticate requests to Jira
     if (url.indexOf(this.baseUrl) == 0) {
       opts.headers = {
         Authorization: await authHeader()
@@ -199,7 +199,7 @@ export default class JIRA {
 }
 
 /**
- * Make a REST request to JIRA.
+ * Make a REST request to Jira.
  *
  * @param {string} url the absolute URL to the REST resource
  * @param {Object} [opts] request options. Some are documented here, some are
@@ -234,7 +234,7 @@ async function jiraFetch (url, opts) {
     if (res.status == 400 && await doesItLooksLikeAPermissionProblem(res)) {
       throwPermissionsError()
     }
-    throw new Error(`JIRA responded with: ${res.status} ${res.statusText}`)
+    throw new Error(`Jira responded with: ${res.status} ${res.statusText}`)
   }
   if (res.status != 204) {
     try {
@@ -252,7 +252,7 @@ async function jiraFetch (url, opts) {
 }
 
 /**
- * @return {Promise<string>} a bearer token for the connected JIRA instance, formatted
+ * @return {Promise<string>} a bearer token for the connected Jira instance, formatted
  * for use in an Authorization HTTP header.
  */
 async function authHeader () {

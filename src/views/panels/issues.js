@@ -7,7 +7,7 @@ import { feedbackUrl } from '../../config'
 import { openInBrowser } from '../../util'
 import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import { titlebarHeight } from './ui-constants'
-import JIRA from '../../jira'
+import Jira from '../../jira'
 import openConnectPanel from './connect'
 import keepOrReplaceAlert from '../alerts/keep-or-replace'
 import {
@@ -32,7 +32,7 @@ const issueViewDimensions = [
 ]
 
 /**
- * Spawns the 'JIRA' panel for browsing and interacting with JIRA issues.
+ * Spawns the 'Jira' panel for browsing and interacting with Jira issues.
  *
  * @param {Object} context provided by Sketch
  * @return {Object} a WebUI for the launched panel
@@ -126,7 +126,7 @@ export default async function (context) {
     }
   })
 
-  const jira = new JIRA()
+  const jira = new Jira()
   const filters = new Filters(context, webUI, jira)
   const attachments = new Attachments(context, webUI, jira)
   const uploads = new Uploads(context, webUI, jira, attachments)

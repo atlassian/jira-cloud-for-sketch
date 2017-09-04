@@ -4,7 +4,7 @@ import { analytics } from '../analytics'
 
 /**
  * The primary command. Launches the authorization panel if the plugin isn't
- * currently connected to a JIRA Cloud site, or the JIRA panel if it is.
+ * currently connected to a Jira Cloud site, or the Jira panel if it is.
  *
  * @param {Object} context provided by Sketch
  */

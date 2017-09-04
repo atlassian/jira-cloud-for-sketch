@@ -26,7 +26,7 @@ export default class Issue {
 
     // There's a small race condition where duplicate attachments may appear
     // if the user deselects then reselects an issue while an upload is in
-    // progress (JIRA may return the attachment as part of the issue payload
+    // progress (Jira may return the attachment as part of the issue payload
     // before our upload request completes). This autorun function cleans up
     // any dupes for us, before they're displayed to the user.
     reaction(
@@ -58,7 +58,7 @@ export default class Issue {
   }
 
   /**
-   * Map JIRA statusCategory keys to @atlaskit/lozenge appearances.
+   * Map Jira statusCategory keys to @atlaskit/lozenge appearances.
    */
   @computed get statusAppearance () {
     if (!this.status) {

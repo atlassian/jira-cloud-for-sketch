@@ -9,7 +9,7 @@ import { bearerTokenExpirySafetyMargin } from './config'
  *
  * Note: Add-ons are allowed 500 access token requests every 5 minutes for each
  * host product the add-on is installed on. Eagerly fetching tokens may become
- * problematic for companies with one JIRA Cloudsite and >500 concurrent Sketch
+ * problematic for companies with one Jira Cloud site and >500 concurrent Sketch
  * users.
  *
  * @see https://developer.atlassian.com/cloud/jira/software/oauth-2-jwt-bearer-token-authorization-grant-type/#rate-limiting

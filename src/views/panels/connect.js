@@ -13,7 +13,7 @@ import openIssuesPanel from './issues'
 import { trace } from '../../logger'
 
 /**
- * Spawns the 'Connect' panel for authorizing the user with JIRA.
+ * Spawns the 'Connect' panel for authorizing the user with Jira.
  *
  * @param {Object} context provided by Sketch
  * @return {Object} a WebUI for the launched panel

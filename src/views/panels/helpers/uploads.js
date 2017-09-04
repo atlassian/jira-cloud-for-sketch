@@ -14,7 +14,7 @@ import { attachmentFromRest } from '../../../entity-mappers'
 import Queue from 'promise-queue'
 
 /**
- * Handles uploading files to JIRA as attachments.
+ * Handles uploading files to Jira as attachments.
  */
 export default class Uploads {
   constructor (context, webUI, jira, attachments) {

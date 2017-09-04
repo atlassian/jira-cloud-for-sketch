@@ -6,11 +6,11 @@ import launchPanel from '../panels/launch'
 
 export default { add, remove }
 
-const jiraButtonToolTip = 'Export to JIRA'
+const jiraButtonToolTip = 'Export to Jira'
 const exportButtonOffset = 44
 
 /**
- * *Carefully* try to add an 'Export to JIRA' button to Sketch's export panel.
+ * *Carefully* try to add an 'Export to Jira' button to Sketch's export panel.
  * Care is taken to ensure that if the Sketch UI is not structured as we expect,
  * the button simply fails to appear and prints a suitable log message, rather
  * than crashing Sketch. See inline below for the documented assumptions about
@@ -29,7 +29,7 @@ async function add (context) {
       if (toolTip && toolTip == jiraButtonToolTip) {
         // button already registered \o/
       } else {
-        error(`Found three export buttons, but the 'Export to JIRA' button isn't there`)
+        error(`Found three export buttons, but the 'Export to Jira' button isn't there`)
       }
       return
     }
@@ -50,7 +50,7 @@ async function add (context) {
       return
     }
 
-    // Add the JIRA button
+    // Add the Jira button
     const uploadIcon = NSImage.alloc().initWithContentsOfFile(
       context.plugin.urlForResourceNamed('jira-icon.png').path()
     )
@@ -70,7 +70,7 @@ async function add (context) {
     exportButtonBar.addSubview(jiraButton)
     jiraButton.setFrame(NSMakeRect(110, -2, 56, 32))
 
-    // Adjust the sizing of the 'Export $layerName' button to make room for the JIRA button
+    // Adjust the sizing of the 'Export $layerName' button to make room for the Jira button
     // Assumption: The first subview is the 'Export $layerName' button
     const eFrame = exportButton.frame()
     exportButton.setFrame(NSMakeRect(
@@ -83,7 +83,7 @@ async function add (context) {
 }
 
 /**
- * *Carefully* try to remove the 'Export to JIRA' button from Sketch's export
+ * *Carefully* try to remove the 'Export to Jira' button from Sketch's export
  * panel, and restore the UI to its previous state. If the Sketch UI is not
  * structured as we expect, bail out and print a suitable log message, rather
  * than attempting to remove the button (or crashing Sketch).
@@ -94,7 +94,7 @@ async function remove (context) {
   withExportButtonBar(context, (exportButtonBar) => {
     const exportButtons = exportButtonBar.subviews()
 
-    // Assumption: There are two standard export buttons (plus our JIRA button)
+    // Assumption: There are two standard export buttons (plus our Jira button)
     // Assumption: If they aren't present, the layer is probably collapsed or the button isn't present
     if (exportButtons.length != 3) {
       trace(`Last subview MSExportStackView has ${exportButtons.length} subviews`)
@@ -108,7 +108,7 @@ async function remove (context) {
       return
     }
 
-    // Re-adjust the sizing of the 'Export $layerName' button once we remove the JIRA button
+    // Re-adjust the sizing of the 'Export $layerName' button once we remove the Jira button
     // Assumption: The first subview is the 'Export $layerName' button
     const exportButton = exportButtons[0]
     jiraButton.removeFromSuperview()

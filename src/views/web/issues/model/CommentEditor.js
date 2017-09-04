@@ -147,7 +147,7 @@ export default class CommentEditor {
       return
     }
 
-    // replace the @mention with the correct JIRA syntax
+    // replace the @mention with the correct Jira syntax
     const input = this.inputRef
     const precedingText = input.value.substring(0, input.selectionStart - mention.length)
     const trailingText = input.value.substring(input.selectionStart)
@@ -208,7 +208,7 @@ function mentionFromUser (restUser) {
   if (restUser.avatarUrls) {
     avatarUrl = restUser.avatarUrls['32x32']
   } else if (restUser.avatarUrl) {
-    // HACK: JIRA's /user/picker API returns tiny avatars by default. Here we
+    // HACK: Jira's /user/picker API returns tiny avatars by default. Here we
     // override the 's' parameter to get the desired resolution
     avatarUrl = restUser.avatarUrl.replace(/[?&]s=\d+/, str => {
       return str.charAt(0) + 's=32'

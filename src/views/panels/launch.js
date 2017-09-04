@@ -6,7 +6,7 @@ import { closeAllPluginPanels } from './webui-common'
 
 /**
  * If the user isn't already authorized, opens the Connect panel to start the
- * authorization process with JIRA. Otherwise opens the JIRA panel.
+ * authorization process with Jira. Otherwise opens the Jira panel.
  *
  * @param {Object} context provided by Sketch
  */

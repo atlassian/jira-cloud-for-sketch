@@ -1,5 +1,5 @@
 /*
- * Functions for mapping REST entities returned from the JIRA API to lighter
+ * Functions for mapping REST entities returned from the Jira API to lighter
  * weight internal representations from inside the plugin. Since these entities
  * are often logged, serialized, and pass over the CocoaScript-JavaScript
  * (which has memory constraints), it's good practice to keep them as slim as
@@ -23,7 +23,7 @@ const attachmentProperties = [
 ]
 
 /**
- * @param {Object} issue a JSON issue from the JIRA REST API (see
+ * @param {Object} issue a JSON issue from the Jira REST API (see
  * https://docs.atlassian.com/jira/REST/cloud/#api/2/issue-getIssue)
  * @return {Object} a simpler representation of the issue. Notably: important
  * fields are promoted from the 'fields' property to the root, and the
@@ -47,7 +47,7 @@ export function issueFromRest (issue) {
 }
 
 /**
- * @param {Object} attachment a JSON attachment from the JIRA REST API. (see
+ * @param {Object} attachment a JSON attachment from the Jira REST API. (see
  * https://docs.atlassian.com/jira/REST/cloud/#api/2/attachment-getAttachment)
  * @return {Object} a representation of the attachment with a restricted set of
  * properties.

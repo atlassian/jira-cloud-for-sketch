@@ -9,7 +9,7 @@
 export const layerLastExportedIssue = 'layer.last.exported.issue'
 
 /**
- * The last issue viewed in the JIRA panel whilst a particular Sketch document
+ * The last issue viewed in the Jira panel whilst a particular Sketch document
  * was active.
  */
 export const documentLastViewedIssue = 'document.last.viewed.issue'
