@@ -34,6 +34,10 @@ This could indicate that one of the Objective-C classes depended on by the plugi
 
 ## Other troubleshooting steps
 
+### Check your JIRA Cloud permissions
+
+The Sketch plugin tries hard to determine if a request to JIRA Cloud failed due to a permissions issue and display an appropriate error. However, different JIRA Cloud REST resources have different failure modes depending on the user's permissions, so there's a chance that the plugin will misinterpret a returned error code. Check with your JIRA Cloud administrator that you have the [appropriate permissions] for the operation that is failing.
+
 ### Check the logs
 
 Plugin logs are written to `~/Library/Logs/com.bohemiancoding.sketch3/Plugin Output.log`. This file is cleared by Sketch on startup, so be sure to reproduce the issue before capturing the logs.
@@ -73,4 +77,5 @@ Or, if you're feeling brave, you can modify the transpiled CocoaScript in `jira.
 [raise an issue]: https://github.com/atlassian/jira-cloud-for-sketch/issues
 [downloading and re-installing the plugin]: https://sketch.atlassian.com
 [downloading and installing an earlier version]: https://www.sketchapp.com/updates/
+[appropriate permissions]: https://sketch.atlassian.com/faq#no-permission
 [Safari Develop menu]: https://apple.stackexchange.com/a/139771
