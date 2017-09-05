@@ -58,7 +58,7 @@ Or clear these settings with:
 
 `/usr/bin/defaults delete ~/Library/Preferences/plugin.sketch.jira-sketch-plugin`
 
-NOTE: the `authToken` stored in the plist is a temporary bearer token valid for a short period (~15 minutes, at time of writing) from creation. Do not share tokens that are still valid with others, or post them on the Internet, etc.
+NOTE: the `authToken` stored in the `plist` is a temporary bearer token valid for a short period (~15 minutes, at time of writing) from creation. Do not share tokens that are still valid with others, or post them on the Internet, etc.
 
 ### Verify or tweak configuration settings
 
@@ -71,6 +71,6 @@ To aid in diagnosis, you may wish to add additional logging to the plugin and cr
 Or, if you're feeling brave, you can modify the transpiled CocoaScript in `jira.sketchplugin/Contents/Sketch/*.js` or transpiled JavaScript in `jira.sketchplugin/Contents/Resources/*.js`. Note that you'll need to restart Sketch to pick up any changes.
 
 [raise an issue]: https://github.com/atlassian/jira-cloud-for-sketch/issues
-[re-installing the plugin]: https://sketch.atlassian.com
+[downloading and re-installing the plugin]: https://sketch.atlassian.com
 [downloading and installing an earlier version]: https://www.sketchapp.com/updates/
-[enabling the Safari Develop menu]: https://apple.stackexchange.com/a/139771
+[Safari Develop menu]: https://apple.stackexchange.com/a/139771
