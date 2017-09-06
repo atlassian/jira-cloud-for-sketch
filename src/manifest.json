@@ -11,7 +11,9 @@
 			"name": "Jira",
 			"identifier": "jira",
 			"script": "./commands/jira.js",
-			"shortcut": "cmd alt j"
+			"shortcut": "cmd alt j",
+			"description": "Open the 'Export to Jira Cloud' panel.",
+			"icon": "jira-icon-runner.png"
 		},
 		{
 			"name": "StartUp",
