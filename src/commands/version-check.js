@@ -12,7 +12,7 @@ export default function () {
     var alert = NSAlert.alloc().init()
     alert.messageText = 'Unsupported macOS version'
     alert.informativeText =
-      'Sorry mate! JIRA Cloud for Sketch requires ' +
+      'Sorry mate! Jira Cloud for Sketch requires ' +
       'macOS v10.12 (Sierra) or newer.\n\n' +
       'See https://www.apple.com/macos/how-to-upgrade/' +
       'for instructions on how to upgrade.'

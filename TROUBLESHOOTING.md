@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-Like many Sketch plugins, JIRA Cloud for Sketch indulges in some slightly risky behaviour in order to provide a more compelling user experience. This includes:
+Like many Sketch plugins, Jira Cloud for Sketch indulges in some slightly risky behaviour in order to provide a more compelling user experience. This includes:
 
 1. Invoking Sketch's internal classes directly
 2. Invoking classes provided by some of Sketch's dependencies (i.e. AFNetworking)
@@ -14,17 +14,17 @@ We've made some effort to minimize the risk of failure, and to degrade gracefull
 
 ## Symptoms & remedies
 
-### Sketch starts, but the 'Export to JIRA' button doesn't appear in the 'Export' panel
+### Sketch starts, but the 'Export to Jira' button doesn't appear in the 'Export' panel
 
-If the user has recently upgraded Sketch, the UI layout may have changed in such a way that the plugin can no longer find the correct `NSView` to add the 'Export to JIRA' button to. As a workaround, it should still be possible to export images by using the 'JIRA' item in the 'Plugin' menu, or by pressing `⌘+⌥+J`. Please also [raise an issue] for the plugin maintainers to investigate.
+If the user has recently upgraded Sketch, the UI layout may have changed in such a way that the plugin can no longer find the correct `NSView` to add the 'Export to Jira' button to. As a workaround, it should still be possible to export images by using the 'Jira' item in the 'Plugin' menu, or by pressing `⌘+⌥+J`. Please also [raise an issue] for the plugin maintainers to investigate.
 
-### Sketch starts, but the JIRA button doesn't appear in the menu
+### Sketch starts, but the Jira button doesn't appear in the menu
 
 This usually indicates that the plugin isn't actually installed. Please try [downloading and re-installing the plugin]. If symptoms persist, [raise an issue] for the plugin maintainers to investigate.
 
 ### Sketch fails to start, or crashes on startup
 
-This may be a problem caused by a Sketch plugin. To determine which plugin is causing the issue, try removing them one-by-one from the Sketch plugin's directory at `~/Library/Application\ Support/com.bohemiancoding.sketch3/Plugins/` and reproducing the crash. If the offending plugin is JIRA Cloud for Sketch, please [raise an issue] for the plugin maintainers to investigate. 
+This may be a problem caused by a Sketch plugin. To determine which plugin is causing the issue, try removing them one-by-one from the Sketch plugin's directory at `~/Library/Application\ Support/com.bohemiancoding.sketch3/Plugins/` and reproducing the crash. If the offending plugin is Jira Cloud for Sketch, please [raise an issue] for the plugin maintainers to investigate.
 
 If the broken plugin is critical to your workflow, you may downgrade Sketch by [downloading and installing an earlier version].
 
@@ -34,9 +34,9 @@ This could indicate that one of the Objective-C classes depended on by the plugi
 
 ## Other troubleshooting steps
 
-### Check your JIRA Cloud permissions
+### Check your Jira Cloud permissions
 
-The Sketch plugin tries hard to determine if a request to JIRA Cloud failed due to a permissions issue and display an appropriate error. However, different JIRA Cloud REST resources have different failure modes depending on the user's permissions, so there's a chance that the plugin will misinterpret a returned error code. Check with your JIRA Cloud administrator that you have the [appropriate permissions] for the operation that is failing.
+The Sketch plugin tries hard to determine if a request to Jira Cloud failed due to a permissions issue and display an appropriate error. However, different Jira Cloud REST resources have different failure modes depending on the user's permissions, so there's a chance that the plugin will misinterpret a returned error code. Check with your Jira Cloud administrator that you have the [appropriate permissions] for the operation that is failing.
 
 ### Check the logs
 
@@ -47,7 +47,7 @@ Plugin logs are written to `~/Library/Logs/com.bohemiancoding.sketch3/Plugin Out
 The plugin's UI is provided by a Safari WebView. You can view errors logged to the Safari console by:
 
 1. Enabling the [Safari Develop menu]
-2. Right-clicking on the JIRA panel and selecting 'Inspect Element'
+2. Right-clicking on the Jira panel and selecting 'Inspect Element'
 3. Clicking on `Console`
 
 Warnings and errors will be displayed in yellow and red, respectively. Note that there are a couple of known but bengign issues with a couple of the plugin's dependencies. Warnings about PropTypes and failures to load `.js.map` files are usually safe to ignore.
@@ -66,11 +66,11 @@ NOTE: the `authToken` stored in the `plist` is a temporary bearer token valid fo
 
 ### Verify or tweak configuration settings
 
-Various configuration settings (log levels, refresh intervals, etc.) can be modified by editing `jira.sketchplugin/Contents/Resources/config.json`. 
+Various configuration settings (log levels, refresh intervals, etc.) can be modified by editing `jira.sketchplugin/Contents/Resources/config.json`.
 
 ### Create a development build
 
-To aid in diagnosis, you may wish to add additional logging to the plugin and create a development build. Check `README.md` for a guide to building the plugin. 
+To aid in diagnosis, you may wish to add additional logging to the plugin and create a development build. Check `README.md` for a guide to building the plugin.
 
 Or, if you're feeling brave, you can modify the transpiled CocoaScript in `jira.sketchplugin/Contents/Sketch/*.js` or transpiled JavaScript in `jira.sketchplugin/Contents/Resources/*.js`. Note that you'll need to restart Sketch to pick up any changes.
 
