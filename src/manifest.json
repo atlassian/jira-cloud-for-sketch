@@ -24,6 +24,16 @@
 			}
 		},
 		{
+			"name": "Version Check",
+			"identifier": "version-check",
+			"script": "./commands/version-check.js",
+			"handlers": {
+				"actions": {
+					"Startup": "onRun"
+				}
+			}
+		},
+		{
 			"name": "Test Action",
 			"identifier": "test",
 			"script": "./commands/test.js",

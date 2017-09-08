@@ -17,6 +17,7 @@ globals:
   AtlassianURLDownloadDelegate: false
   COScript: false
   coscript: false
+  log: false
   MOClassDescription: false
   MOPointer: false
   MSImmutableColor: false
@@ -24,6 +25,8 @@ globals:
   NSASCIIStringEncoding: false
   NSAlertFirstButtonReturn: false
   NSAlertSecondButtonReturn: false
+  NSAppKitVersionNumber: false
+  NSAppKitVersionNumber10_12: false
   NSClassFromString: false
   NSClosableWindowMask: false
   NSDownloadsDirectory: false
