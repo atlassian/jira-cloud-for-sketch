@@ -13,7 +13,6 @@ import fetch from 'sketch-module-fetch-polyfill'
 import {
   jiraSketchIntegrationBaseUrl,
   jiraSketchIntegrationApi,
-  userAuthorizationPollInterval,
   jiraAuthorizationUrlMaxRetries,
   jiraAuthorizationUrlRetryInterval
 } from './config'
@@ -25,7 +24,7 @@ import URL from 'url-parse'
 import { trace, isTraceEnabled } from './logger'
 import analytics from './analytics'
 import TokenCache from './token-cache'
-import { retryUntilReturn, retryUntilTruthy } from './util'
+import { retryUntilReturn } from './util'
 import AuthorizationError from './error/AuthorizationError'
 import FaqError, { faqTopics } from './error/FaqError'
 
@@ -135,16 +134,6 @@ async function _getAuthorizationUrl (clientId, jiraHost) {
     throw new FaqError(`Couldn't connect to ${jiraHost}`, faqTopics.CAN_NOT_CONNECT)
   }
   return json.authorizeUrl
-}
-
-/**
- * Periodically test (forever) whether the user has authorized the plugin
- * to connect to JIRA on their behalf.
- *
- * @return {Promise} a Promise that resolves when the plugin is authorized
- */
-export async function awaitAuthorization () {
-  return retryUntilTruthy(testAuthorization, 0, userAuthorizationPollInterval)
 }
 
 /**

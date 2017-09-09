@@ -8,7 +8,7 @@
   "attachmentUploadConcurrency": 4,
   "thumbnailRetryMax": 25,
   "thumbnailRetryDelay": 600,
-  "userAuthorizationPollInterval": 3000,
+  "userAuthorizationPollInterval": 2000,
   "cocoaDelegatePollInterval": 200,
   "jiraAuthorizationUrlRetryInterval": 3000,
   "jiraAuthorizationUrlMaxRetries": 3,

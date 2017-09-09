@@ -19,7 +19,7 @@ const defaults = {
   attachmentUploadConcurrency: 4,
   thumbnailRetryMax: 25,
   thumbnailRetryDelay: 600, // milliseconds
-  userAuthorizationPollInterval: 3000, // milliseconds
+  userAuthorizationPollInterval: 2000, // milliseconds
   cocoaDelegatePollInterval: 200, // milliseconds
   jiraAuthorizationUrlMaxRetries: 3,
   jiraAuthorizationUrlRetryInterval: 3000, // milliseconds

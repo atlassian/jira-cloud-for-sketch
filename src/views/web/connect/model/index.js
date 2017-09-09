@@ -1,15 +1,15 @@
 import { observable, computed } from 'mobx'
 import { bridgedFunction, markBridgeAsInitialized } from '../../../bridge/client'
-import { truncateWithEllipsis } from '../../util'
+import { truncateWithEllipsis, retryUntilTruthy } from '../../util'
 
 const _getJiraUrl = bridgedFunction('getJiraUrl')
 const _setJiraUrl = bridgedFunction('setJiraUrl')
 const _authorizationComplete = bridgedFunction('authorizationComplete')
 const _testAuthorization = bridgedFunction('testAuthorization')
 const _getAuthorizationUrl = bridgedFunction('getAuthorizationUrl')
-const _awaitAuthorization = bridgedFunction('awaitAuthorization')
 const _openInBrowser = bridgedFunction('openInBrowser')
 const _openFaqPage = bridgedFunction('openFaqPage')
+const _config = bridgedFunction('config')
 
 const maxErrorMessageLength = 30
 
@@ -19,6 +19,7 @@ export default class ViewModel {
   @observable error = null
   @observable jiraUrl = ''
   @observable authUrl = null
+  @observable config = null
 
   constructor () {
     this.init()
@@ -26,6 +27,7 @@ export default class ViewModel {
 
   async init () {
     markBridgeAsInitialized()
+    this.config = await _config()
     this.jiraUrl = await _getJiraUrl()
     this.initializing = false
   }
@@ -42,14 +44,16 @@ export default class ViewModel {
 
     try {
       await _setJiraUrl(this.jiraUrl)
-      if (await _testAuthorization()) {
-        await _authorizationComplete()
-      } else {
+      if (!await _testAuthorization()) {
         this.authUrl = await _getAuthorizationUrl()
         _openInBrowser(this.authUrl)
-        await _awaitAuthorization()
-        await _authorizationComplete()
+        await retryUntilTruthy(
+          _testAuthorization,
+          0,
+          this.config.userAuthorizationPollInterval
+        )
       }
+      await _authorizationComplete()
     } catch (e) {
       this.error = e
       this.loading = false

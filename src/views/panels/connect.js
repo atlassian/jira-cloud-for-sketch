@@ -4,7 +4,6 @@ import {
   getJiraHost,
   isJiraHostSet,
   getAuthorizationUrl,
-  awaitAuthorization,
   testAuthorization
 } from '../../auth'
 import analytics from '../../analytics'
@@ -43,9 +42,6 @@ export default async function (context) {
       },
       async getAuthorizationUrl () {
         return getAuthorizationUrl()
-      },
-      async awaitAuthorization () {
-        return awaitAuthorization()
       },
       async authorizationComplete () {
         webUI.panel.close()

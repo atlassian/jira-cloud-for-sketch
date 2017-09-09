@@ -1,6 +1,6 @@
 import { assign } from 'lodash'
 import { executeSafely, openInBrowser } from '../../util'
-import { jiraSketchIntegrationFaqUrl } from '../../config'
+import * as config from '../../config'
 import { trace } from '../../logger'
 import createBridgedWebUI from '../bridge/host'
 import analytics from '../../analytics'
@@ -74,11 +74,14 @@ export function createWebUI (context, identifier, page, options) {
       },
       openFaqPage (topic) {
         executeSafely(context, function () {
-          openInBrowser(`${jiraSketchIntegrationFaqUrl}#${topic}`)
+          openInBrowser(`${config.jiraSketchIntegrationFaqUrl}#${topic}`)
         })
       },
       resizePanel (width, height, animate) {
         webUI.resizePanel(width, height, animate)
+      },
+      config () {
+        return config
       }
     },
     options.handlers
@@ -120,6 +123,7 @@ export function createWebUI (context, identifier, page, options) {
       trace(`Panel closed: ${identifier}`)
       NSThread.mainThread().threadDictionary().removeObjectForKey(identifier)
       options.onClose && options.onClose()
+      webUI.webView.close()
     }
   })
 

@@ -38,3 +38,24 @@ export function sleep (delay) {
     setTimeout(resolve, delay)
   })
 }
+
+/**
+ * @param {function} fn the function to retry until it returns a truthy result
+ * @param {number} maxRetries the number of times to retry (0 == unlimited retries)
+ * @param {number} delay the delay to wait between retries
+ * @return {*} the result of the function
+ */
+export async function retryUntilTruthy (fn, maxRetries, delay) {
+  while (true) {
+    const result = await fn()
+    if (result) {
+      return result
+    }
+    if (maxRetries) {
+      if (--maxRetries <= 0) {
+        return result
+      }
+    }
+    await sleep(delay)
+  }
+}

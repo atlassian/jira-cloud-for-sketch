@@ -200,12 +200,11 @@ export async function retryUntilTruthy (fn, maxRetries, delay) {
       return result
     }
     if (maxRetries) {
-      if (--maxRetries) {
-        await sleep(delay)
-      } else {
+      if (--maxRetries <= 0) {
         return result
       }
     }
+    await sleep(delay)
   }
 }
 
