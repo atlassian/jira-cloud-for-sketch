@@ -2,6 +2,7 @@ import '../default-imports'
 import { trace, error } from '../logger'
 import { isAuthorized, getBearerToken } from '../auth'
 import { bearerTokenRefreshInterval } from '../config'
+import { analytics } from '../analytics'
 
 /**
  * Triggered on plugin startup (when the plugin is installed and on subsequent
@@ -12,6 +13,7 @@ export default function () {
   COScript.currentCOScript().setShouldKeepAround(true)
   refreshAuthToken()
   setInterval(refreshAuthToken, bearerTokenRefreshInterval)
+  analytics('pluginStart')
 }
 
 function refreshAuthToken () {
@@ -26,4 +28,5 @@ function refreshAuthToken () {
   } else {
     trace('Not authorized. Skipping auth token refresh.')
   }
+  analytics('refreshAuthToken')
 }
