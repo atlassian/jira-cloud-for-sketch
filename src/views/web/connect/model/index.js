@@ -1,6 +1,6 @@
 import { observable, computed } from 'mobx'
 import { bridgedFunction, markBridgeAsInitialized } from '../../../bridge/client'
-import { truncateWithEllipsis, retryUntilTruthy } from '../../util'
+import { analytics, truncateWithEllipsis, retryUntilTruthy } from '../../util'
 
 const _getJiraUrl = bridgedFunction('getJiraUrl')
 const _setJiraUrl = bridgedFunction('setJiraUrl')
@@ -35,6 +35,7 @@ export default class ViewModel {
   async connect () {
     if (this.authUrl && !this.error) {
       // if the user presses 'Connect' again, reopen the auth page
+      analytics('clickConnectAgain')
       return _openInBrowser(this.authUrl)
     }
 
@@ -44,19 +45,24 @@ export default class ViewModel {
 
     try {
       await _setJiraUrl(this.jiraUrl)
-      if (!await _testAuthorization()) {
+      if (await _testAuthorization()) {
+        analytics('clickConnectAlreadyAuthorized')
+      } else {
         this.authUrl = await _getAuthorizationUrl()
         _openInBrowser(this.authUrl)
+        analytics('clickConnectStartDance')
         await retryUntilTruthy(
           _testAuthorization,
           0,
           this.config.userAuthorizationPollInterval
         )
+        analytics('clickConnectFinishDance')
       }
       await _authorizationComplete()
     } catch (e) {
       this.error = e
       this.loading = false
+      analytics(`connectError_${e.name}`)
     }
   }
 
@@ -70,6 +76,7 @@ export default class ViewModel {
 
   async moreInfo () {
     if (this.error && this.error.faqTopic) {
+      analytics('openFaq_' + this.error.faqTopic)
       _openFaqPage(this.error.faqTopic)
     }
   }

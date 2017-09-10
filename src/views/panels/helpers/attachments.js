@@ -1,6 +1,5 @@
 import { openInDefaultApp, sleep } from '../../../util'
 import { trace } from '../../../logger'
-import analytics, { postMultiple, event } from '../../../analytics'
 import {
   thumbnailDownloadConcurrency,
   thumbnailRetryDelay,
@@ -30,9 +29,7 @@ export default class Attachments {
    */
   async getIssue (issueKey, updateHistory, suppressError) {
     try {
-      const issue = await this.jira.getIssue(issueKey, { updateHistory })
-      postAnalytics(issue.attachments)
-      return issue
+      return await this.jira.getIssue(issueKey, { updateHistory })
     } catch (e) {
       if (suppressError) {
         return null
@@ -88,24 +85,5 @@ export default class Attachments {
       progress(completed / total)
     })
     openInDefaultApp(filepath)
-    analytics.viewIssueAttachmentOpen()
   }
-}
-
-/**
- * Send analytics about the attachments' mime type, size, and whether it had a
- * thumbnail. DO NOT send any sensitive information such as the image's name,
- * thumbnail, content, or the user that uploaded it.
- * @param {Object[]} attachments an issue's attachments
- */
-async function postAnalytics (attachments) {
-  var analyticsEvents = attachments.map((attachment) => {
-    return event('viewIssueAttachmentLoaded', {
-      mimeType: attachment.mimeType,
-      thumbnail: attachment.thumbnail && true,
-      size: attachment.size
-    })
-  })
-  analyticsEvents.push(event('viewIssueAttachmentsLoaded', {count: attachments.length}))
-  postMultiple(analyticsEvents)
 }

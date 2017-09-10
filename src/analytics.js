@@ -9,37 +9,6 @@ import {
 import { isAuthorized, getJiraHost } from './auth'
 import { trace, isTraceEnabled, warn } from './logger'
 
-const eventNames = [
-  'clientIdRetrieved',
-  'bearerTokenCacheMiss',
-  'bearerTokenCacheHit',
-  'bearerTokenCacheFlush',
-  'bearerTokenForceRefresh',
-  'jiraConnectPanelOpen',
-  'jiraConnectInitiateDance',
-  'jiraDisconnect', // not implemented yet
-  'viewIssueListPanelOpen',
-  'viewIssueListPanelOpenNotConnected',
-  'viewIssueListDefaultFilter', // suffixed with keys from ./jql-filters
-  'viewIssueListFilterChangeTo', // suffixed with keys from ./jql-filters
-  'viewIssueListFilterLoaded', // suffixed with keys from ./jql-filters
-  'viewIssue',
-  'viewIssue10Seconds', // not implemented yet
-  'backToViewIssueList',
-  'viewIssueProfileLoaded',
-  'viewIssueAttachmentsLoaded',
-  'viewIssueAttachmentLoaded',
-  'viewIssueSingleAttachmentUpload',
-  'viewIssueMultipleAttachmentUpload',
-  'viewIssueAttachmentUpload',
-  'viewIssueAttachmentReplace',
-  'viewIssueAttachmentDelete',
-  'viewIssueAttachmentOpen',
-  'viewIssueOpenInBrowser',
-  'viewIssueCommentAdd',
-  'feedbackOpenInBrowser'
-]
-
 var analyticsId = NSUserDefaults.standardUserDefaults().objectForKey(analyticsIdKey)
 // an early bug meant we serialized the string 'null' and stored it
 if (!analyticsId || analyticsId == 'null') {
@@ -61,7 +30,7 @@ analyticsId = analyticsId + ''
  * restrictions regarding these properties). Do NOT send user content or
  * personally identifying information in events.
  */
-export function event (eventName, properties) {
+function event (eventName, properties) {
   // https://extranet.atlassian.com/display/MOD/Public+Analytics+aka+GAS
   const payload = {
     name: eventName,
@@ -81,26 +50,23 @@ export function event (eventName, properties) {
 /**
  * Send a single analytics event.
  */
-export async function postSingle (eventName, properties) {
-  return _postToAnalyticsApi(analyticsApiSingleEvent, event(eventName, properties))
+export async function analytics (eventName, properties) {
+  return postToAnalyticsApi(
+    analyticsApiSingleEvent,
+    event(eventName, properties)
+  )
 }
 
 /**
  * Send an array of analytics events.
  */
-export async function postMultiple (events) {
-  return _postToAnalyticsApi(analyticsApiMultipleEvents, {events: events})
+export async function analyticsBatch (events) {
+  return postToAnalyticsApi(analyticsApiMultipleEvents, {
+    events: events.map(({name, properties}) => event(name, properties))
+  })
 }
 
-const events = {}
-eventNames.map(function (eventName) {
-  events[eventName] = function (properties) {
-    return postSingle(eventName, properties)
-  }
-})
-export default events
-
-async function _postToAnalyticsApi (api, payload) {
+async function postToAnalyticsApi (api, payload) {
   const body = JSON.stringify(payload)
   trace(`analytics event(s) ${body}`)
   try {

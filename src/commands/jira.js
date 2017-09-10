@@ -1,5 +1,6 @@
 import '../default-imports'
 import launchPanel from '../views/panels/launch'
+import { analytics } from '../analytics'
 
 /**
  * The primary command. Launches the authorization panel if the plugin isn't
@@ -10,4 +11,5 @@ import launchPanel from '../views/panels/launch'
 export default function (context) {
   COScript.currentCOScript().setShouldKeepAround(true)
   launchPanel(context)
+  analytics('openPanelByMenuOrShortcut')
 }

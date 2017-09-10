@@ -1,7 +1,12 @@
 import { observable, computed } from 'mobx'
 import { find } from 'lodash'
-import { bridgedFunction, addGlobalErrorHandler, exposeFunction, markBridgeAsInitialized } from '../../../bridge/client'
-import { analytics, truncateWithEllipsis } from '../../util'
+import {
+  bridgedFunction,
+  addGlobalErrorHandler,
+  exposeFunction,
+  markBridgeAsInitialized
+} from '../../../bridge/client'
+import { analytics, analyticsBatch, truncateWithEllipsis } from '../../util'
 import {
   FiltersMapper,
   IssuesMapper,
@@ -100,11 +105,7 @@ export default class ViewModel {
 
   async selectFilter (filter) {
     if (this.filters.selected) {
-      analytics('viewIssueListFilterChangeTo' + filter.key, {
-        previous: this.filters.selected.key
-      })
-    } else {
-      analytics('viewIssueListDefaultFilter' + filter.key)
+      analytics('changeFilterTo_' + filter.key)
     }
     this.filters.selected = filter
     return this.loadIssues()
@@ -140,19 +141,22 @@ export default class ViewModel {
     // add the suggested issue as the first entry of the issue list
     this.issues.list.unshift(suggestedIssue)
     this.selectIssue(suggestedIssue, false)
+    analytics('issuePreselected')
   }
 
   selectIssue (issue, refresh) {
     this.issues.selected = issue
     issue.onSelected(refresh)
     _onIssueSelected(issue.key)
+    analytics('selectIssue')
+    this.viewIssueAnalytics(issue)
   }
 
   deselectIssue () {
     const prevKey = this.issues.selected.key
     this.issues.selected = null
     _onIssueDeselected(prevKey)
-    analytics('backToViewIssueList')
+    analytics('deselectIssue')
   }
 
   withIssue (issueKey, fn) {
@@ -168,7 +172,6 @@ export default class ViewModel {
 
   async loadProfile () {
     this.profile = await _loadProfile()
-    analytics('viewIssueProfileLoaded')
   }
 
   @computed get truncatedErrorMessage () {
@@ -182,6 +185,7 @@ export default class ViewModel {
   async moreInfo () {
     if (this.error && this.error.faqTopic) {
       _openFaqPage(this.error.faqTopic)
+      analytics(`openFaq_${this.error.faqTopic}`)
     }
   }
 
@@ -189,17 +193,24 @@ export default class ViewModel {
     return [{
       id: 'switch-site',
       label: 'Switch JIRA Cloud site',
-      select: () => { _reauthorize() }
+      select: () => {
+        analytics('switchJira')
+        _reauthorize()
+      }
     }, {
       id: 'feedback',
       label: 'Feedback',
-      select: () => { _feedback() }
+      select: () => {
+        analytics('feedback')
+        _feedback()
+      }
     }]
   }
 
   registerGlobalErrorHandler () {
     addGlobalErrorHandler((error, retry) => {
       this.error = error
+      analytics(`issuesError_${error.name}`)
       if (error.name === 'AuthorizationError') {
         this.reauthorize = () => {
           _reauthorize()
@@ -207,11 +218,51 @@ export default class ViewModel {
       } else {
         this.retry = () => {
           this.error = this.retry = null
+          analytics('clickErrorRetry')
           retry()
         }
       }
       // indicate that this error handler will facilitate retries
       return true
     })
+  }
+
+  viewIssueAnalytics (issue) {
+    let assigneeEventName
+    if (this.profile) {
+      if (!issue.assignee) {
+        assigneeEventName = 'viewIssueAssignedToNobody'
+      } else if (issue.assignee.key === this.profile.key) {
+        assigneeEventName = 'viewIssueAssignedToUser'
+      } else {
+        assigneeEventName = 'viewIssueAssignedToOther'
+      }
+    } else {
+      assigneeEventName = 'viewIssueBeforeProfileLoaded'
+    }
+    let statusCategory = issue.status ? issue.status.statusCategory.key : 'null'
+    analyticsBatch([
+      {
+        name: 'viewIssueDetails',
+        properties: {
+          keyLength: issue.key.length,
+          summaryLength: issue.summary.length,
+          attachmentCount: issue.attachments.length
+        }
+      }, {
+        name: `viewIssueStatusCategory_${statusCategory}`
+      }, {
+        name: assigneeEventName
+      }
+    ].concat(issue.attachments.map(attachment => {
+      return {
+        name: 'viewAttachment',
+        properties: {
+          mimeType: attachment.mimeType,
+          thumbnail: attachment.thumbnail && true,
+          size: attachment.size
+        }
+      }
+    })))
   }
 }

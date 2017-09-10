@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { isSet, getInt, getString, setString, unset, keys } from './prefs'
-import analytics from './analytics'
+import { trace } from './logger'
 import { bearerTokenExpirySafetyMargin } from './config'
 
 /**
@@ -29,17 +29,17 @@ export default class TokenCache {
   async get (force) {
     const now = moment.utc().unix()
     if (force) {
-      analytics.bearerTokenForceRefresh()
+      trace('bearerTokenForceRefresh')
     } else {
       if (isSet(keys.authToken, keys.authTokenExpiry)) {
         const token = getString(keys.authToken)
         const expiry = getInt(keys.authTokenExpiry)
         if (expiry > now) {
-          analytics.bearerTokenCacheHit()
+          trace('bearerTokenCacheHit')
           return token
         }
       }
-      analytics.bearerTokenCacheMiss()
+      trace('bearerTokenCacheMiss')
     }
     const newToken = await this.getNewToken()
     setString(keys.authToken, newToken[0])
@@ -50,7 +50,6 @@ export default class TokenCache {
    * Clear the token cache
    */
   flush () {
-    analytics.bearerTokenCacheFlush()
     unset(keys.authToken, keys.authTokenExpiry)
   }
 }

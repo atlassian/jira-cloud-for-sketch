@@ -161,6 +161,8 @@ export default class CommentEditor {
     // move caret to end of inserted @mention
     input.selectionStart = input.selectionEnd = precedingText.length + textToInsert.length
 
+    analytics('selectAtMention')
+
     this.clearMentions()
   }
 
@@ -170,6 +172,10 @@ export default class CommentEditor {
       this.isFocused = false
       this.isPosting = true
       this.href = await _addComment(this.issueKey, this.text)
+      analytics('addComment', {
+        length: this.text.length,
+        lines: this.text.split('\n').length
+      })
       this.text = ''
       this.isPosting = false
     }
@@ -178,7 +184,7 @@ export default class CommentEditor {
   openPostedCommentInBrowser () {
     if (this.href) {
       _openInBrowser(this.href)
-      analytics('viewIssueOpenCommentInBrowser')
+      analytics('openCommentInBrowser')
     }
   }
 }

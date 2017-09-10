@@ -143,7 +143,7 @@ class AttachmentCard extends Component {
     this.props.attachment.open()
   }
   handleDeleteAction (event) {
-    this.props.attachment.delete(true)
+    this.props.attachment.delete()
   }
 }
 

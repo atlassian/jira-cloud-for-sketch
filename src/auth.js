@@ -22,7 +22,7 @@ import jwt from 'atlassian-jwt'
 import moment from 'moment'
 import URL from 'url-parse'
 import { trace, isTraceEnabled } from './logger'
-import analytics from './analytics'
+import { analytics } from './analytics'
 import TokenCache from './token-cache'
 import { retryUntilReturn } from './util'
 import AuthorizationError from './error/AuthorizationError'
@@ -76,7 +76,7 @@ export async function getSketchClientDetails () {
     setString(keys.clientId, json.data.id)
     setString(keys.sharedSecret, json.data.sharedSecret)
     setString(keys.addonUrl, jiraSketchIntegrationBaseUrl)
-    analytics.clientIdRetrieved()
+    analytics('clientIdRetrieved', {addonUrl: jiraSketchIntegrationBaseUrl})
   }
   return {
     clientId: getString(keys.clientId),

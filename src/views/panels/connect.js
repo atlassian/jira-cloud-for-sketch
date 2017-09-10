@@ -6,7 +6,7 @@ import {
   getAuthorizationUrl,
   testAuthorization
 } from '../../auth'
-import analytics from '../../analytics'
+import { analytics } from '../../analytics'
 import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
 import { titlebarHeight } from './ui-constants'
 import openIssuesPanel from './issues'
@@ -49,9 +49,8 @@ export default async function (context) {
       }
     }
   })
-  analytics.jiraConnectPanelOpen()
 
+  analytics('openPanelConnect')
   await webUI.waitUntilBridgeInitialized()
-
   return webUI
 }

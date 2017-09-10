@@ -1,7 +1,7 @@
 import { error, trace } from '../../logger'
 import { documentFromContext } from '../../util'
+import { analytics } from '../../analytics'
 import buttonDelegate, { onClickSelector } from './button-delegate'
-import { triggerExportSelectedLayers, getSelectedIssueKey } from '../../plugin-state'
 import launchPanel from '../panels/launch'
 
 export default { add, remove }
@@ -57,6 +57,7 @@ async function add (context) {
     const jiraButtonDelegate = buttonDelegate({
       onClick: function () {
         launchPanel(context)
+        analytics('openPanelByButton')
       }
     })
     const jiraButton = NSButton.buttonWithImage_target_action(

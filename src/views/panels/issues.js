@@ -2,7 +2,7 @@ import { createWebUI, IssuePanelId } from './webui-common'
 import Filters from './helpers/filters'
 import Uploads from './helpers/uploads'
 import Attachments from './helpers/attachments'
-import analytics from '../../analytics'
+import { analytics } from '../../analytics'
 import { feedbackUrl } from '../../config'
 import { openInBrowser } from '../../util'
 import { akGridSizeUnitless } from '@atlaskit/util-shared-styles'
@@ -16,7 +16,6 @@ import {
   setOnSelectionChangedFn
 } from '../../plugin-state'
 import {
-  getLastViewedIssueForDocument,
   setLastViewedIssueForDocument,
   getLastExportedIssueForSelectedLayers,
   areLayersSelected
@@ -108,10 +107,6 @@ export default async function (context) {
         return attachments.deleteAttachment(id)
       },
       addComment (issueKey, comment) {
-        analytics.viewIssueCommentAdd({
-          length: comment.length,
-          lines: comment.split('\n').length
-        })
         return jira.addComment(issueKey, comment)
       },
       findUsersForPicker (query) {
@@ -127,7 +122,6 @@ export default async function (context) {
       },
       feedback () {
         openInBrowser(feedbackUrl)
-        analytics.feedbackOpenInBrowser()
       }
     }
   })
@@ -144,7 +138,7 @@ export default async function (context) {
     webUI.invokeExposedFunction('setHasSelection', areLayersSelected(context))
   }
   setOnSelectionChangedFn(updateHasSelection)
+  analytics('openPanelIssues')
   await webUI.waitUntilBridgeInitialized()
-  analytics.viewIssueListPanelOpen()
   return webUI
 }

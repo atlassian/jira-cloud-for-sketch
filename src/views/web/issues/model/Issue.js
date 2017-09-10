@@ -51,7 +51,6 @@ export default class Issue {
       this.updateAttachments(issue)
       this.commentEditor.onIssueUpdated(issue)
     }
-    analytics('viewIssue')
   }
 
   updateIssueFields (issue) {
@@ -107,13 +106,24 @@ export default class Issue {
     let insertAt = 0
     if (replacedAttachment) {
       insertAt = Math.max(0, this.attachments.indexOf(replacedAttachment))
-      replacedAttachment.delete()
-      analytics('viewIssueAttachmentReplace')
+      replacedAttachment.delete(true)
     }
     droppedFiles.forEach(file => {
       file.upload(this.key)
       this.attachments.splice(insertAt, 0, file)
     })
+
+    // analytics
+    if (droppedFiles.length > 1) {
+      analytics(
+        replacedAttachment ? 'dragFilesToReplace' : 'dragFilesToAttach',
+        { count: droppedFiles.length }
+      )
+    } else {
+      analytics(
+        replacedAttachment ? 'dragFileToReplace' : 'dragFileToAttach'
+      )
+    }
   }
 
   async exportSelectedLayers () {
@@ -139,8 +149,21 @@ export default class Issue {
         this.key,
         matching.map(file => file.filename)
       )
-      if (choice === 'replace') {
-        matching.forEach(attachment => attachment.delete())
+      const replace = choice === 'replace'
+      if (replace) {
+        matching.forEach(attachment => attachment.delete(true))
+      }
+
+      // analytics
+      if (matching.length > 1) {
+        analytics(
+          replace ? 'replaceDuplicates' : 'keepDuplicates',
+          { count: matching.length }
+        )
+      } else {
+        analytics(
+          replace ? 'replaceDuplicate' : 'keepDuplicate'
+        )
       }
     }
   }
@@ -152,6 +175,6 @@ export default class Issue {
 
   openInBrowser () {
     _openInBrowser(this.browseUrl)
-    analytics('viewIssueOpenInBrowser')
+    analytics('openIssueInBrowser')
   }
 }

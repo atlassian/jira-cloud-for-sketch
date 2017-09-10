@@ -7,7 +7,6 @@ import {
 import { getDraggedFiles } from '../../../pasteboard'
 import { isTraceEnabled, trace, error } from '../../../logger'
 import { jiraDateMomentFormat, attachmentUploadConcurrency } from '../../../config'
-import { postMultiple, event } from '../../../analytics'
 import { executeSafelyAsync } from '../../../util'
 import { getSelectedIssueKey } from '../../../plugin-state'
 import { exportSelection } from '../../../export'
@@ -32,9 +31,7 @@ export default class Uploads {
    * object's properties.
    */
   getDroppedFiles () {
-    const droppedFiles = getDraggedFiles().map(fileUrlToUploadInfo)
-    postAnalytics(droppedFiles, this.uploadQueue.getPendingLength() > 0)
-    return droppedFiles
+    return getDraggedFiles().map(fileUrlToUploadInfo)
   }
 
   /**
@@ -101,28 +98,4 @@ function fileUrlToUploadInfo (fileUrlString) {
     size: parseInt(attributes[NSFileSize] + ''),
     mimeType: mime.lookup(extension)
   }
-}
-
-/**
- * Transmits analytics about the number of files, the file extension, and
- * whether multiple uploads are occurring concurrently.
- * @param {Object[]} files the files being uploaded
- * @param {boolean} alreadyUploading whether an upload is already in progress
- */
-async function postAnalytics (files, alreadyUploading) {
-  var events = files.map(file => {
-    return event(
-      'viewIssueAttachmentUpload',
-      file.extension ? {extension: file.extension} : null
-    )
-  })
-  if (files.length > 1) {
-    events.push(event('viewIssueMultipleAttachmentUpload', {
-      count: files.length,
-      alreadyUploading
-    }))
-  } else {
-    events.push(event('viewIssueSingleAttachmentUpload', { alreadyUploading }))
-  }
-  postMultiple(events)
 }

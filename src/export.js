@@ -1,4 +1,5 @@
 import { tempDir, localPathToNSURLString, documentFromContext } from './util'
+import { analytics } from './analytics'
 import { trace, error } from './logger'
 import { layerLastExportedIssue, documentLastViewedIssue } from './properties'
 
@@ -15,13 +16,20 @@ const badFilenameChars = new RegExp('/', 'g')
 export function exportSelection (context, issueKey) {
   const dir = tempDir(`export-${Date.now()}`)
   const exportedPaths = []
+  let layerCount = 0
   withDocument(context, document => {
     forEachSelectedLayer(context, layer => {
       exportedPaths.push(...exportLayer(document, layer, dir))
       setLastExportedIssueForLayer(context, layer, issueKey)
+      layerCount++
     })
   })
   trace(`Exporting ${exportedPaths.length} assets to ${dir}`)
+  if (layerCount > 1) {
+    analytics('exportSelectedLayers', { count: layerCount })
+  } else {
+    analytics('exportSelectedLayer')
+  }
   return exportedPaths
 }
 
@@ -42,6 +50,11 @@ function exportLayer (document, layer, dir) {
     const filepath = dir + nameForSlice(slice)
     document.saveArtboardOrSlice_toFile(slice, filepath)
     exportedPaths.push(localPathToNSURLString(filepath))
+  }
+  if (exportedPaths.length > 1) {
+    analytics('exportMultipleFormats', {count: exportedPaths.length})
+  } else {
+    analytics('exportSingleFormat')
   }
   return exportedPaths
 }

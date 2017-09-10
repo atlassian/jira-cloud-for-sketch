@@ -33,6 +33,12 @@ export default class Attachment {
     const uploaded = await _uploadAttachment(issueKey, this, progress => {
       this.progress = progress
     })
+    analytics(
+      this.extension
+        ? `attachFileWithExtension_${this.extension.toLowerCase()}`
+        : 'attachFileWithoutExtension',
+      {size: this.size}
+    )
     assign(this, uploaded)
     this.uploading = false
     this.loadThumbnail()
@@ -56,6 +62,7 @@ export default class Attachment {
   async open () {
     if (this.readyForAction) {
       this.downloading = true
+      analytics('downloadAttachment')
       this.progress = 0
       await _openAttachment(this.content, this.filename, progress => {
         this.progress = progress
@@ -64,16 +71,20 @@ export default class Attachment {
     }
   }
 
-  async delete (animate) {
+  /**
+   * @param {boolean} replace indicates this is part of a replace operation,
+   * and should skip animation & analytics.
+   */
+  async delete (replace) {
     if (this.readyForAction) {
-      if (animate) {
+      if (!replace) {
         this.animatingDelete = true
+        analytics('deleteAttachment')
         await sleep(this.deleteAnimationDelayMs)
       }
       try {
         this.deleting = true
         await _deleteAttachment(this.id)
-        analytics('viewIssueAttachmentDelete')
       } catch (e) {
         this.animatingDelete = false
         this.deleting = false

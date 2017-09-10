@@ -16,6 +16,10 @@ export async function analytics (event, properties) {
   pluginCall('analytics', event, properties)
 }
 
+export async function analyticsBatch (events) {
+  pluginCall('analyticsBatch', events)
+}
+
 /**
  * @param {string} string a string to potentially truncate
  * @param {number} maxLength the maximum length of the string after truncation

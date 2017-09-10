@@ -1,6 +1,5 @@
 import { executeSafelyAsync } from '../../util'
 import { isAuthorized } from '../../auth'
-import analytics from '../../analytics'
 import connectPanel from './connect'
 import issuesPanel from './issues'
 import { closeAllPluginPanels } from './webui-common'
@@ -17,7 +16,6 @@ export default async function (context) {
     if (isAuthorized()) {
       issuesPanel(context)
     } else {
-      analytics.viewIssueListPanelOpenNotConnected()
       connectPanel(context)
     }
   })

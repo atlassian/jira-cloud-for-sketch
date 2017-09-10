@@ -3,7 +3,7 @@ import { executeSafely, openInBrowser } from '../../util'
 import * as config from '../../config'
 import { trace } from '../../logger'
 import createBridgedWebUI from '../bridge/host'
-import analytics from '../../analytics'
+import { analytics, analyticsBatch } from '../../analytics'
 import { titlebarHeight } from './ui-constants'
 import panelDelegate from './panel-delegate'
 
@@ -65,7 +65,10 @@ export function createWebUI (context, identifier, page, options) {
   options.handlers = assign(
     {
       analytics (eventName, properties) {
-        analytics[eventName](properties)
+        analytics(eventName, properties)
+      },
+      analyticsBatch (events) {
+        analyticsBatch(events)
       },
       openInBrowser (url) {
         executeSafely(context, function () {
