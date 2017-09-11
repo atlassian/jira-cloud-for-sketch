@@ -1,6 +1,6 @@
 {
   "name": "jira-cloud-for-sketch",
-  "version": "0.0.13",
+  "version": "1.0.0",
   "description": "Share designs, assets, and feedback with your team",
   "main": "jira.sketchplugin",
   "manifest": "src/manifest.json",

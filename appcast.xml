@@ -5,6 +5,19 @@
     <link>https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/appcast.xml</link>
     <description>Share from Sketch to Jira, without losing focus</description>
     <language>en</language>
+    <item>
+        <title>v1.0.0</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>First non-beta release :)</li>
+              <li>New logos and product name</li>
+              <li>Sketch runner command support</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-1.0.0.zip" sparkle:version="1.0.0" />
+      </item>
       <item>
         <title>v0.13.0</title>
         <description>
