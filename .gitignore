@@ -38,3 +38,6 @@ xcuserdata/
 !*.xcodeproj/xcshareddata/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
+
+## symlink to Sketch plugins directory
+sketch-plugins
