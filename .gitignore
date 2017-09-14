@@ -41,3 +41,11 @@ xcuserdata/
 
 ## symlink to Sketch plugins directory
 sketch-plugins
+
+## Test artifacts
+xvfb-run*/
+.org.chromium.Chromium*/
+.com.google.Chrome*/
+
+## Build artifacts
+jira.sketchplugin-*.zip
