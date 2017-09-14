@@ -1,0 +1,66 @@
+{
+  "name": "Jira Cloud for Sketch",
+  "author": "Atlassian",
+  "email": "tim@atlassian.com",
+  "identifier": "com.atlassian.sketch.jira-plugin",
+  "appcast": "https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/appcast.xml",
+  "compatibleVersion": 3,
+  "bundleVersion": 1,
+  "commands": [
+    {
+      "name": "Jira",
+      "identifier": "jira",
+      "script": "jira.js",
+      "shortcut": "cmd alt j",
+      "description": "Open the 'Export to Jira Cloud' panel.",
+      "icon": "jira-icon-runner.png"
+    },
+    {
+      "name": "StartUp",
+      "identifier": "startup",
+      "script": "startup.js",
+      "handlers": {
+        "actions": {
+          "Startup": "onRun"
+        }
+      }
+    },
+    {
+      "name": "Version Check",
+      "identifier": "version-check",
+      "script": "version-check.js",
+      "handlers": {
+        "actions": {
+          "Startup": "onRun"
+        }
+      }
+    },
+    {
+      "name": "Test Action",
+      "identifier": "test",
+      "script": "test.js",
+      "shortcut": "cmd alt b"
+    },
+    {
+      "name": "On Selection or Export Change",
+      "identifier": "on-selection-or-export-change",
+      "script": "on-selection-or-export-change.js",
+      "handlers": {
+        "actions": {
+          "AddExportFormat": "onRun",
+          "SelectionChanged": "onRun"
+        }
+      }
+    }
+  ],
+  "menu": {
+    "isRoot": true,
+    "items": [
+      "jira"
+    ]
+  },
+  "version": "1.0.1",
+  "description": "Share designs, assets, and feedback with your team",
+  "homepage": "https://sketch.atlassian.com",
+  "disableCocoaScriptPreprocessor": true
+}

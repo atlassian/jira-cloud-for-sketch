@@ -6,6 +6,17 @@
     <description>Share from Sketch to Jira, without losing focus</description>
     <language>en</language>
     <item>
+      <title>v1.0.1</title>
+      <description>
+        <![CDATA[
+          <ul>
+            <li>Publish complete jira.sketchplugin to GitHub to support Runner/Sketchpacks</li>
+          </ul>
+        ]]>
+      </description>
+      <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-1.0.1.zip" sparkle:version="1.0.1" />
+    </item>
+    <item>
         <title>v1.0.0</title>
         <description>
           <![CDATA[

@@ -15,12 +15,12 @@ RUN rm -rf /var/lib/apt/lists/* && apt-get -q update && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
 
-# Python dependencies
-RUN apt-get update && apt-get install -y zip python-pip python-dev
+# Python dependencies & jq (used in bitbucket-pipelines.sh)
+RUN apt-get update && apt-get install -y zip python-pip python-dev jq
 RUN pip install boto3
 
 # npm dependencies
-RUN npm install -g skpm@0.9.16 bitbucket-build-status
+RUN npm install -g skpm@0.9.16 bitbucket-build-status@1.0.3
 
 # Install Chrome
 RUN curl --silent --show-error --location --fail --retry 3 \
