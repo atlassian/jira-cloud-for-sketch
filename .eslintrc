@@ -34,6 +34,8 @@ globals:
   NSFileHandleReadToEndOfFileCompletionNotification: false
   NSFileManager: false
   NSFileSize: false
+  NSImageOnly: false
+  NSImageScaleProportionallyDown: false
   NSInputStream: false
   NSModalResponseCancel: false
   NSMutableURLRequest: false
@@ -41,6 +43,7 @@ globals:
   NSOperationQueue: false
   NSOutputStream: false
   NSPasteboard: false
+  NSRoundedBezelStyle: false
   NSSelectorFromString: false
   NSTaskDidTerminateNotification: false
   NSTemporaryDirectory: false

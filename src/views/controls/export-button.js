@@ -60,15 +60,22 @@ async function add (context) {
         analytics('openPanelByButton')
       }
     })
-    const jiraButton = NSButton.buttonWithImage_target_action(
-      uploadIcon,
-      jiraButtonDelegate,
-      onClickSelector
-    )
-    jiraButton.setToolTip(jiraButtonToolTip)
-
-    exportButtonBar.addSubview(jiraButton)
-    jiraButton.setFrame(NSMakeRect(110, -2, 56, 32))
+    try {
+      const jiraButton = NSButton.alloc().initWithFrame(NSMakeRect(110, -2, 56, 32))
+      exportButtonBar.addSubview(jiraButton)
+      jiraButton.setBezelStyle(NSRoundedBezelStyle)
+      jiraButton.setTarget(jiraButtonDelegate)
+      jiraButton.setImage(uploadIcon)
+      jiraButton.setImagePosition(NSImageOnly)
+      jiraButton.setImageScaling(NSImageScaleProportionallyDown)
+      jiraButton.setAction(onClickSelector)
+      jiraButton.setToolTip(jiraButtonToolTip)
+    } catch (e) {
+      log('that button aint no gud')
+      log(e)
+      throw e
+    }
+    // jiraButton.setFrame()
 
     // Adjust the sizing of the 'Export $layerName' button to make room for the Jira button
     // Assumption: The first subview is the 'Export $layerName' button

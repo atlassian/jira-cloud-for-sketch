@@ -26,22 +26,6 @@
 			}
 		},
 		{
-			"name": "Version Check",
-			"identifier": "version-check",
-			"script": "./commands/version-check.js",
-			"handlers": {
-				"actions": {
-					"Startup": "onRun"
-				}
-			}
-		},
-		{
-			"name": "Test Action",
-			"identifier": "test",
-			"script": "./commands/test.js",
-			"shortcut": "cmd alt b"
-		},
-		{
 			"name": "On Selection or Export Change",
 			"identifier": "on-selection-or-export-change",
 			"script": "./commands/on-selection-or-export-change.js",

@@ -26,22 +26,6 @@
       }
     },
     {
-      "name": "Version Check",
-      "identifier": "version-check",
-      "script": "version-check.js",
-      "handlers": {
-        "actions": {
-          "Startup": "onRun"
-        }
-      }
-    },
-    {
-      "name": "Test Action",
-      "identifier": "test",
-      "script": "test.js",
-      "shortcut": "cmd alt b"
-    },
-    {
       "name": "On Selection or Export Change",
       "identifier": "on-selection-or-export-change",
       "script": "on-selection-or-export-change.js",
@@ -59,7 +43,7 @@
       "jira"
     ]
   },
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Share designs, assets, and feedback with your team",
   "homepage": "https://sketch.atlassian.com",
   "disableCocoaScriptPreprocessor": true

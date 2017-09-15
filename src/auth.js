@@ -9,7 +9,7 @@
  * This file contains various functions for authorizing users and retrieving
  * bearer tokens.
  */
-import fetch from 'sketch-module-fetch-polyfill'
+import fetch from 'sketch-polyfill-fetch-babel-safe'
 import {
   jiraSketchIntegrationBaseUrl,
   jiraSketchIntegrationApi,

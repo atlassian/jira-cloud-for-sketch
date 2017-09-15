@@ -1,3 +1,5 @@
+var path = require('path')
+
 module.exports = {
   module: {
     rules: [
@@ -16,6 +18,26 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             babelrc: true
+          }
+        }
+      },
+      {
+        /*
+        ASP-63: some dependencies use the 'const' keyword, which
+        causes Safari to barf in strict mode. This loader transforms
+        them to ES5.
+        */
+        test: /\.jsx?$/,
+        include: [
+          path.resolve(__dirname, 'node_modules/sketch-module-user-preferences'),
+          path.resolve(__dirname, 'node_modules/sketch-polyfill-fetch-babel-safe'),
+          path.resolve(__dirname, 'node_modules/cocoascript-class-babel-safe')
+        ],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            babelrc: false,
+            presets: ['es2015']
           }
         }
       },

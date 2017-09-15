@@ -1,4 +1,4 @@
-import fetch from 'sketch-module-fetch-polyfill'
+import fetch from 'sketch-polyfill-fetch-babel-safe'
 import { assign } from 'lodash'
 import { download, upload } from './request'
 import { getJiraHost, getBearerToken } from './auth'
@@ -203,7 +203,7 @@ export default class Jira {
  *
  * @param {string} url the absolute URL to the REST resource
  * @param {Object} [opts] request options. Some are documented here, some are
- * passed through to `sketch-module-fetch-polyfill`
+ * passed through to `sketch-polyfill-fetch-babel-safe`
  * @param {string} [opts.method] request method (defaults to GET)
  * @param {Object} [opts.headers] request headers
  * @param {string} [opts.body] the request body

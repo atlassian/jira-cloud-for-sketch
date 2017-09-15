@@ -1,4 +1,4 @@
-import fetch from 'sketch-module-fetch-polyfill'
+import fetch from 'sketch-polyfill-fetch-babel-safe'
 import moment from 'moment'
 import {
   pluginVersion,

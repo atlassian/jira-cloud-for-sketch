@@ -1,4 +1,4 @@
-import ObjCClass from 'cocoascript-class'
+import ObjCClass from 'cocoascript-class-babel-safe'
 
 const DelegateClass = ObjCClass({
   classname: 'AtlassianNSPanelDelegate',

@@ -102,7 +102,7 @@ function addFileAsMultipartRequestBody (request, parameterName, filePath) {
  *
  * Plan A was to implement an NSURLConnectionDelegate delegate using
  * `cocoascript-class` (similar to the approach taken by
- * `sketch-module-fetch-polyfill`). However, Sketch would crash when the
+ * `sketch-polyfill-fetch-babel-safe`). However, Sketch would crash when the
  * connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:
  * selector was invoked, I suspect due to a problem with the way
  * Objective-C's NSInteger is bridged.
