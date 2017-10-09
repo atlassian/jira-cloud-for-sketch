@@ -6,6 +6,17 @@
     <description>Share from Sketch to Jira, without losing focus</description>
     <language>en</language>
     <item>
+      <title>v1.1.2</title>
+      <description>
+        <![CDATA[
+          <ul>
+            <li>'Export to Jira' button no longer appears on export panel when collapsed</li>
+          </ul>
+        ]]>
+      </description>
+      <enclosure url="https://s3-us-west-2.amazonaws.com/atlassian-sketch-plugin/jira.sketchplugin-1.1.2.zip" sparkle:version="1.1.2" />
+    </item>
+    <item>
       <title>v1.1.1</title>
       <description>
         <![CDATA[

@@ -55038,7 +55038,11 @@ var add = function () {
               // Assumption: There are two standard export buttons
               // Assumption: If they aren't present, the layer is probably collapsed.
               if (exportButtons.length != 2) {
-                (0, _logger.trace)('Last subview MSExportStackView has ' + exportButtons.length + ' subviews');
+                (0, _logger.trace)('Last subview of MSExportStackView has ' + exportButtons.length + ' subviews');
+                return;
+              }
+              if (exportButtons[0].class() != 'NSButton' || exportButtons[1].class() != 'NSButton') {
+                (0, _logger.trace)('Last subview of MSExportStackView contains non-NSButton children');
                 return;
               }
 
