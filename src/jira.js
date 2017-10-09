@@ -71,7 +71,19 @@ export default class Jira {
    * @see https://docs.atlassian.com/jira/REST/cloud/#api/2/issue-getIssueWatchers
    */
   async getWatchers (issueKey) {
-    return (await jiraFetch(`${this.apiRoot}/issue/${issueKey}/watchers`)).watchers
+    let watchers
+    try {
+      watchers = (await jiraFetch(`${this.apiRoot}/issue/${issueKey}/watchers`)).watchers
+    } catch (e) {
+      // ASP-71: Jira sometimes returns a 200 with an empty response :|
+      if (e.message == 'JSON Parse error: Unexpected EOF') {
+        trace(e)
+        watchers = []
+      } else {
+        throw e
+      }
+    }
+    return watchers
   }
 
   /**

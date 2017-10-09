@@ -41,15 +41,6 @@ async function add (context) {
       return
     }
 
-    // Assumption: The first export button title is 'Export $layerName'
-    // Assumption: Sketch is not internationalized (verify!)
-    const exportButton = exportButtons[0]
-    const title = exportButton.title && exportButton.title()
-    if (!title || title.indexOf('Export ') != 0) {
-      trace(`Possible export button has title: ${title}`)
-      return
-    }
-
     // Add the Jira button
     const uploadIcon = NSImage.alloc().initWithContentsOfFile(
       context.plugin.urlForResourceNamed('jira-icon.png').path()
@@ -75,10 +66,10 @@ async function add (context) {
       log(e)
       throw e
     }
-    // jiraButton.setFrame()
 
     // Adjust the sizing of the 'Export $layerName' button to make room for the Jira button
     // Assumption: The first subview is the 'Export $layerName' button
+    const exportButton = exportButtons[0]
     const eFrame = exportButton.frame()
     exportButton.setFrame(NSMakeRect(
         eFrame.origin.x,
