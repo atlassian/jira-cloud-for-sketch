@@ -11,9 +11,7 @@ import Jira from '../../jira'
 import openConnectPanel from './connect'
 import keepOrReplaceAlert from '../alerts/keep-or-replace'
 import {
-  setSelectedIssueKey,
-  setExportSelectedLayersFn,
-  setOnSelectionChangedFn
+  setSelectedIssueKey
 } from '../../plugin-state'
 import {
   setLastViewedIssueForDocument,
@@ -42,7 +40,6 @@ export default async function (context) {
     width: issueListDimensions[0],
     height: issueListDimensions[1],
     onClose: function () {
-      setExportSelectedLayersFn(null)
       setSelectedIssueKey(null)
     },
     handlers: {
@@ -131,13 +128,6 @@ export default async function (context) {
   const attachments = new Attachments(context, webUI, jira)
   const uploads = new Uploads(context, webUI, jira, attachments)
 
-  setExportSelectedLayersFn(function () {
-    uploads.exportSelectedLayersToSelectedIssue()
-  })
-  function updateHasSelection () {
-    webUI.invokeExposedFunction('setHasSelection', areLayersSelected(context))
-  }
-  setOnSelectionChangedFn(updateHasSelection)
   analytics('openPanelIssues')
   await webUI.waitUntilBridgeInitialized()
   return webUI

@@ -43,7 +43,7 @@
       "jira"
     ]
   },
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Share designs, assets, and feedback with your team",
   "homepage": "https://sketch.atlassian.com",
   "disableCocoaScriptPreprocessor": true

@@ -14,7 +14,7 @@ export default class IssueView extends Component {
       <div>
         <MinHeight>
           <IssueSummary issue={issue} />
-          <Attachments issue={issue} viewmodel={viewmodel} />
+          <Attachments issue={issue} />
         </MinHeight>
         <Comments
           issue={issue}

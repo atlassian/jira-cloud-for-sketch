@@ -57,7 +57,6 @@ export default class DropZone extends Component {
       style.padding = '2px'
       style.borderColor = '#ffab00'
     }
-    const { hasSelection } = this.props.viewmodel
     return (
       <DropZoneDiv
         style={style}
@@ -69,26 +68,23 @@ export default class DropZone extends Component {
       >
         <DocumentsImg src='upload.png' alt='Upload' />
         <TextDiv>
-          {`Drag your artboards and layers here${hasSelection ? ' or' : ''}`}
+          Drag your artboards and layers here or
         </TextDiv>
-        {hasSelection && (
-          <ButtonWrapper>
-            <Button
-              appearance='default'
-              type='button'
-              onClick={this.handleExportSelected}
-            >
-              Export selection
-            </Button>
-          </ButtonWrapper>
-        )}
+        <ButtonWrapper>
+          <Button
+            appearance='default'
+            type='button'
+            onClick={this.handleExportSelected}
+          >
+            Export selection
+          </Button>
+        </ButtonWrapper>
       </DropZoneDiv>
     )
   }
 }
 
 DropZone.propTypes = {
-  viewmodel: PropTypes.object.isRequired,
   issue: PropTypes.object.isRequired
 }
 

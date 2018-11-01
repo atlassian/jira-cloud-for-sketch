@@ -8,10 +8,10 @@ import Attachment from './Attachment'
 @observer
 export default class Attachments extends Component {
   render () {
-    const { issue, viewmodel } = this.props
+    const { issue } = this.props
     return (
       <AttachmentsArea>
-        <DropZone issue={issue} viewmodel={viewmodel} />
+        <DropZone issue={issue} />
         {issue.attachments.map(attachment => (
           attachment.visible &&
             <Attachment
@@ -34,6 +34,5 @@ const AttachmentsArea = styled.div`
 `
 
 Attachments.propTypes = {
-  viewmodel: PropTypes.object.isRequired,
   issue: PropTypes.object.isRequired
 }
